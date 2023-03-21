@@ -1,20 +1,46 @@
-// TIPE.cpp : Ce fichier contient la fonction 'main'. L'exécution du programme commence et se termine à cet endroit.
-//
+#include "env_world.h"
+#include "constants.h"
 
+#include <GLFW/glfw3.h>
 #include <iostream>
+using namespace std;
+int main(void) {
+    env_world World;
 
-int main()
-{
-    std::cout << "Hello World!\n";
+    GLFWwindow* window;
+
+    double lastTime = glfwGetTime();
+    int nbFrames = 0;
+    if (!glfwInit()) //initialisation de GL
+        return -1;
+    cout.precision(17);
+
+    //Cr�ation de la fen�tre
+    window = glfwCreateWindow(640, 640, "TIPE", NULL, NULL);
+    if (!window)
+    {
+        glfwTerminate();
+        return -1;
+    }
+    glfwMakeContextCurrent(window);
+
+    //Boucle principale
+    while (!glfwWindowShouldClose(window)){
+        double currentTime = glfwGetTime();
+        nbFrames++;
+        if (currentTime - lastTime >= 1.0) { // If last prinf() was more than 1 sec ago
+            // printf and reset timer
+            cout << 1000.0 / double(nbFrames) << endl;
+            nbFrames = 0;
+            lastTime += 1.0;
+        }
+
+
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        World.print_world(); //afficher la map
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+    }
+    glfwTerminate();
+    return 0;
 }
-
-// Exécuter le programme : Ctrl+F5 ou menu Déboguer > Exécuter sans débogage
-// Déboguer le programme : F5 ou menu Déboguer > Démarrer le débogage
-
-// Astuces pour bien démarrer : 
-//   1. Utilisez la fenêtre Explorateur de solutions pour ajouter des fichiers et les gérer.
-//   2. Utilisez la fenêtre Team Explorer pour vous connecter au contrôle de code source.
-//   3. Utilisez la fenêtre Sortie pour voir la sortie de la génération et d'autres messages.
-//   4. Utilisez la fenêtre Liste d'erreurs pour voir les erreurs.
-//   5. Accédez à Projet > Ajouter un nouvel élément pour créer des fichiers de code, ou à Projet > Ajouter un élément existant pour ajouter des fichiers de code existants au projet.
-//   6. Pour rouvrir ce projet plus tard, accédez à Fichier > Ouvrir > Projet et sélectionnez le fichier .sln.
