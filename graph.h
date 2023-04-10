@@ -11,5 +11,6 @@ Graph* GraphCreate();
 void GraphFill(Graph *g);
 void GraphFree(Graph* g);
 void GraphPrint(Graph *g);
+void* NodeDataGet(Graph* g, int index);
 
 #endif

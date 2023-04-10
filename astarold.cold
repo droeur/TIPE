@@ -2,33 +2,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include "astarold.hold"
 #include "graph.h"
-#include "astar.h"
-#include "proceduralGeneration.h"
 
-typedef struct NodeTemp NodeTemp;
-
-struct NodeTemp {
-    int g;
-    int h;
-    int f;
-
-    int x;
-    int y;
-
-    int numero;
-
-    int parent;
-    NodeTemp* suivant;
-};
-
-typedef struct{
-    NodeTemp *firstNode;
-}NodeArray;
 
 NodeArray *CreateNodeArray(){
     NodeArray *array = NULL;
-    array = (NodeArray*)calloc(1, sizeof(NodeArray));
+    array = calloc(1, sizeof(NodeArray));
     array->firstNode = NULL;
     return array;
 }
@@ -47,14 +27,14 @@ void DestroyNodeArray(NodeArray *array){
 NodeTemp* CreateNode(NodeArray *array){
     NodeTemp *node = NULL;
     if(array->firstNode == NULL){
-        array->firstNode = (NodeTemp*)calloc(1, sizeof(NodeTemp));
+        array->firstNode = calloc(1, sizeof(NodeTemp));
         node = array->firstNode;
     } else {
         node = array->firstNode;
         while(node->suivant != NULL){
             node = node->suivant;
         }
-        node->suivant = (NodeTemp*)calloc(1, sizeof(NodeTemp));
+        node->suivant = calloc(1, sizeof(NodeTemp));
         node = node->suivant;
     }
     node->suivant = NULL;
@@ -114,7 +94,7 @@ NodeTemp* CopyNode(NodeTemp *destination, NodeTemp *source){
 
 void ReverseArray(int array[], int size){
     int *aux = NULL, i = 0, j = size - 1;
-    aux = (int*)calloc(1, size * sizeof(int));
+    aux = calloc(1, size * sizeof(int));
     while(i < size){
         aux[j] = array[i];
         j--;
@@ -132,13 +112,12 @@ void ReverseArray(int array[], int size){
     }
 }
 
-//TODO pathfinding
-void pathfinding_astar(Graph* graph, int path[20], int debut, int fin){
+void AStarPathfinding(Graph* graph, int path[20], int debut, int fin){
     NodeArray *listeOuverte = NULL;
     NodeArray *listeFermee = NULL;
     NodeArray *listeEnfants = NULL;
-    NodeTemp *depart = (NodeTemp*)malloc(sizeof(NodeTemp));
-    NodeTemp *arrivee = (NodeTemp*)malloc(sizeof(NodeTemp));
+    NodeTemp *depart = malloc(sizeof(NodeTemp));
+    NodeTemp *arrivee = malloc(sizeof(NodeTemp));
     NodeTemp *current_node = NULL;
     NodeTemp *temporary_node = NULL;
     NodeTemp *children = NULL;
@@ -146,8 +125,11 @@ void pathfinding_astar(Graph* graph, int path[20], int debut, int fin){
     int index = 0, current_index = 0, children_index = 0;
     int enfant[4], parent;
 
-    depart->x = debut / MAPSIZE;
-    depart->y = debut % MAPSIZE ;
+    //printf("%d -> %d\n\n", debut, fin);
+
+
+    depart->x = galaxie[debut / TAILLE][debut - (debut / TAILLE) * TAILLE].x;
+    depart->y = galaxie[debut / TAILLE][debut - (debut / TAILLE) * TAILLE].y;
     depart->g = 0;
     depart->h = 0;
     depart->f = 0;
@@ -155,13 +137,12 @@ void pathfinding_astar(Graph* graph, int path[20], int debut, int fin){
     depart->suivant = NULL;
     depart->parent = 0;
 
-    arrivee->x = fin / MAPSIZE;
-    arrivee->y = fin % MAPSIZE;
+    arrivee->x = galaxie[fin / TAILLE][fin - (fin / TAILLE) * TAILLE].x;
+    arrivee->y = galaxie[fin / TAILLE][fin - (fin / TAILLE) * TAILLE].y;
     arrivee->g = 0;
     arrivee->h = 0;
     arrivee->f = 0;
     arrivee->numero = fin;
-
 
     memset(path, 0, sizeof(int) * 50);
 
@@ -193,7 +174,7 @@ void pathfinding_astar(Graph* graph, int path[20], int debut, int fin){
         DestroyNodeArray(listeEnfants);
         listeEnfants = CreateNodeArray();
 
-        //ecrire resultat
+        //�cire resultat
         if(current_node->numero == fin){
                 printf("\n");
                 current_index = 1;
@@ -218,5 +199,63 @@ void pathfinding_astar(Graph* graph, int path[20], int debut, int fin){
                 ReverseArray(path, 20);
                 return;
         }
+
+        memset(enfant, 0, sizeof(int) * 4);
+        children_index = 0;
+        while(children_index < 4){
+            enfant[children_index] = current_node->numero;
+            switch(children_index){
+            case 0:
+                index = galaxie[current_node->numero - (current_node->numero / TAILLE) * TAILLE][current_node->numero / TAILLE].hyperlane1;
+                break;
+            case 1:
+                index = galaxie[current_node->numero - (current_node->numero / TAILLE) * TAILLE][current_node->numero / TAILLE].hyperlane2;
+                break;
+            case 2:
+                index = galaxie[current_node->numero - (current_node->numero / TAILLE) * TAILLE][current_node->numero / TAILLE].hyperlane3;
+                break;
+            case 3:
+                index = galaxie[current_node->numero - (current_node->numero / TAILLE) * TAILLE][current_node->numero / TAILLE].hyperlane4;
+                break;
+            }
+            if(index != 0){
+                children = CreateNode(listeEnfants);
+                children->numero = index;
+                children->x = galaxie[index / TAILLE][index - (index / TAILLE) * TAILLE].x;
+                children->y = galaxie[index / TAILLE][index - (index / TAILLE) * TAILLE].y;
+                children->parent = current_node->numero;
+            }
+            children_index++;
+        }
+
+        children_index = 0;
+        index = 0;
+        while(children_index < ArraySize(listeEnfants)){
+            while(index < ArraySize(listeFermee)){
+                if(NodeNumber(listeEnfants, children_index)->numero == NodeNumber(listeFermee, index)->numero){
+                    goto finBoucleEnfants;
+                }
+                index++;
+            }
+
+            NodeNumber(listeEnfants, children_index)->g = current_node->g + 1;
+            NodeNumber(listeEnfants, children_index)->h = pow(NodeNumber(listeEnfants, children_index)->x - arrivee->x, 2.0) + pow(NodeNumber(listeEnfants, children_index)->y - arrivee->y, 2.0);
+            NodeNumber(listeEnfants, children_index)->f = NodeNumber(listeEnfants, children_index)->g + NodeNumber(listeEnfants, children_index)->h;
+
+            index = 0;
+            while(index < ArraySize(listeOuverte)){
+                if(NodeNumber(listeEnfants, children_index)->numero == NodeNumber(listeOuverte, index)->numero){
+                       if(NodeNumber(listeEnfants, children_index)->g > NodeNumber(listeOuverte, index)->g){
+                            goto finBoucleEnfants;
+                        }
+                }
+                index++;
+            }
+            //printf("\n  enfant:%d h:%d, g:%d, f:%d", NodeNumber(listeEnfants, children_index)->numero, NodeNumber(listeEnfants, children_index)->h, NodeNumber(listeEnfants, children_index)->g, NodeNumber(listeEnfants, children_index)->f);
+            CopyNode(CreateNode(listeOuverte), NodeNumber(listeEnfants, children_index));
+            finBoucleEnfants:
+            children_index++;
+        }
+        //printf("\n");
     }
 }

@@ -2,10 +2,10 @@
 #include <assert.h>
 #include "liste.h"
 
-struct GenericList_struct {
+struct _GenericList {
     GenericNode* firstNode;
 };
-struct GenericNode_strcut {
+struct _GenericNode {
     void* contenu;
     GenericNode* nextNode;
 };
@@ -52,7 +52,35 @@ void GenericNodeAppend(GenericList* liste, void* contenu){
         }
         tempNode->nextNode = node;
     }
+}
 
+void GenericNodeAdd(GenericList* liste, void* contenu, int index){
+    GenericNode* node;
+    int i = 0;
+
+    if(!liste)
+        return;
+
+    node = (GenericNode*)calloc(1, sizeof(GenericNode));
+    assert(node);
+    
+    node->contenu = contenu;
+    node->nextNode = NULL;
+
+    if(liste->firstNode == NULL) {
+        liste->firstNode = node;
+    }else if(index == 0) {
+        node->nextNode = liste->firstNode;
+        liste->firstNode = node;
+    } else {
+        GenericNode *tempNode = liste->firstNode;
+        while(tempNode->nextNode != NULL && i < index - 1){
+            tempNode = tempNode->nextNode;
+            i++;
+        }
+        node->nextNode = tempNode->nextNode;
+        tempNode->nextNode = node;  
+    }
 }
 
 void *GenericNodeGet(GenericList *list, int index) {

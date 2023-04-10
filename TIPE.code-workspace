@@ -47,7 +47,15 @@
 			"sstream": "cpp",
 			"stdexcept": "cpp",
 			"streambuf": "cpp",
-			"typeinfo": "cpp"
+			"typeinfo": "cpp",
+			"astar.h": "c",
+			"*.hold": "c",
+			"proceduralgeneration.h": "c",
+			"stdlib.h": "c",
+			"graph.h": "c",
+			"liste.h": "c",
+			"queue.h": "c",
+			"assert.h": "c"
 		}
 	}
 }

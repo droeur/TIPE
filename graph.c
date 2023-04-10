@@ -26,6 +26,7 @@ struct node_struct {
     int index;
     Edge* edge;
     Node* nextNode;
+    void* data;
 };
 
 struct edge_struct {
@@ -117,4 +118,18 @@ void GraphFree(Graph* g){
         node = nextNode;
     }
     free(g);
+}
+
+void* NodeDataGet(Graph* g, int index){
+    Node *node = g->firstNode;
+    int  actualNode = 0;
+    while(node != NULL){
+        if(actualNode == index){
+            return node->data;
+        }
+        
+        node = node->nextNode;
+        actualNode++;
+    }
+    return NULL;
 }
