@@ -23,11 +23,44 @@
 \title{Algorithmique des jeux de stratégie}
 \author{Dimitri \bsc{Cocheril-Crèvecoeur}}
 
+\section*{Définitions}
+\begin{description}
+    \item[Action] On définit deux actions : 
+    \begin{itemize}
+        \item Bouger l'unitée $a$ à la position $p$
+        \item Attaquer l'unitée $b$ avec l'unité $a$
+    \end{itemize} 
+\end{description}
+
+\section{Upper Confidence bounds applied to Trees}
+Évolution de algorithme de recherche arborescente de Monte-Carlo.
+L'algorithme recherche dans l'arbre des possibles. La formule du UCT est :
+$$UCT = \overline{X_j} + C_p \sqrt{\frac{2 \ln(n)}{n_j}} $$ 
+avec :
+\begin{itemize}
+    \item $n$ le nombre de fois que le parent a été visité
+    \item $n_j$ le nombre de fois que l'enfant a été visité
+    \item $\overline{X_j}$ le ratio de victoire : $$\overline{X_j} = \frac{\text{victoires} + \frac{\text{égalités}}{2}}{\text{victoires} + \text{égalités} + \text{défaites}}$$
+    \item $C$ une constante permettant d'ajuster le nombre d'exploration de chaque noed
+\end{itemize}
+L'algorithme classique UCT n'est pas adapté aux jeux en temps réél. Ainsi, une évolution,
+le UCT Considering Durations (UCTCD). 
+L'algorithme se déroule en quatres étapes :
+\\ \begin{tikzpicture}
+    [
+        sibling distance=7em,
+        every node/.style = {shape=rectangle, rounded corners, draw, align=center}
+    ]
+    \node {Formulas}
+      child { node {single-line} };
+  \end{tikzpicture}
 
 \section{La recherche hiérarchique par portfolio}
 Un problème fréquent des gens de stratégie est la taille des cartes, rendant trop
 lourds les algorithmes classiques d'ia de jeu comme l'algorithme alpha-béta. 
-Nous étudierons ici une évolution de la recherche gourmande par portfolio : la
+En effet, le nombre d'actions possibles que l'algorithme UCT considère est $L^U$
+avec $L$ le nombre d'action possible moyen et $U$ le nombre d'unités possibles.
+Nous étudierons ici une évolution de la recherche glouton par portfolio : la
 recherche hiéarchique par portfolio (HPS) a été inventée.\\
 Les éléments qui forment une HPS sont :
 \begin{description}
@@ -42,5 +75,7 @@ Les éléments qui forment une HPS sont :
     de toutes les unitées elle calcule celle d'une seule unitée.
     \item[Portfolio] $P = (pp_1, pp_2, ..., pp_k)$ ensemble des joueurs partiels
 \end{description}
+L'algorithme HPS permet alors de changer un nombre de combibaison exponentiel
+d'action en nombre linéaire d'action.
 
 \end{document}

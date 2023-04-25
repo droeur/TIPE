@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021/W32TeX) (preloaded format=pdflatex 2021.10.3)  25 APR 2023 22:10
+This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021/W32TeX) (preloaded format=pdflatex 2021.10.3)  25 APR 2023 23:27
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -531,51 +531,51 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 48
  (f:/texlive/2021/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 ))
-LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 34.
+LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 30.
  (f:/texlive/2021/texmf-dist/tex/latex/lm/ot1lmr.fd
 File: ot1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OML+lmm on input line 34.
+LaTeX Font Info:    Trying to load font information for OML+lmm on input line 30.
  (f:/texlive/2021/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 34.
+LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 30.
  (f:/texlive/2021/texmf-dist/tex/latex/lm/omslmsy.fd
 File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 34.
+LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 30.
  (f:/texlive/2021/texmf-dist/tex/latex/lm/omxlmex.fd
 File: omxlmex.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10.95> on input line 34.
+(Font)              <10.95> on input line 30.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 34.
+(Font)              <8> on input line 30.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 34.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 34.
+(Font)              <6> on input line 30.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 30.
  (f:/texlive/2021/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 34.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 30.
  (f:/texlive/2021/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) [1
 
-{f:/texlive/2021/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] (./tipe.aux) ) 
+{f:/texlive/2021/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2] (./tipe.aux) ) 
 Here is how much of TeX's memory you used:
- 18500 strings out of 478599
- 389143 string characters out of 5858101
- 690659 words of memory out of 5000000
- 36025 multiletter control sequences out of 15000+600000
- 428737 words of font info for 49 fonts, out of 8000000 for 9000
+ 18581 strings out of 478599
+ 391331 string characters out of 5858101
+ 695659 words of memory out of 5000000
+ 36104 multiletter control sequences out of 15000+600000
+ 434717 words of font info for 51 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 84i,5n,89p,485b,424s stack positions out of 5000i,500n,10000p,200000b,80000s
-{f:/texlive/2021/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{f:/texlive/2021/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{f:/texlive/2021/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{f:/texlive/2021/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}<f:/texlive/2021/texmf-dist/fonts/type1/public/lm/lmbx10.pfb><f:/texlive/2021/texmf-dist/fonts/type1/public/lm/lmbx12.pfb><f:/texlive/2021/texmf-dist/fonts/type1/public/lm/lmmi10.pfb><f:/texlive/2021/texmf-dist/fonts/type1/public/lm/lmmi8.pfb><f:/texlive/2021/texmf-dist/fonts/type1/public/lm/lmr10.pfb><f:/texlive/2021/texmf-dist/fonts/type1/public/lm/lmr8.pfb><f:/texlive/2021/texmf-dist/fonts/type1/public/lm/lmsy8.pfb>
-Output written on tipe.pdf (1 page, 116427 bytes).
+ 84i,9n,89p,485b,818s stack positions out of 5000i,500n,10000p,200000b,80000s
+{f:/texlive/2021/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{f:/texlive/2021/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{f:/texlive/2021/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{f:/texlive/2021/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc}{f:/texlive/2021/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}<f:/texlive/2021/texmf-dist/fonts/type1/public/lm/lmbx10.pfb><f:/texlive/2021/texmf-dist/fonts/type1/public/lm/lmbx12.pfb><f:/texlive/2021/texmf-dist/fonts/type1/public/lm/lmex10.pfb><f:/texlive/2021/texmf-dist/fonts/type1/public/lm/lmmi10.pfb><f:/texlive/2021/texmf-dist/fonts/type1/public/lm/lmmi8.pfb><f:/texlive/2021/texmf-dist/fonts/type1/public/lm/lmr10.pfb><f:/texlive/2021/texmf-dist/fonts/type1/public/lm/lmr8.pfb><f:/texlive/2021/texmf-dist/fonts/type1/public/lm/lmsy8.pfb>
+Output written on tipe.pdf (2 pages, 131553 bytes).
 PDF statistics:
- 53 PDF objects out of 1000 (max. 8388607)
- 34 compressed objects within 1 object stream
+ 65 PDF objects out of 1000 (max. 8388607)
+ 42 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  13 words of extra memory for PDF output out of 10000 (max. 10000000)
 
