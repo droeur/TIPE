@@ -60,3 +60,6 @@ set_target_properties(${LOCAL_PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
 ####################
 #   Dependencies   #
 ####################
+set(RAPIDCSV_INCLUDE_DIRS "C:/Users/User/vcpkg/packages/rapidcsv_x86-windows/include")
+find_path(${RAPIDCSV_INCLUDE_DIRS} "rapidcsv.h" HINTS )
+target_include_directories(${LOCAL_PROJECT_NAME} PRIVATE ${RAPIDCSV_INCLUDE_DIRS})
