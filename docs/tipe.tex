@@ -1,0 +1,46 @@
+\documentclass[a4paper, 11pt]{article}
+\usepackage[utf8]{inputenc} 
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[french]{babel}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{mathtools}
+
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{calc,trees,positioning,arrows,chains,shapes.geometric,%
+    decorations.pathreplacing,decorations.pathmorphing,shapes,%
+    matrix,shapes.symbols}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+
+\begin{document}
+
+\title{Algorithmique des jeux de stratégie}
+\author{Dimitri \bsc{Cocheril-Crèvecoeur}}
+
+
+\section{La recherche hiérarchique par portfolio}
+Un problème fréquent des gens de stratégie est la taille des cartes, rendant trop
+lourds les algorithmes classiques d'ia de jeu comme l'algorithme alpha-béta. 
+Nous étudierons ici une évolution de la recherche gourmande par portfolio : la
+recherche hiéarchique par portfolio (HPS) a été inventée.\\
+Les éléments qui forment une HPS sont :
+\begin{description}
+    \item[État] $s$ contenant toutes les informations du jeu nécessaires
+    \item[Mouvement] $m= ( a_1, a_2, ..., a_k )$ séquence d'actions $a_i$
+    \item[Joueur] fonction $p(s) = m$ prenant l'état du jeu et renvoyant les 
+    actions choisies par l'alghorithme
+    \item[Jeu] fonction $g(s, p_1, p_2, ..., p_k) = s'$ prenant l'état du jeu et
+    les fonctions des joueurs et effectuant les actions
+    \item[Joueur partiel] fonction $pp(s) = m$ joueur pariel \\
+    elle est similaire à la fonction joueur $p$ mais au lieu de calculer les actions
+    de toutes les unitées elle calcule celle d'une seule unitée.
+    \item[Portfolio] $P = (pp_1, pp_2, ..., pp_k)$ ensemble des joueurs partiels
+\end{description}
+
+\end{document}
