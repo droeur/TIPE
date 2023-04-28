@@ -8,6 +8,7 @@
 \usepackage{amssymb}
 \usepackage{amsthm}
 \usepackage{mathtools}
+\usepackage{listings}
 
 \usepackage{graphicx}
 \usepackage{tikz}
@@ -29,8 +30,38 @@
     \begin{itemize}
         \item Bouger l'unitée $a$ à la position $p$
         \item Attaquer l'unitée $b$ avec l'unité $a$
+        \item Attendre $t$ secondes
     \end{itemize} 
 \end{description}
+
+Le jeu est formé de 3 classes et 2 fonctions :
+
+\begin{description}
+    \item[Unitée] $u = (p, hp, t_a, t_m, type)$
+    \begin{itemize}
+        \item $p = (x,y)$ la position de l'unitée
+        \item $hp$ la vie de l'unitée
+        \item $t_a$ le cooldown avant que l'unitée puisse attaquer
+        \item $t_m$le cooldown avant que l'unitée puisse bouger
+        \item $type$ le type de l'unitée
+    \end{itemize} 
+    \item[État] $s = (t, U_1, U_2, ..., U_k)$ contenant toutes les informations du jeu nécessaires :
+    \begin{itemize}
+        \item $t$ le temps
+        \item $U_i = (u_1,...,u_k)$ l'ensemble des unitées controlées par le joueur i
+    \end{itemize} 
+    \item[Mouvement] $m= ( a_1,..., a_k )$ séquence d'actions $a_i = (u, type, cible, t)$ :
+    \begin{itemize}
+        \item $u$ l'unitée qui effectue l'action
+        \item $type$ le type d'action
+    \end{itemize}
+    \item[Joueur] fonction $p(s,U) = m$ prenant l'état du jeu $s$ et la liste des unitées $U$
+    et renvoyant les actions choisies par l'alghorithme
+    \item[Jeu] fonction $g(s, p_1, p_2, ..., p_k) = s'$ prenant l'état du jeu et
+    les fonctions des joueurs et effectuant les actions
+\end{description}
+
+Les \emph{IA} développées ici seront donc des fonctions player.
 
 \section{Upper Confidence bounds applied to Trees}
 Évolution de algorithme de recherche arborescente de Monte-Carlo.
@@ -43,17 +74,17 @@ avec :
     \item $\overline{X_j}$ le ratio de victoire : $$\overline{X_j} = \frac{\text{victoires} + \frac{\text{égalités}}{2}}{\text{victoires} + \text{égalités} + \text{défaites}}$$
     \item $C$ une constante permettant d'ajuster le nombre d'exploration de chaque noed
 \end{itemize}
-L'algorithme classique UCT n'est pas adapté aux jeux en temps réél. Ainsi, une évolution,
-le UCT Considering Durations (UCTCD). 
+L'algorithme classique UCT n'est pas adapté aux jeux en temps réél. Ainsi nous 
+allons considerer ici une évolution, le UCT Considering Durations (UCTCD) qui 
+permet de gérer faire plusieurs actions en même temps. 
 L'algorithme se déroule en quatres étapes :
-\\ \begin{tikzpicture}
-    [
-        sibling distance=7em,
-        every node/.style = {shape=rectangle, rounded corners, draw, align=center}
-    ]
-    \node {Formulas}
-      child { node {single-line} };
-  \end{tikzpicture}
+\begin{enumerate}
+    \item On prends deux listes d'actions des algorithmes \emph{NOK-AV} et \emph{Kiter}.
+\end{enumerate}
+
+\section{La recherche glouton par portfolio}
+\begin{lstlisting}
+\end{lstlisting}
 
 \section{La recherche hiérarchique par portfolio}
 Un problème fréquent des gens de stratégie est la taille des cartes, rendant trop
@@ -62,20 +93,14 @@ En effet, le nombre d'actions possibles que l'algorithme UCT considère est $L^U
 avec $L$ le nombre d'action possible moyen et $U$ le nombre d'unités possibles.
 Nous étudierons ici une évolution de la recherche glouton par portfolio : la
 recherche hiéarchique par portfolio (HPS) a été inventée.\\
-Les éléments qui forment une HPS sont :
+L'algorithme ajoute une fonction et une classe :
 \begin{description}
-    \item[État] $s$ contenant toutes les informations du jeu nécessaires
-    \item[Mouvement] $m= ( a_1, a_2, ..., a_k )$ séquence d'actions $a_i$
-    \item[Joueur] fonction $p(s) = m$ prenant l'état du jeu et renvoyant les 
-    actions choisies par l'alghorithme
-    \item[Jeu] fonction $g(s, p_1, p_2, ..., p_k) = s'$ prenant l'état du jeu et
-    les fonctions des joueurs et effectuant les actions
     \item[Joueur partiel] fonction $pp(s) = m$ joueur pariel \\
     elle est similaire à la fonction joueur $p$ mais au lieu de calculer les actions
     de toutes les unitées elle calcule celle d'une seule unitée.
     \item[Portfolio] $P = (pp_1, pp_2, ..., pp_k)$ ensemble des joueurs partiels
 \end{description}
-L'algorithme HPS permet alors de changer un nombre de combibaison exponentiel
+    L'algorithme HPS permet alors de changer un nombre de combibaison exponentiel
 d'action en nombre linéaire d'action.
 
 \end{document}

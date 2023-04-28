@@ -18,13 +18,17 @@ set(LOCAL_PROJECT_DESCRIPTION "Description")
 
 # Header files (relative to "include" directory)
 set(HEADERS
-    header.h
+    game.hpp
+    hps.hpp
+    player_random.hpp
 )
 
 # Source files (relative to "src" directory)
 set(SOURCES
     main.cpp
-    generation.cpp
+    game.cpp
+    hps.cpp
+    player_random.cpp
 )
 
 # Compiler definitions
