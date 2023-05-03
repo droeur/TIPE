@@ -24,17 +24,33 @@
 \title{Algorithmique des jeux de stratégie}
 \author{Dimitri \bsc{Cocheril-Crèvecoeur}}
 
-\section*{Définitions}
-\begin{description}
-    \item[Action] On définit deux actions : 
-    \begin{itemize}
-        \item Bouger l'unitée $a$ à la position $p$
-        \item Attaquer l'unitée $b$ avec l'unité $a$
-        \item Attendre $t$ secondes
-    \end{itemize} 
-\end{description}
+\section*{Présentation}
+On pose les contraintes auxquelles on va répondre :\\
+On travaille sur les IA de jeu de stratégie en "temps réel" appelés RTS. C'est à dire que
+l'IA doit faire des choix à chaque frame du jeu, donc 24 fois par seconde. Ainsi,
+elle est limité en temps : \emph{40ms}. L'espace de jeu est supposé continu (les
+les coordonnées sont à virgule flottante). Les IA sont appelés les \emph{joueurs}.
+Le but de ce TIPE est d'étudier différents algorithmes pour simuler les joueurs.
+Usuellement, les RTS sont formés de trois éléments : la gestion des ressources,
+la construction de bases et d'armées et le combat contre l'ennemi. Il y a trois 
+phases stratégiques : l'attaque, la défense et l'expansion. Dans une partie classique,
+le joueur alterne suivant ces trois phases. Nous n'étudierons ici que l'attaque.
+\\
+Chaque joueur contrôle des unitées qu'il peut bouger et qui peuvent effectuer 3
+actions :
+\begin{itemize}
+    \item Bouger l'unitée $a$ à la position $p$
+    \item Attaquer l'unitée $b$ avec l'unité $a$
+    \item Attendre $t$ secondes
+\end{itemize}
+les unitées on une variable "HP" qui définit leur vie, c'est à dire que lorsqu'elle
+atteint 0, les unitées sont tuées et ne sont plus jouables. Chaque action prends
+un certain temps.
+Le joueur gagnant et le dernier a avoir toutes ses unitées en vie.
+\newpage
 
-Le jeu est formé de 3 classes et 2 fonctions :
+\section*{Définitions}
+Le framework du jeu est formé de 3 classes et 2 fonctions :
 
 \begin{description}
     \item[Unitée] $u = (p, hp, t_a, t_m, type)$

@@ -596,7 +596,7 @@ INPUT f:/texlive/2021/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
 INPUT f:/texlive/2021/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
 INPUT f:/texlive/2021/texmf-dist/fonts/tfm/public/lm/ec-lmr12.tfm
 INPUT f:/texlive/2021/texmf-dist/fonts/tfm/public/lm/ec-lmbx12.tfm
-INPUT f:/texlive/2021/texmf-dist/fonts/tfm/public/lm/ec-lmbx10.tfm
+INPUT f:/texlive/2021/texmf-dist/fonts/tfm/public/lm/ec-lmri10.tfm
 INPUT f:/texlive/2021/texmf-dist/tex/latex/lm/ot1lmr.fd
 INPUT f:/texlive/2021/texmf-dist/tex/latex/lm/ot1lmr.fd
 INPUT f:/texlive/2021/texmf-dist/tex/latex/lm/ot1lmr.fd
@@ -637,11 +637,11 @@ INPUT f:/texlive/2021/texmf-dist/tex/latex/amsfonts/umsb.fd
 INPUT f:/texlive/2021/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm10.tfm
 INPUT f:/texlive/2021/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm10.tfm
 INPUT f:/texlive/2021/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm7.tfm
-INPUT f:/texlive/2021/texmf-dist/fonts/tfm/public/lm/ec-lmri10.tfm
-INPUT f:/texlive/2021/texmf-dist/fonts/tfm/public/lm/ec-lmr8.tfm
-INPUT f:/texlive/2021/texmf-dist/fonts/tfm/public/lm/ec-lmr6.tfm
 OUTPUT tipe.pdf
 INPUT f:/texlive/2021/texmf-var/fonts/map/pdftex/updmap/pdftex.map
+INPUT f:/texlive/2021/texmf-dist/fonts/tfm/public/lm/ec-lmbx10.tfm
+INPUT f:/texlive/2021/texmf-dist/fonts/tfm/public/lm/ec-lmr8.tfm
+INPUT f:/texlive/2021/texmf-dist/fonts/tfm/public/lm/ec-lmr6.tfm
 INPUT tipe.aux
 INPUT f:/texlive/2021/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc
 INPUT f:/texlive/2021/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc
