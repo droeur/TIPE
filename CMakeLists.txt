@@ -17,18 +17,13 @@ set(LOCAL_PROJECT_VERSION     "0.0.1")
 set(LOCAL_PROJECT_DESCRIPTION "Description")
 
 # Header files (relative to "include" directory)
-set(HEADERS
-    game.hpp
-    hps.hpp
-    player_random.hpp
+file(GLOB HEADERS
+    "include/*.hpp"
 )
 
 # Source files (relative to "src" directory)
-set(SOURCES
-    main.cpp
-    game.cpp
-    hps.cpp
-    player_random.cpp
+file(GLOB SOURCES
+    "src/*.cpp"
 )
 
 # Compiler definitions
@@ -48,9 +43,6 @@ project(${LOCAL_PROJECT_NAME}
         LANGUAGES CXX)
 
 add_executable(${LOCAL_PROJECT_NAME})
-
-list(TRANSFORM HEADERS PREPEND "include/")
-list(TRANSFORM SOURCES PREPEND "src/")
 
 target_include_directories(${LOCAL_PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_sources(${LOCAL_PROJECT_NAME} PRIVATE ${SOURCES} ${HEADERS})

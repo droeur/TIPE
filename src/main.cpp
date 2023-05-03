@@ -1,7 +1,10 @@
 #include <iostream>
 #include <vector>
 #include <rapidcsv.h>
+#include <memory>
 #include "game.hpp"
+#include "player.hpp"
+#include "player_random.hpp"
 
 using namespace std;
 
@@ -26,18 +29,6 @@ int main() {
     }
 
     state s{map};
-    vector<vector<action>(*)(state *s, vector<unit> U)> P;
+    vector<shared_ptr<player>> P;
 
-    // initialize
-    for(int i = 0; i < 2; i++){
-        vector<unit> U;
-        unit u_j{0,0};
-        P.push_back(&player);
-        U.push_back(u_j);
-        s.unitList_add(U);
-    }
-
-    for(time_t t = 0; t < 1000; t++){
-        game(&s, P);
-    }
 }

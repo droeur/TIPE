@@ -1,10 +1,11 @@
 #include <iostream>
 #include "game.hpp"
+#include "state.hpp"
 
 using namespace std;
 
 /*-state-*/
-void state::time_update(){
+void state::time_increment(){
     this->t++;
 }
 time_t state::time_get(){
@@ -18,15 +19,8 @@ vector<vector<unit>> state::unitList_get(){
 }
 
 
-void game(state *s, vector<vector<action>(*)(state *s, vector<unit> U)> P) {
+void game::play(state *s, vector<vector<unitAction>(*)(state *s, vector<unit> U)> P) {
     int index = 0;
-    s->time_update();
-    for(auto p : P){
-        p(s, (s->unitList_get()).at(index));
-    }
+    s->moves_generate();
+    s->moves_make();
 }
-
-vector<action> player(state *s, vector<unit> U){
-    vector<action> m;
-    return m;
-} 
