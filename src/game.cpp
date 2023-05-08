@@ -5,17 +5,17 @@
 using namespace std;
 
 /*-state-*/
-void state::time_increment(){
-    this->t++;
+void state::frame_increment(){
+    this->_frame++;
 }
-time_t state::time_get(){
-    return t;
+frame state::frame_get(){
+    return _frame;
 }
 void state::unitList_add(vector<unit> U){
-    this->U_list.push_back(U);
+    this->_U_list.push_back(U);
 }
 vector<vector<unit>> state::unitList_get(){
-    return this->U_list;
+    return this->_U_list;
 }
 
 

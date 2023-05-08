@@ -8,5 +8,5 @@ public:
     randPlayer (const PlayerID id) {
         _playerID = id;
     }
-    void getMoves(state s, vector<unitAction> & m);
+    void getMoves(state &s, vector<unitAction> & m);
 };

@@ -1,13 +1,14 @@
 #pragma once
 
 #include <vector>
-#include "player.hpp"
-#include "units.hpp"
-#include "state.hpp"
 
 #define NUMBER_OF_PLAYERS 2
 
 using namespace std;
+
+#include "state.hpp"
+#include "player.hpp"
+#include "units.hpp"
 
 class game{
 public:

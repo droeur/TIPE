@@ -1,20 +1,22 @@
 #pragma once
 
 #include <vector>
-#include "player.hpp"
+#include "game.hpp"
 #include "units.hpp"
 #include "map.hpp"
 
 using namespace std;
 
+typedef int frame;
+
 class state {
 public:
     state(vector<vector<tile>> map) {
-        t = 0;
-        this->map = map;
+        _frame = 0;
+        this->_map = map;
     };
-    void time_increment();
-    time_t time_get();
+    void frame_increment();
+    frame frame_get();
 
     void moves_generate();
     void moves_make();
@@ -22,7 +24,7 @@ public:
     void unitList_add(vector<unit> U);
     vector<vector<unit>> unitList_get();
 private:
-    time_t t;
-    vector<vector<unit>> U_list;
-    vector<vector<tile>> map;
+    frame _frame;
+    vector<vector<unit>> _U_list;
+    vector<vector<tile>> _map;
 };

@@ -3,6 +3,7 @@
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
 \usepackage[french]{babel}
+\usepackage{hyperref}
 
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -28,7 +29,7 @@
 On pose les contraintes auxquelles on va répondre :\\
 On travaille sur les IA de jeu de stratégie en "temps réel" appelés RTS. C'est à dire que
 l'IA doit faire des choix à chaque frame du jeu, donc 24 fois par seconde. Ainsi,
-elle est limité en temps : \emph{40ms}. L'espace de jeu est supposé continu (les
+elle est limitée en temps : \emph{40ms}. L'espace de jeu est supposé continu (les
 les coordonnées sont à virgule flottante). Les IA sont appelés les \emph{joueurs}.
 Le but de ce TIPE est d'étudier différents algorithmes pour simuler les joueurs.
 Usuellement, les RTS sont formés de trois éléments : la gestion des ressources,
@@ -36,43 +37,54 @@ la construction de bases et d'armées et le combat contre l'ennemi. Il y a trois
 phases stratégiques : l'attaque, la défense et l'expansion. Dans une partie classique,
 le joueur alterne suivant ces trois phases. Nous n'étudierons ici que l'attaque.
 \\
-Chaque joueur contrôle des unitées qu'il peut bouger et qui peuvent effectuer 3
+Chaque joueur contrôle des unités qu'il peut bouger et qui peuvent effectuer 3
 actions :
 \begin{itemize}
-    \item Bouger l'unitée $a$ à la position $p$
-    \item Attaquer l'unitée $b$ avec l'unité $a$
+    \item Bouger l'unité $a$ à la position $p$
+    \item Attaquer l'unité $b$ avec l'unité $a$
     \item Attendre $t$ secondes
 \end{itemize}
-les unitées on une variable "HP" qui définit leur vie, c'est à dire que lorsqu'elle
-atteint 0, les unitées sont tuées et ne sont plus jouables. Chaque action prends
+les unités on une variable "HP" qui définit leur vie, c'est à dire que lorsqu'elle
+atteint 0, les unités sont tuées et ne sont plus jouables. Chaque action prend
 un certain temps.
-Le joueur gagnant et le dernier a avoir toutes ses unitées en vie.
+Le premier joueur à n'avoir plus de d'unité vivante a perdu.
+
+\section*{References}
+\begin{itemize}
+    \item \href{https://www.researchgate.net/publication/260711387_A_Survey_of_Real-Time_Strategy_Game_AI_Research_and_Competition_in_StarCraft}{A Survey of Real-Time Strategy Game AI Research and Competition in StarCraft}
+    \item \href{https://web.archive.org/web/20130919101338/http://eldar.mathstat.uoguelph.ca:80/dashlock/cig2013/papers/paper_68.pdf}{Portfolio Greedy Search and Simulation for Large-Scale Combat in StarCraft}
+    \item \href{https://storage.kghost.de/cig_proc/full/paper_76.pdf}{Script- and Cluster-based UCT for StarCraft}
+    \item \href{http://www.gameaipro.com/}{Game AI Pro 3}
+    \item \href{https://web.archive.org/web/20190303080330/http://richoux.fr:80/publications/ecgg15_chapter-rts_ai.pdf}{RTS AI: Problems and Techniques}
+    \item \href{https://code.google.com/archive/p/sparcraft/}{Sparcraft}
+    \item \href{https://www.youtube.com/@DaveChurchill}{Dave Churchill, \emph{University of Alberta}}
+\end{itemize}
 \newpage
 
 \section*{Définitions}
 Le framework du jeu est formé de 3 classes et 2 fonctions :
 
 \begin{description}
-    \item[Unitée] $u = (p, hp, t_a, t_m, type)$
+    \item[unité] $u = (p, hp, t_a, t_m, type)$
     \begin{itemize}
-        \item $p = (x,y)$ la position de l'unitée
-        \item $hp$ la vie de l'unitée
-        \item $t_a$ le cooldown avant que l'unitée puisse attaquer
-        \item $t_m$le cooldown avant que l'unitée puisse bouger
-        \item $type$ le type de l'unitée
+        \item $p = (x,y)$ la position de l'unité
+        \item $hp$ la vie de l'unité
+        \item $t_a$ le cooldown avant que l'unité puisse attaquer
+        \item $t_m$le cooldown avant que l'unité puisse bouger
+        \item $type$ le type de l'unité
     \end{itemize} 
     \item[État] $s = (t, U_1, U_2, ..., U_k)$ contenant toutes les informations du jeu nécessaires :
     \begin{itemize}
         \item $t$ le temps
-        \item $U_i = (u_1,...,u_k)$ l'ensemble des unitées controlées par le joueur i
+        \item $U_i = (u_1,...,u_k)$ l'ensemble des unités controlées par le joueur i
     \end{itemize} 
     \item[Mouvement] $m= ( a_1,..., a_k )$ séquence d'actions $a_i = (u, type, cible, t)$ :
     \begin{itemize}
-        \item $u$ l'unitée qui effectue l'action
+        \item $u$ l'unité qui effectue l'action
         \item $type$ le type d'action
     \end{itemize}
-    \item[Joueur] fonction $p(s,U) = m$ prenant l'état du jeu $s$ et la liste des unitées $U$
-    et renvoyant les actions choisies par l'alghorithme
+    \item[Joueur] fonction $p(s,U) = m$ prenant l'état du jeu $s$ et la liste des unités $U$
+    et renvoyant les actions choisies par l'algorithme
     \item[Jeu] fonction $g(s, p_1, p_2, ..., p_k) = s'$ prenant l'état du jeu et
     les fonctions des joueurs et effectuant les actions
 \end{description}
@@ -88,14 +100,14 @@ avec :
     \item $n$ le nombre de fois que le parent a été visité
     \item $n_j$ le nombre de fois que l'enfant a été visité
     \item $\overline{X_j}$ le ratio de victoire : $$\overline{X_j} = \frac{\text{victoires} + \frac{\text{égalités}}{2}}{\text{victoires} + \text{égalités} + \text{défaites}}$$
-    \item $C$ une constante permettant d'ajuster le nombre d'exploration de chaque noed
+    \item $C$ une constante permettant d'ajuster le nombre d'exploration de chaque noeud
 \end{itemize}
 L'algorithme classique UCT n'est pas adapté aux jeux en temps réél. Ainsi nous 
 allons considerer ici une évolution, le UCT Considering Durations (UCTCD) qui 
 permet de gérer faire plusieurs actions en même temps. 
 L'algorithme se déroule en quatres étapes :
 \begin{enumerate}
-    \item On prends deux listes d'actions des algorithmes \emph{NOK-AV} et \emph{Kiter}.
+    \item On prend deux listes d'actions des algorithmes \emph{NOK-AV} et \emph{Kiter}.
 \end{enumerate}
 
 \section{La recherche glouton par portfolio}
@@ -113,7 +125,7 @@ L'algorithme ajoute une fonction et une classe :
 \begin{description}
     \item[Joueur partiel] fonction $pp(s) = m$ joueur pariel \\
     elle est similaire à la fonction joueur $p$ mais au lieu de calculer les actions
-    de toutes les unitées elle calcule celle d'une seule unitée.
+    de toutes les unités elle calcule celle d'une seule unité.
     \item[Portfolio] $P = (pp_1, pp_2, ..., pp_k)$ ensemble des joueurs partiels
 \end{description}
     L'algorithme HPS permet alors de changer un nombre de combibaison exponentiel
@@ -121,20 +133,16 @@ d'action en nombre linéaire d'action.
 
 \section{Test}
 La boucle du jeu est :
-\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=4cm,
-    thick,main node/.style={circle,draw,font=\Large\bfseries}]
-    \node[main node] (1) {1};
-    \node[main node] (2) [below left of=1] {2};
-    \node[main node] (3) [below right of=1] {3};
-  
-    \path
-      (1) edge [loop above] node {0.6} (1)
-          edge [bend right] node {0.4} (2)
-      (2) edge node [below]{1.0} (1)
-      (3) edge [loop below] node {0.8} (3)
-          edge node[right] {0.1} (1)
-          edge node[below] {0.1} (2); 
+\begin{center}
+\begin{tikzpicture}[->, every node/.style={draw, rounded rectangle, fill=white, font=\sffamily}, align=center]
+    \node (1) at (0,0) {Génération du graphe des mouvements};
+    \node (2) at (0,-1) {Appel des fonctions joueurs};
+    \node (3) at (0,-2) {Réalisation des actions};
+
+    \draw (1) -- (2);
+    \draw (2) -- (3);
 \end{tikzpicture}
+\end{center}
 
 On effectue des tests avec un joueur choisissant toutes ses actions de manière aléatoire.
 

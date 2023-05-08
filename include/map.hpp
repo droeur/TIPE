@@ -1,7 +1,6 @@
 #pragma once
 
 #include <vector>
-#include "player.hpp"
 #include "units.hpp"
 
 using namespace std;

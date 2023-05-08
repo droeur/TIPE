@@ -1,10 +1,27 @@
 #pragma once
 
 #include <vector>
-#include "player.hpp"
+#include "game.hpp"
+
 using namespace std;
 
-enum class uType {};
+typedef int frame;
+
+enum class uType {NORMAL};
+
+class unit;
+
+class unitAction{
+public:
+    unitAction() : type(uType::NORMAL), u(NULL), cible(NULL), frameRestantes(0){
+
+    };
+private:
+    unit* u;
+    uType type;
+    unit* cible;
+    frame frameRestantes;
+};
 
 class unit {
 public:
@@ -12,6 +29,9 @@ public:
         this->x = x;
         this->y = y;
     }
+    vector<unitAction> *getPossibleActionVector(){
+        return &possibleActions;
+    };
 //actions
     void move(double x ,double y);
     void attack(unit* b);
@@ -22,12 +42,5 @@ private:
     int hp;
     int t_a, t_m;
     uType type;
-};
-
-class unitAction{
-private:
-    unit u;
-    uType type;
-    unit cible;
-    time_t t;
+    vector<unitAction> possibleActions;
 };
