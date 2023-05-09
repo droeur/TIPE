@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <iostream>
 
 #define NUMBER_OF_PLAYERS 2
 

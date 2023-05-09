@@ -1,26 +1,37 @@
 #pragma once
 
 #include <vector>
-#include "game.hpp"
 
 using namespace std;
 
 typedef int frame;
 
+#define ATTACK_COOLDOWN 24
+
 enum class uType {NORMAL};
+enum class uActionID {ERROR, MOVE, ATTACK, WAIT};
 
 class unit;
+class unitAction;
+#include "game.hpp"
+#include "position.hpp"
+#include "player.hpp"
 
 class unitAction{
 public:
-    unitAction() : type(uType::NORMAL), u(NULL), cible(NULL), frameRestantes(0){
+    unitAction(unit* u, uActionID type, unit* cible, frame frameRestantes) : 
+        _u(u), 
+        _actionType(type), 
+        _cible(cible),
+        _frameRestantes(frameRestantes){
 
     };
-private:
-    unit* u;
-    uType type;
-    unit* cible;
-    frame frameRestantes;
+protected:
+    unit* _u;
+    uActionID _actionType;
+    unit* _cible;
+    frame _frameRestantes;
+    double x,y;
 };
 
 class unit {
@@ -38,6 +49,7 @@ public:
     void wait(time_t t);
 
 private:
+    PlayerID joueur;
     double x,y;
     int hp;
     int t_a, t_m;

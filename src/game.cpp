@@ -1,6 +1,6 @@
 #include <iostream>
-#include "game.hpp"
 #include "state.hpp"
+#include "game.hpp"
 
 using namespace std;
 

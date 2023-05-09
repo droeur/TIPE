@@ -1,9 +1,12 @@
 #pragma once
 
 #include <vector>
-#include "game.hpp"
+
+class state;
+
 #include "units.hpp"
 #include "map.hpp"
+#include "game.hpp"
 
 using namespace std;
 
