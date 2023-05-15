@@ -26,3 +26,4 @@ docs/tipe.fdb_latexmk
 docs/tipe.fls
 docs/tipe.log
 docs/tipe.synctex.gz
+*.out
