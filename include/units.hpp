@@ -48,11 +48,14 @@ public:
     void attack(unit* b);
     void wait(time_t t);
 
+    bool canMove() {return t_a == 0;};
+    bool canAttack() {return t_m == 0;};
+
 private:
     PlayerID joueur;
     double x,y;
     int hp;
-    int t_a, t_m;
+    int t_a, t_m; // attack cooldown and move cooldown
     uType type;
     vector<unitAction> possibleActions;
 };

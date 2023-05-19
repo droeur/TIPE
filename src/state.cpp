@@ -9,7 +9,13 @@ void state::moves_generate(){
         for(unit& u : _U_list[player]){
             vector<unitAction> *actionList = u.getPossibleActionVector();
             if(actionList->empty()){
-                
+                // On switch entre les différentes actions possibles
+                if(u.canAttack()){
+                    ennemyPlayer = game.getEnnemy(player);
+                    for(unit& u : _U_list[ennemyPlayergame]){
+
+                    }
+                }
             }
         }
     }

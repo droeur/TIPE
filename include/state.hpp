@@ -29,5 +29,6 @@ public:
 private:
     frame _frame;
     vector<vector<unit>> _U_list;
+    vector<vector<unitAction>> _P_actions;
     vector<vector<tile>> _map;
 };

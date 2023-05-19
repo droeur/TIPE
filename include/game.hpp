@@ -14,6 +14,9 @@ using namespace std;
 class game{
 public:
     void play(state *s, vector<vector<unitAction>(*)(state *s, vector<unit> U)> P);
+    PlayerID getEnnemy(PlayerID p){
+        return p == 0;
+    };
 private:
     player _players[NUMBER_OF_PLAYERS];
     vector<unitAction> scriptMoves[NUMBER_OF_PLAYERS];
