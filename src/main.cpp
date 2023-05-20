@@ -2,6 +2,7 @@
 #include <vector>
 #include <rapidcsv.h>
 #include <memory>
+#include <GLFW/glfw3.h>
 #include "game.hpp"
 #include "player.hpp"
 #include "player_random.hpp"
@@ -27,8 +28,16 @@ int main() {
         }
         cout << endl;
     }
-
-    state s{map};
-    vector<shared_ptr<player>> P;
-
+    game g;
+    state s{map, &g};
+    vector<vector<unitAction>(*)(state *s, vector<unit> U)> P;
+    unit u1{0,0};
+    unit u2{1,1};
+    vector<unit> unitlist1{u1};
+    vector<unit> unitlist2{u2};
+    s.unitList_add(unitlist1);
+    s.unitList_add(unitlist2);
+    for(int i=0; i < 1000; i++){
+        g.play(&s, P);
+    }
 }

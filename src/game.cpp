@@ -20,7 +20,6 @@ vector<vector<unit>> state::unitList_get(){
 
 
 void game::play(state *s, vector<vector<unitAction>(*)(state *s, vector<unit> U)> P) {
-    int index = 0;
     s->moves_generate();
     s->moves_make();
 }

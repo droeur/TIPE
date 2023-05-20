@@ -14,9 +14,10 @@ typedef int frame;
 
 class state {
 public:
-    state(vector<vector<tile>> map) {
+    state(vector<vector<tile>> map, game* g) {
         _frame = 0;
         this->_map = map;
+        this->g = g;
     };
     void frame_increment();
     frame frame_get();
@@ -29,6 +30,8 @@ public:
 private:
     frame _frame;
     vector<vector<unit>> _U_list;
-    vector<vector<unitAction>> _P_actions;
+    vector<vector<unitAction>> _possibles_actions; //vector of possible actions
+    vector<vector<unitAction>> _choosed_actions; //vector of possible actions
     vector<vector<tile>> _map;
+    game *g;
 };

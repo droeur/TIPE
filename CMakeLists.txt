@@ -56,6 +56,16 @@ set_target_properties(${LOCAL_PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
 ####################
 #   Dependencies   #
 ####################
-set(RAPIDCSV_INCLUDE_DIRS "C:/Users/Laptop/vcpkg/packages/rapidcsv_x86-windows/include")
-find_path(${RAPIDCSV_INCLUDE_DIRS} "rapidcsv.h" HINTS )
-target_include_directories(${LOCAL_PROJECT_NAME} PRIVATE ${RAPIDCSV_INCLUDE_DIRS})
+#rapidcsv pour la map
+add_subdirectory(external/rapidcsv)
+target_include_directories(${LOCAL_PROJECT_NAME} PRIVATE external/rapidcsv/src)
+
+#glfw
+set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+
+add_subdirectory(external/glfw)
+
+target_include_directories(${LOCAL_PROJECT_NAME} PRIVATE external/glfw/include)
+target_link_directories(${LOCAL_PROJECT_NAME} PRIVATE external/glfw/src)
