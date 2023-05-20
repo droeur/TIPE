@@ -12,7 +12,7 @@ set(CMAKE_CXX_STANDARD 17)
 #####################
 
 # Project variables
-set(LOCAL_PROJECT_NAME        "TIPE2")
+set(LOCAL_PROJECT_NAME        "TIPE")
 set(LOCAL_PROJECT_VERSION     "0.0.1")
 set(LOCAL_PROJECT_DESCRIPTION "Description")
 
