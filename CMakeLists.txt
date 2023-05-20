@@ -69,3 +69,6 @@ add_subdirectory(external/glfw)
 
 target_include_directories(${LOCAL_PROJECT_NAME} PRIVATE external/glfw/include)
 target_link_directories(${LOCAL_PROJECT_NAME} PRIVATE external/glfw/src)
+target_link_libraries(${LOCAL_PROJECT_NAME} glfw)
+find_package(OpenGL REQUIRED)
+target_link_libraries(${LOCAL_PROJECT_NAME} OpenGL::GL)

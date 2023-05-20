@@ -51,6 +51,12 @@ public:
     bool canMove() {return t_a == 0;};
     bool canAttack() {return t_m == 0;};
 
+    double getX(){
+        return this->x;
+    }
+    double getY(){
+        return this->y;
+    }
 private:
     PlayerID joueur;
     double x,y;
