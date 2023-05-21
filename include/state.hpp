@@ -27,6 +27,13 @@ public:
 
     void unitList_add(vector<unit> U);
     vector<vector<unit>> unitList_get();
+
+    void fps_set(double f){
+        fps = f;
+    }
+    double fps_get(){
+        return fps;
+    }
 private:
     frame _frame;
     vector<vector<unit>> _U_list;
@@ -34,4 +41,5 @@ private:
     vector<vector<unitAction>> _choosed_actions; //vector of possible actions
     vector<vector<tile>> _map;
     game *g;
+    double fps;
 };
