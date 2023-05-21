@@ -4,3 +4,6 @@
 [submodule "external/rapidcsv"]
 	path = external/rapidcsv
 	url = https://github.com/d99kris/rapidcsv.git
+[submodule "external/SDL"]
+	path = external/SDL
+	url = https://github.com/libsdl-org/SDL.git

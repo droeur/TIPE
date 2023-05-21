@@ -56,9 +56,11 @@ set_target_properties(${LOCAL_PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
 ####################
 #   Dependencies   #
 ####################
+set( BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE )
 #rapidcsv pour la map
 add_subdirectory(external/rapidcsv)
 target_include_directories(${LOCAL_PROJECT_NAME} PRIVATE external/rapidcsv/src)
+
 
 #glfw
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
@@ -72,3 +74,13 @@ target_link_directories(${LOCAL_PROJECT_NAME} PRIVATE external/glfw/src)
 target_link_libraries(${LOCAL_PROJECT_NAME} glfw)
 find_package(OpenGL REQUIRED)
 target_link_libraries(${LOCAL_PROJECT_NAME} OpenGL::GL)
+
+
+#SDL3
+set( BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE )
+set( SDL_LIBC ON CACHE BOOL "" FORCE )
+set( SDL_TEST OFF CACHE BOOL "" FORCE )
+
+add_subdirectory(external/sdl)
+
+target_link_libraries(${LOCAL_PROJECT_NAME} SDL3::SDL3)
