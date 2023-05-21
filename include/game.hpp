@@ -15,7 +15,7 @@ class game;
 
 class game{
 public:
-    void play(state *s, vector<vector<unitAction>(*)(state *s, vector<unit> U)> P);
+    void play(state &s, vector<player*> P);
     PlayerID getEnnemy(PlayerID p){
         return p == 0;
     };

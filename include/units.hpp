@@ -6,7 +6,7 @@ using namespace std;
 
 typedef int frame;
 
-#define ATTACK_COOLDOWN 24
+#define ATTACK_COOLDOWN (frame)24
 
 enum class uType {NORMAL};
 enum class uActionID {ERROR, MOVE, ATTACK, WAIT};
@@ -26,6 +26,9 @@ public:
         _frameRestantes(frameRestantes){
 
     };
+    ~unitAction(){
+        
+    };
 protected:
     unit* _u;
     uActionID _actionType;
@@ -40,8 +43,8 @@ public:
         this->x = x;
         this->y = y;
     }
-    vector<unitAction> *getPossibleActionVector(){
-        return &possibleActions;
+    vector<unitAction> *getActualActionVector(){
+        return &actualActions;
     };
 //actions
     void move(double x ,double y);
@@ -63,5 +66,5 @@ private:
     int hp;
     int t_a, t_m; // attack cooldown and move cooldown
     uType type;
-    vector<unitAction> possibleActions;
+    vector<unitAction> actualActions;
 };

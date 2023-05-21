@@ -36,7 +36,16 @@ int main() {
 
     game g;
     state s{map, &g};
-    vector<vector<unitAction>(*)(state *s, vector<unit> U)> P;
+    vector<player*> P;
+    player *tempPlayer;
+
+    randPlayer player1((PlayerID)0);
+    tempPlayer = &player1;
+    P.push_back(tempPlayer);
+
+    randPlayer player2((PlayerID)1);
+    tempPlayer = &player2;
+    P.push_back(tempPlayer);
     unit u1{0,0};
     unit u2{1,1};
     vector<unit> unitlist1{u1};
@@ -48,7 +57,7 @@ int main() {
     bool quit = false; 
     while(!quit){
         clock_t beginFrame = clock();
-        g.play(&s, P);
+        g.play(s, P);
         quit = game_graphic.update(s);
         clock_t endFrame = clock();
         s.fps_set(1000.0/(endFrame-beginFrame));

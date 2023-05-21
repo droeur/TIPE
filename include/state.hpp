@@ -18,12 +18,20 @@ public:
         _frame = 0;
         this->_map = map;
         this->g = g;
+        vector<unitAction> possibles_actionList1;
+        _possibles_actions.push_back(possibles_actionList1);
+        vector<unitAction> possibles_actionList2;
+        _possibles_actions.push_back(possibles_actionList2);
     };
     void frame_increment();
     frame frame_get();
 
     void moves_generate();
     void moves_make();
+
+    vector<vector<unitAction>> possibles_actions_get(){
+        return _possibles_actions;
+    }
 
     void unitList_add(vector<unit> U);
     vector<vector<unit>> unitList_get();
@@ -34,6 +42,7 @@ public:
     double fps_get(){
         return fps;
     }
+    
 private:
     frame _frame;
     vector<vector<unit>> _U_list;

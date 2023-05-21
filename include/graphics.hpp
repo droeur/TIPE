@@ -55,7 +55,6 @@ class graphic {
                     SDL_RenderFillRect(render, &rect);
                 }
             }
-            cout << s.fps_get() << endl;
             
             SDL_SetRenderDrawColor(render, 0, 0, 0, 255);
             SDL_RenderPresent(render);

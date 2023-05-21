@@ -7,7 +7,12 @@
 
 class player {
 public:
-    void getMoves(state &s, vector<unitAction> & m);
+    virtual void getMoves(state &s, vector<unitAction> &m){
+        cout << "ERROR : base player" << endl;
+    };
+    PlayerID getPlayerID(){
+        return _playerID;
+    };
 protected:
     PlayerID _playerID;
 };

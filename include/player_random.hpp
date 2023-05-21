@@ -3,10 +3,10 @@
 #include "game.hpp"
 #include "player.hpp"
 
-class randPlayer : player {
+class randPlayer : public player {
 public:
     randPlayer (const PlayerID id) {
         _playerID = id;
     }
-    void getMoves(state &s, vector<unitAction> & m);
+    virtual void getMoves(state &s, vector<unitAction> & m);
 };
