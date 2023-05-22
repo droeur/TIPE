@@ -18,10 +18,10 @@ public:
         _frame = 0;
         this->_map = map;
         this->g = g;
-        vector<unitAction> possibles_actionList1;
-        _possibles_actions.push_back(possibles_actionList1);
-        vector<unitAction> possibles_actionList2;
-        _possibles_actions.push_back(possibles_actionList2);
+        vector<vector<unitAction>> possibles_actionList1;
+        _possibles_actions[0] = possibles_actionList1;
+        vector<vector<unitAction>> possibles_actionList2;
+        _possibles_actions[1] = possibles_actionList2;
     };
     void frame_increment();
     frame frame_get();
@@ -29,8 +29,13 @@ public:
     void moves_generate();
     void moves_make();
 
-    vector<vector<unitAction>> possibles_actions_get(){
+    vector<vector<unitAction>>* possibles_actions_get(){
         return _possibles_actions;
+    }
+
+    void choosed_actions_set(vector<unitAction> choosed, PlayerID id){
+        _choosed_actions[id].clear();
+        _choosed_actions[id] = choosed;
     }
 
     void unitList_add(vector<unit> U);
@@ -46,8 +51,8 @@ public:
 private:
     frame _frame;
     vector<vector<unit>> _U_list;
-    vector<vector<unitAction>> _possibles_actions; //vector of possible actions
-    vector<vector<unitAction>> _choosed_actions; //vector of possible actions
+    vector<vector<unitAction>> _possibles_actions[NUMBER_OF_PLAYERS]; //vector of possible actions
+    vector<unitAction> _choosed_actions[NUMBER_OF_PLAYERS]; //vector of possible actions
     vector<vector<tile>> _map;
     game *g;
     double fps;

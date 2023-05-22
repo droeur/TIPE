@@ -5,13 +5,30 @@
 class position{
 public:
     double distance(position p){
-        return sqrt(pow(_x - p._x, 2) + pow(_y - p._y, 2));
+        double x = _x - p._x;
+        double y = _y - p._y;
+        double a;
+        a = pow(x,2) + pow(y,2);
+        a = sqrt(a);
+        return a;
     }
-    double x(){
+    double getX(){
         return _x;
     }
-    double y(){
+    double getY(){
         return _y;
+    }
+    void setX(double x){
+        _x = x;
+    }
+    void setY(double y){
+        _y = y;
+    }
+    void addX(double x){
+        _x += x;
+    }
+    void addY(double y){
+        _y += y;
     }
 protected:
     double _x, _y;

@@ -9,6 +9,9 @@
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
 
+#define RED 249, 137, 137, 255
+#define BLUE 137, 223, 249, 255
+
 class graphic {
     public:
         graphic(){
@@ -44,16 +47,17 @@ class graphic {
             rect.w = 10;
             rect.h = 10;
 
-            SDL_SetRenderDrawColor(render, 255, 255, 255, 255);
-            SDL_RenderFillRect(render, &rect);
 
-
+            SDL_SetRenderDrawColor(render, BLUE);
             for(auto U_list: list_of_U_list){
                 for(auto u:U_list){
-                    rect.x = u.getX()*100;
-                    rect.y = u.getY()*100;
-                    SDL_RenderFillRect(render, &rect);
+                    if(u.getHP() > 0){
+                        rect.x = u.getX();
+                        rect.y = u.getY();
+                        SDL_RenderFillRect(render, &rect);
+                    }
                 }
+                SDL_SetRenderDrawColor(render, RED);
             }
             
             SDL_SetRenderDrawColor(render, 0, 0, 0, 255);

@@ -8,5 +8,5 @@ public:
     randPlayer (const PlayerID id) {
         _playerID = id;
     }
-    virtual void getMoves(state &s, vector<unitAction> & m);
+    virtual vector<unitAction> getMoves(state &s, vector<vector<unitAction>> & possibleActionsVec);
 };

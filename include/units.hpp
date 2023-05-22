@@ -7,6 +7,9 @@ using namespace std;
 typedef int frame;
 
 #define ATTACK_COOLDOWN (frame)24
+#define ATTACK_DISTANCE 15
+
+#define SPEED_FACTOR 0.5
 
 enum class uType {NORMAL};
 enum class uActionID {ERROR, MOVE, ATTACK, WAIT};
@@ -24,47 +27,89 @@ public:
         _actionType(type), 
         _cible(cible),
         _frameRestantes(frameRestantes){
-
     };
     ~unitAction(){
         
     };
+
+    unit* unit_get(){
+        return _u;
+    }
+    uActionID actionType_get(){
+        return _actionType;
+    }
+    unit* targetUnit_get(){
+        return _cible;
+    }
+    position &position_get(){
+        return p;
+    }
 protected:
     unit* _u;
     uActionID _actionType;
     unit* _cible;
     frame _frameRestantes;
-    double x,y;
+    position p;
 };
 
 class unit {
 public:
-    unit(double x, double y){
-        this->x = x;
-        this->y = y;
+    unit(double x, double y, PlayerID id){
+        p.setX(x);
+        p.setY(y);
+        t_a = 0;
+        t_m = 0;
+        actualAction = NULL;
+        joueur = id;
+        hp = 100;
     }
-    vector<unitAction> *getActualActionVector(){
-        return &actualActions;
+    void setActualAction(unitAction *action){
+        actualAction = action;
+    }
+    unitAction *getActualAction(){
+        return actualAction;
     };
 //actions
     void move(double x ,double y);
     void attack(unit* b);
     void wait(time_t t);
 
-    bool canMove() {return t_a == 0;};
-    bool canAttack() {return t_m == 0;};
+    bool canMove() {return t_m == 0 && hp > 0;};
+    bool canAttack() {return t_a == 0 && hp > 0;};
+
+    void update_coolDown(){
+        if(t_m > 0)
+            t_m--;
+        else
+            t_m = 0;
+        if(t_a > 0)
+            t_a--;
+        else
+            t_a = 0;
+    }
+
+    void position_add_vector(double x, double y) {
+        this->p.addX(x);
+        this->p.addY(y);
+    }
 
     double getX(){
-        return this->x;
+        return this->p.getX();
     }
     double getY(){
-        return this->y;
+        return this->p.getY();
+    }
+    position position_get(){
+        return this->p;
+    }
+    int getHP(){
+        return hp;
     }
 private:
     PlayerID joueur;
-    double x,y;
+    position p;
     int hp;
     int t_a, t_m; // attack cooldown and move cooldown
     uType type;
-    vector<unitAction> actualActions;
+    unitAction *actualAction;
 };

@@ -9,6 +9,7 @@ using namespace std;
 
 class game;
 
+#include "types.hpp"
 #include "state.hpp"
 #include "player.hpp"
 #include "units.hpp"
