@@ -3,6 +3,7 @@
 #include <rapidcsv.h>
 #include <memory>
 #include <stdio.h>
+#include <yaml-cpp/yaml.h>
 
 #include "game.hpp"
 #include "player.hpp"
@@ -14,6 +15,19 @@ using namespace std;
 
 
 int main() {
+
+    YAML::Node config = YAML::LoadFile("config.yaml");
+    vector<unit> unitlist1;
+    if (config["player1"]) {
+        for(auto u_yaml:config["player1"]){
+            double x = u_yaml["x"].as<float>();
+            double y = u_yaml["y"].as<float>();
+            unit u{u_yaml["x"].as<double>(), u_yaml["y"].as<double>(), (PlayerID)0, u_yaml["hp"].as<int>()};            
+            unitlist1.push_back(u);
+        }
+    }
+
+
     graphic game_graphic;
     // Load map
     rapidcsv::Document map_doc("map.csv", rapidcsv::LabelParams(-1, -1));
@@ -46,16 +60,13 @@ int main() {
     randPlayer player2((PlayerID)1);
     tempPlayer = &player2;
     P.push_back(tempPlayer);
-    unit u11{300.0,400.0, (PlayerID)0};
-    unit u12{300.0,300.0, (PlayerID)0};
-    unit u13{300.0,200.0, (PlayerID)0};
-    unit u14{300.0,100.0, (PlayerID)0};
-    unit u21{10.0,400.0, (PlayerID)1};
-    unit u22{10.0,300.0, (PlayerID)1};
-    unit u23{10.0,200.0, (PlayerID)1};
-    unit u24{10.0,100.0, (PlayerID)1};
-    vector<unit> unitlist1{u11, u12, u13, u14};
-    vector<unit> unitlist2{u21, u22, u23, u24};
+    unit u11{150.0,0.0, (PlayerID)0, 100};
+    unit u12{0.0,150.0, (PlayerID)0, 100};
+    unit u13{300.0,150.0, (PlayerID)0, 100};
+    unit u14{150.0,300.0, (PlayerID)0, 100};
+    unit u21{150.0,150.0, (PlayerID)1, 100};
+    // vector<unit> unitlist1{u11, u12, u13, u14};
+    vector<unit> unitlist2{u21};
     s.unitList_add(unitlist1);
     s.unitList_add(unitlist2);
 

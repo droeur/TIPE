@@ -84,3 +84,9 @@ set( SDL_TEST OFF CACHE BOOL "" FORCE )
 add_subdirectory(external/sdl)
 
 target_link_libraries(${LOCAL_PROJECT_NAME} SDL3::SDL3)
+
+#YAML-CPP
+add_subdirectory(external/yaml-cpp)
+
+target_include_directories(${LOCAL_PROJECT_NAME} PRIVATE external/yaml-cpp/include)
+target_link_libraries(${LOCAL_PROJECT_NAME} yaml-cpp)

@@ -54,14 +54,14 @@ protected:
 
 class unit {
 public:
-    unit(double x, double y, PlayerID id){
+    unit(double x, double y, PlayerID id, int hp){
         p.setX(x);
         p.setY(y);
         t_a = 0;
         t_m = 0;
         actualAction = NULL;
         joueur = id;
-        hp = 100;
+        this->hp = hp;
     }
     void setActualAction(unitAction *action){
         actualAction = action;
