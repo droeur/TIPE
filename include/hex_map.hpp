@@ -49,7 +49,7 @@ public:
         return _passable;
     }
 
-    int distance(hex_tile a){ // Manhattan distance
+    float distance(hex_tile &a){ // Manhattan distance
         hex_tile temp = *this - a;
         return (abs(temp._q) + abs(temp._r) + abs(temp._s)) / 2;
     }
@@ -85,9 +85,15 @@ protected:
 
 class map_class{
 public:
-    vector<hex_tile> chemin(hex_tile &start, hex_tile &end);
+    vector<hex_tile*> chemin(hex_tile &start, hex_tile &end);
+    hex_tile *get_tile(int q, int r){
+        return &_tiles_map[q][r];
+    }
     void add_column(vector<hex_tile> &col){
         _tiles_map.push_back(col);
+    }
+    vector<vector<hex_tile>> getTilesMap(){
+        return _tiles_map;
     }
 private:
     int _x_size;

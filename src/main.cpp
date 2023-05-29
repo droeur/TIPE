@@ -64,7 +64,11 @@ int main() {
 
 
     hex_tile start{0,0}, end{5,5};
-    // map.chemin(start, end);
+    hex_tile start2{5,5}, end2{2,8};
+    vector<hex_tile*> chemin = map.chemin(start, end);
+    vector<hex_tile*> chemin2 = map.chemin(start2, end2);
+    game_graphic.dessin(s, map, chemin);
+    game_graphic.dessin(s, map, chemin2);
 
 
     //boucle du jeu

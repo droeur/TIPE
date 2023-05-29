@@ -1,5 +1,6 @@
 #include <iostream>
-#include <array>
+#include <queue>
+#include <algorithm>
 #include <assert.h>
 #include <float.h>
 #include "hex_map.hpp"
@@ -12,12 +13,15 @@ public:
     int parentQ = -1;
     int parentR = -1;
     int parentS = -1;
-    float gCost = FLT_MAX;
-    float hCost = FLT_MAX;
-    float fCost = FLT_MAX;
+    float gCost = FLT_MAX; //couts
+    float hCost = FLT_MAX; //heuristique
+    float fCost = FLT_MAX; //g+h
 
-    inline bool operator< (const pathfinding_node &a){
+    bool operator< (const pathfinding_node &a){
         return this->fCost < a.fCost;
+    }
+    bool operator> (const pathfinding_node &a){
+        return this->fCost > a.fCost;
     }
     explicit operator hex_tile(){
         return hex_tile(this->_q, this->_r);
@@ -26,47 +30,65 @@ public:
         return this->_passable;
     }
 };
+class Compare{
+public:
+    bool operator() (pathfinding_node *a, pathfinding_node *b){
+        return a->fCost > b->fCost; 
+    }
+};
 
-vector<hex_tile> map_class::chemin(hex_tile &start, hex_tile &end){
-    vector<hex_tile> vide;
-    vector<pathfinding_node> listeOuverte;
-    bool listeFermee[Q_TAILLE][R_TAILLE];
-    vector<pathfinding_node> listeEnfants;
-    if(end == start)
-        return vide;
-    if(end.passable())
-        return vide;
-    vector<vector<pathfinding_node>> allMap;
-    for(int q = 0; q < Q_TAILLE; q++){
-        for(int r = 0; r < R_TAILLE; r++){
-            pathfinding_node node{q,r,true};
-            allMap[q][r] = node;
-        }
-    }
-    int q = start.q();
-    int r = start.r();
-    allMap[q][r].fCost = 0.0;
-    allMap[q][r].gCost = 0.0;
-    allMap[q][r].hCost = 0.0;
-    allMap[q][r].parentQ = q;
-    allMap[q][r].parentQ = r;
-    listeOuverte.emplace_back(allMap[q][r]);
-    while(!listeOuverte.empty()){
-        pathfinding_node *node;
-        do {
-            float tempMax = FLT_MAX;
-            vector<pathfinding_node>::iterator itNode;
-            //recupere l'element le plus petit
-            for(vector<pathfinding_node>::iterator it = listeOuverte.begin();
-                    it != listeOuverte.end(); it = next(it)){
-                pathfinding_node n = *it;
-                if (n.fCost < tempMax){
-                    tempMax = n.fCost;
-                    node = &n;
+
+vector<hex_tile*> map_class::chemin(hex_tile &start, hex_tile &end){
+    vector<hex_tile*> path;
+    priority_queue<pathfinding_node*, vector<pathfinding_node*>, Compare> listeOuverte;
+    bool listeFermee[Q_TAILLE][R_TAILLE] = {true};
+    pathfinding_node* listeEnfants[Q_TAILLE][R_TAILLE];
+
+    pathfinding_node *depart = new pathfinding_node{start.q(), start.r(), start.passable()};
+    pathfinding_node *arrivee = new pathfinding_node{end.q(), end.r(), end.passable()};
+    pathfinding_node *current_node = NULL;
+    pathfinding_node *temporary_node = NULL;
+    pathfinding_node *children = NULL;
+
+    int index = 0, current_index = 0, children_index = 0;
+    
+    depart->fCost = 0.0;
+    depart->gCost = 0.0;
+    depart->hCost = 0.0;
+    depart->parentQ = depart->q();
+    depart->parentR = depart->r();
+    depart->parentS = depart->s();
+
+    listeOuverte.push(depart);
+
+    while(listeOuverte.size() > 0) {
+        current_node = listeOuverte.top();
+        listeFermee[current_node->q()][current_node->r()] = true;
+        listeEnfants[current_node->q()][current_node->r()] = current_node;
+        listeOuverte.pop();
+        for(int dir = 0; dir < 6; dir++){
+            if(!listeFermee[current_node->voisin(dir).q()][current_node->voisin(dir).r()]){
+                if(current_node->voisin(dir).q() == end.q() && current_node->voisin(dir).r() == end.r()){
+                    path.push_back(&end);
+                    path.push_back(get_tile(current_node->q(), current_node->r()));
+                    while(*current_node != start){
+                        path.push_back(get_tile(current_node->parentQ, current_node->parentR));
+                        current_node = listeEnfants[current_node->parentQ][current_node->parentR];
+                    }
+                    reverse(path.begin(), path.end());
+                    return path;
                 }
+                children = new pathfinding_node{current_node->voisin(dir).q(), current_node->voisin(dir).r(), current_node->voisin(dir).passable()};
+                children->gCost = current_node->gCost + 1.0;
+                children->hCost = children->distance(end);
+                children->fCost = children->hCost + children->gCost;
+                children->parentQ = current_node->q();
+                children->parentR = current_node->r();
+                children->parentS = current_node->s();
+                listeOuverte.push(children);
             }
-            listeOuverte.erase(itNode);
-        } while(node->estValide() == false);
+        }
+        listeFermee[current_node->q()][current_node->r()] = true;
     }
-    return vide;
+    return path;
 }

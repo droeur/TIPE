@@ -5,6 +5,7 @@
 #include <iostream>
 #include <GLFW/glfw3.h>
 #include <SDL3/SDL.h>
+#include "hex_map.hpp"
 
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
@@ -34,7 +35,37 @@ class graphic {
             //Quit SDL subsystems
             SDL_QuitSubSystem(SDL_INIT_VIDEO);
         }
+        void dessin(state &s, map_class &m, vector<hex_tile*> tiles){
+            float dec = 0.5;
+            float previousQ = tiles[0]->q() + dec * tiles[0]->r();
+            float previousR = tiles[0]->r();
 
+            SDL_FRect rect;
+            rect.x = 0;
+            rect.y = 0;
+            rect.w = 10;
+            rect.h = 10;
+
+            SDL_SetRenderDrawColor(render, RED);
+            for(auto col:m.getTilesMap()){
+                for(auto hex:col){
+                    rect.x = (hex.q() + hex.r() * dec)*50.0 - 5.0;
+                    rect.y = (hex.r())*50.0 - 5.0;
+                    SDL_RenderRect(render, &rect);
+                }
+            }
+            SDL_SetRenderDrawColor(render, BLUE);
+            for(auto t:tiles){
+                float q = t->q() + t->r() * dec;
+                float r = t->r();
+                SDL_RenderLine(render, q*50, r*50, previousQ*50, previousR*50);
+                previousQ = q;
+                previousR = r;
+            }
+            SDL_RenderPresent(render);
+            SDL_UpdateWindowSurface(window);
+
+        }
         bool update(state &s){
             vector<vector<unit>> list_of_U_list = s.unitList_get();
             bool quit = false; 
