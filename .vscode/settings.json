@@ -65,6 +65,9 @@
         "mutex": "cpp",
         "thread": "cpp",
         "variant": "cpp",
-        "cinttypes": "cpp"
+        "cinttypes": "cpp",
+        "forward_list": "cpp",
+        "valarray": "cpp",
+        "shared_mutex": "cpp"
     }
 }

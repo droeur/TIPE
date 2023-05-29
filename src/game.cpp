@@ -27,3 +27,4 @@ void game::play(state &s, vector<player*> P) {
     }
     s.moves_make();
 }
+

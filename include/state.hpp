@@ -5,7 +5,7 @@
 class state;
 
 #include "units.hpp"
-#include "map.hpp"
+#include "hex_map.hpp"
 #include "game.hpp"
 
 using namespace std;
@@ -14,7 +14,7 @@ typedef int frame;
 
 class state {
 public:
-    state(vector<vector<tile>> map, game* g) {
+    state(map_class &map, game* g) {
         _frame = 0;
         this->_map = map;
         this->g = g;
@@ -53,7 +53,7 @@ private:
     vector<vector<unit>> _U_list;
     vector<vector<unitAction>> _possibles_actions[NUMBER_OF_PLAYERS]; //vector of possible actions
     vector<unitAction> _choosed_actions[NUMBER_OF_PLAYERS]; //vector of possible actions
-    vector<vector<tile>> _map;
+    map_class _map;
     game *g;
     double fps;
 };
