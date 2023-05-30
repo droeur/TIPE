@@ -69,6 +69,7 @@
         "forward_list": "cpp",
         "valarray": "cpp",
         "shared_mutex": "cpp",
-        "queue": "cpp"
+        "queue": "cpp",
+        "any": "cpp"
     }
 }

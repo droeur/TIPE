@@ -29,10 +29,10 @@ int main() {
     // Load map
     rapidcsv::Document map_doc("map.csv", rapidcsv::LabelParams(-1, -1));
     map_class map;
-    for(int i = 0; i < map_doc.GetColumnCount(); i++){
+    for(int q = 0; q < map_doc.GetColumnCount(); q++){
         vector<hex_tile> column;
-        for(int j = 0; j < map_doc.GetColumn<int>(i).size(); j++) {
-            hex_tile t{i,j};
+        for(int r = 0; r < map_doc.GetColumn<int>(q).size(); r++) {
+            hex_tile t{q-r/2,r};
             column.push_back(t);
         }
         map.add_column(column);
@@ -63,12 +63,12 @@ int main() {
     s.unitList_add(unitlist2);
 
 
-    hex_tile start{0,0}, end{5,5};
+    hex_tile start{0,0}, end{-3,6};
     hex_tile start2{5,5}, end2{2,8};
     vector<hex_tile*> chemin = map.chemin(start, end);
-    vector<hex_tile*> chemin2 = map.chemin(start2, end2);
+    // vector<hex_tile*> chemin2 = map.chemin(start2, end2);
     game_graphic.dessin(s, map, chemin);
-    game_graphic.dessin(s, map, chemin2);
+    // game_graphic.dessin(s, map, chemin2);
 
 
     //boucle du jeu

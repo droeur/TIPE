@@ -35,7 +35,7 @@ class graphic {
             //Quit SDL subsystems
             SDL_QuitSubSystem(SDL_INIT_VIDEO);
         }
-        void dessin(state &s, map_class &m, vector<hex_tile*> tiles){
+        void dessin(state &s, map_class &m, vector<hex_tile*> &tiles){
             float dec = 0.5;
             float previousQ = tiles[0]->q() + dec * tiles[0]->r();
             float previousR = tiles[0]->r();

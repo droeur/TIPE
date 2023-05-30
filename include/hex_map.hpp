@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <vector>
+#include <map>
 
 #define Q_TAILLE 10
 #define R_TAILLE 10
@@ -75,12 +76,25 @@ public:
     int s(){
         return _s;
     }
+    int x(){
+        return _q+_r/2;
+    }
 
 protected:
     int _q = -1;
     int _r = -1;
     int _s = -1;
     bool _passable = false;
+};
+
+class coordinates{
+public:
+    coordinates(int q, int r) : q(q), r(r){};
+    int q;
+    int r;
+    bool operator== (coordinates *a){
+        return a->q == this->q && a->r == this->r;
+    }
 };
 
 class map_class{
@@ -99,4 +113,5 @@ private:
     int _x_size;
     int _y_size;
     vector<vector<hex_tile>> _tiles_map;
+    map<coordinates, hex_tile*> _tiles_hash;
 };
