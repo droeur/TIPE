@@ -66,7 +66,7 @@ public:
     hex_tile voisin(int dir){
         return *this + direction(dir);
     }
-    
+    // coordonnées cube
     int q(){
         return _q;
     }
@@ -76,8 +76,13 @@ public:
     int s(){
         return _s;
     }
+
+    //coordonnées "offset even-r"
     int x(){
-        return _q+_r/2;
+        return _r;
+    }
+    int y(){
+        return _q + (_r + (_r & 1))/2;
     }
 
 protected:
@@ -101,13 +106,19 @@ class map_class{
 public:
     vector<hex_tile*> chemin(hex_tile &start, hex_tile &end);
     hex_tile *get_tile(int q, int r){
-        return &_tiles_map[q][r];
+        cout << q << " " << r << endl;
+        cout << q + (r + (r & 1))/2 << " " << r << endl;
+        assert(q + (r + (r & 1))/2 >= 0 && r >= 0);
+        return &_tiles_map[q + (r + (r & 1))/2][r];
     }
     void add_column(vector<hex_tile> &col){
         _tiles_map.push_back(col);
     }
     vector<vector<hex_tile>> getTilesMap(){
         return _tiles_map;
+    }
+    bool inMap(int q, int r){
+        return q + (r + (r & 1))/2 >= 0 && r >= 0;
     }
 private:
     int _x_size;

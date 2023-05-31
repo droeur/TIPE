@@ -17,6 +17,13 @@ public:
     float hCost = FLT_MAX; //heuristique
     float fCost = FLT_MAX; //g+h
 
+    int parentX(){
+        return parentR;
+    }
+    int parentY(){
+        return parentQ + (parentR + (parentR & 1)) / 2;
+    }
+
     bool operator< (const pathfinding_node &a){
         return this->fCost < a.fCost;
     }
@@ -68,17 +75,18 @@ vector<hex_tile*> map_class::chemin(hex_tile &start, hex_tile &end){
 
     while(listeOuverte.size() > 0) {
         current_node = listeOuverte.top();
-        listeFermee[current_node->q()+current_node->r()/2][current_node->r()] = true;
-        listeEnfants[current_node->q()+current_node->r()/2][current_node->r()] = current_node;
+        listeFermee[current_node->x()][current_node->y()] = true;
+        listeEnfants[current_node->x()][current_node->y()] = current_node;
         listeOuverte.pop();
         for(int dir = 0; dir < 6; dir++){
-            if(!listeFermee[current_node->voisin(dir).q()+current_node->voisin(dir).r()/2][current_node->voisin(dir).r()]){
+            if(inMap(current_node->voisin(dir).q(), current_node->voisin(dir).r()) && !listeFermee[current_node->voisin(dir).x()][current_node->voisin(dir).y()]){
                 if(current_node->voisin(dir).q() == end.q() && current_node->voisin(dir).r() == end.r()){
                     path.push_back(&end);
-                    path.push_back(get_tile(current_node->q() + current_node->r()/2, current_node->r()));
+                    path.push_back(get_tile(current_node->q(), current_node->r()));
                     while(*current_node != start){
-                        path.push_back(get_tile(current_node->parentQ + current_node->parentR/2, current_node->parentR));
-                        current_node = listeEnfants[current_node->parentQ + current_node->parentR/2][current_node->parentR];
+                        hex_tile *t = get_tile(current_node->parentQ, current_node->parentR);
+                        path.push_back(t);
+                        current_node = listeEnfants[current_node->parentX()][current_node->parentY()];
                     }
                     reverse(path.begin(), path.end());
                     return path;
@@ -93,7 +101,7 @@ vector<hex_tile*> map_class::chemin(hex_tile &start, hex_tile &end){
                 listeOuverte.push(children);
             }
         }
-        listeFermee[current_node->q()+current_node->r()/2][current_node->r()] = true;
+        listeFermee[current_node->x()][current_node->y()] = true;
     }
     return path;
 }
