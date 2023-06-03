@@ -75,11 +75,11 @@ vector<hex_tile*> map_class::chemin(hex_tile &start, hex_tile &end){
 
     while(listeOuverte.size() > 0) {
         current_node = listeOuverte.top();
-        listeFermee[current_node->x()][current_node->y()] = true;
-        listeEnfants[current_node->x()][current_node->y()] = current_node;
+        listeFermee[current_node->xIndex()][current_node->yIndex()] = true;
+        listeEnfants[current_node->xIndex()][current_node->yIndex()] = current_node;
         listeOuverte.pop();
         for(int dir = 0; dir < 6; dir++){
-            if(inMap(current_node->voisin(dir).q(), current_node->voisin(dir).r()) && !listeFermee[current_node->voisin(dir).x()][current_node->voisin(dir).y()]){
+            if(inMap(current_node->voisin(dir).q(), current_node->voisin(dir).r()) && get_tile(current_node->voisin(dir).q(), current_node->voisin(dir).r())->passable() && !listeFermee[current_node->voisin(dir).xIndex()][current_node->voisin(dir).yIndex()]){
                 if(current_node->voisin(dir).q() == end.q() && current_node->voisin(dir).r() == end.r()){
                     path.push_back(&end);
                     path.push_back(get_tile(current_node->q(), current_node->r()));
@@ -101,7 +101,7 @@ vector<hex_tile*> map_class::chemin(hex_tile &start, hex_tile &end){
                 listeOuverte.push(children);
             }
         }
-        listeFermee[current_node->x()][current_node->y()] = true;
+        listeFermee[current_node->xIndex()][current_node->yIndex()] = true;
     }
     return path;
 }

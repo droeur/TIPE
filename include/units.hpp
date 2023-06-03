@@ -7,7 +7,7 @@ using namespace std;
 typedef int frame;
 
 #define ATTACK_COOLDOWN (frame)24
-#define ATTACK_DISTANCE 15
+#define ATTACK_DISTANCE 4
 
 #define SPEED_FACTOR 0.5
 
@@ -54,9 +54,9 @@ protected:
 
 class unit {
 public:
-    unit(double x, double y, PlayerID id, int hp){
-        p.setX(x);
-        p.setY(y);
+    unit(double q, double r, PlayerID id, int hp){
+        p.setQ(q);
+        p.setR(r);
         t_a = 0;
         t_m = 0;
         actualAction = NULL;
@@ -88,16 +88,16 @@ public:
             t_a = 0;
     }
 
-    void position_add_vector(double x, double y) {
-        this->p.addX(x);
-        this->p.addY(y);
+    void position_set(int q, int r) {
+        this->p.setQ(q);
+        this->p.setR(r);
     }
 
-    double getX(){
-        return this->p.getX();
+    double getQ(){
+        return this->p.getQ();
     }
-    double getY(){
-        return this->p.getY();
+    double getR(){
+        return this->p.getR();
     }
     position position_get(){
         return this->p;

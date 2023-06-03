@@ -6,8 +6,8 @@
 #include <vector>
 #include <map>
 
-#define Q_TAILLE 10
-#define R_TAILLE 10
+#define Q_TAILLE 64
+#define R_TAILLE 64
 
 using namespace std;
 /**
@@ -19,16 +19,16 @@ using namespace std;
 
 class hex_tile {
 public:
-    hex_tile(int q, int r) : _q(q), _r(r), _s(-q-r){
+    hex_tile(int q, int r) : _q(q), _r(r), _s(-q-r), _xGraphic(q + ((double)r)/2){
 
     }
-    hex_tile(int q, int r, int s) : _q(q), _r(r), _s(s){
+    hex_tile(int q, int r, int s) : _q(q), _r(r), _s(s), _xGraphic(q + ((double)r)/2){
 
     }
-    hex_tile(int q, int r, int s, bool passable) : _q(q), _r(r), _s(s), _passable(passable){
+    hex_tile(int q, int r, int s, bool passable) : _q(q), _r(r), _s(s), _xGraphic(q + ((double)r)/2), _passable(passable){
 
     }
-    hex_tile(int q, int r, bool passable) : _q(q), _r(r), _s(-q-r), _passable(passable){
+    hex_tile(int q, int r, bool passable) : _q(q), _r(r), _s(-q-r), _xGraphic(q + ((double)r)/2), _passable(passable){
 
     }
     bool operator== (hex_tile a) {
@@ -50,8 +50,12 @@ public:
         return _passable;
     }
 
-    float distance(hex_tile &a){ // Manhattan distance
+    float distance(hex_tile &a){
         hex_tile temp = *this - a;
+        return (abs(temp._q) + abs(temp._r) + abs(temp._s)) / 2;
+    }
+    float distance(hex_tile *a){
+        hex_tile temp = *this - *a;
         return (abs(temp._q) + abs(temp._r) + abs(temp._s)) / 2;
     }
 
@@ -78,11 +82,17 @@ public:
     }
 
     //coordonnées "offset even-r"
-    int x(){
+    int xIndex(){
         return _r;
     }
-    int y(){
+    int yIndex(){
         return _q + (_r + (_r & 1))/2;
+    }
+    double xGraphic(){
+        return _xGraphic;
+    }
+    double yGraphic(){
+        return _r;
     }
 
 protected:
@@ -90,6 +100,7 @@ protected:
     int _r = -1;
     int _s = -1;
     bool _passable = false;
+    double _xGraphic;
 };
 
 class coordinates{
@@ -106,9 +117,6 @@ class map_class{
 public:
     vector<hex_tile*> chemin(hex_tile &start, hex_tile &end);
     hex_tile *get_tile(int q, int r){
-        cout << q << " " << r << endl;
-        cout << q + (r + (r & 1))/2 << " " << r << endl;
-        assert(q + (r + (r & 1))/2 >= 0 && r >= 0);
         return &_tiles_map[q + (r + (r & 1))/2][r];
     }
     void add_column(vector<hex_tile> &col){

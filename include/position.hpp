@@ -1,35 +1,31 @@
 #pragma once
 
 #include <math.h>
+#include "hex_map.hpp"
 
 class position{
 public:
-    double distance(position p){
-        double x = _x - p._x;
-        double y = _y - p._y;
-        double a;
-        a = pow(x,2) + pow(y,2);
-        a = sqrt(a);
-        return a;
+    int distance(position p, map_class *map){
+        return map->get_tile(_q, _r)->distance(map->get_tile(p._q, p._r));
     }
-    double getX(){
-        return _x;
+    int getQ(){
+        return _q;
     }
-    double getY(){
-        return _y;
+    int getR(){
+        return _r;
     }
-    void setX(double x){
-        _x = x;
+    void setQ(int q){
+        _q = q;
     }
-    void setY(double y){
-        _y = y;
+    void setR(int r){
+        _r = r;
     }
-    void addX(double x){
-        _x += x;
+    void addQ(int q){
+        _q += q;
     }
-    void addY(double y){
-        _y += y;
+    void addR(int r){
+        _r += r;
     }
 protected:
-    double _x, _y;
+    int _q, _r;
 };

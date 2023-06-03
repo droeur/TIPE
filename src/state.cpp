@@ -45,18 +45,15 @@ void state::moves_make(){
                 case uActionID::ATTACK:
                     {
                         unit *ennemyU = action.targetUnit_get();
-                        double distance = u->position_get().distance(ennemyU->position_get());
+                        double distance = u->position_get().distance(ennemyU->position_get(), &_map);
                         if(ATTACK_DISTANCE > distance){
                             u->attack(ennemyU);
                             _choosed_actions[player].erase(_choosed_actions[player].begin() + action_index);
                         } else {
-                            double unitX = u->position_get().getX();
-                            double unitY = u->position_get().getY();
-                            double ennemyX = ennemyU->position_get().getX();
-                            double ennemyY = ennemyU->position_get().getY();
-                            double x = SPEED_FACTOR * (ennemyX - unitX)/distance;
-                            double y = SPEED_FACTOR * (ennemyY - unitY)/distance;
-                            u->position_add_vector(x, y);
+                            hex_tile start{u->position_get().getQ(), u->position_get().getR()};
+                            hex_tile end{ennemyU->position_get().getQ(), ennemyU->position_get().getR()};
+                            vector<hex_tile*> chemin = _map.chemin(start, end);
+                            u->position_set(chemin[1]->q(), chemin[1]->r());
                         }
                     }
                     break;

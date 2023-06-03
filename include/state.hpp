@@ -47,7 +47,9 @@ public:
     double fps_get(){
         return fps;
     }
-    
+    map_class *map_get(){
+        return &_map;
+    }
 private:
     frame _frame;
     vector<vector<unit>> _U_list;
