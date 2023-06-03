@@ -37,6 +37,9 @@ public:
         _choosed_actions[id].clear();
         _choosed_actions[id] = choosed;
     }
+    vector<unitAction> choosed_actions_get(PlayerID id){
+        return _choosed_actions[id];
+    }
 
     void unitList_add(vector<unit> U);
     vector<vector<unit>> unitList_get();

@@ -94,14 +94,14 @@ class graphic {
             SDL_FRect map_tile_rect;
             map_tile_rect.x = 0;
             map_tile_rect.y = 0;
-            map_tile_rect.w = 1 * ZOOM;
-            map_tile_rect.h = 1 * ZOOM;
+            map_tile_rect.w = 1 * zoom;
+            map_tile_rect.h = 1 * zoom;
 
             SDL_SetRenderDrawColor(render, RED);
             for(auto col : s.map_get()->getTilesMap()){
                 for(auto hex:col){
-                    map_tile_rect.x = (hex.xGraphic() - 0.5)*ZOOM;
-                    map_tile_rect.y = (hex.yGraphic() - 0.5)*ZOOM;
+                    map_tile_rect.x = (hex.xGraphic() - 0.5)*zoom + x_shift*zoom;
+                    map_tile_rect.y = (hex.yGraphic() - 0.5)*zoom + y_shift*zoom;
                     if(hex.passable())
                         SDL_SetRenderDrawColor(render, GREEN);
                     else
@@ -117,12 +117,36 @@ class graphic {
                 for(auto u:U_list){
                     if(u.getHP() > 0){
                         tile = s.map_get()->get_tile(u.getQ(),u.getR());
-                        rect.x = tile->xGraphic()*ZOOM-1.5;
-                        rect.y = tile->yGraphic()*ZOOM-1.5;
+                        rect.x = tile->xGraphic()*zoom-1.5 + x_shift*zoom;
+                        rect.y = tile->yGraphic()*zoom-1.5 + y_shift*zoom;
                         SDL_RenderFillRect(render, &rect);
                     }
                 }
                 SDL_SetRenderDrawColor(render, RED);
+            }
+            for(int player = 0; player < NUMBER_OF_PLAYERS; player++){
+                if(s.choosed_actions_get((PlayerID)player).size()){
+                    int action_index = 0;
+                    for(unitAction action:s.choosed_actions_get((PlayerID)player)){
+                        unit *u = action.unit_get();
+                        switch(action.actionType_get()){
+                        case uActionID::ATTACK:
+                            {
+                                unit *ennemyU = action.targetUnit_get();
+                                double distance = u->position_get().distance(ennemyU->position_get(), s.map_get());
+                                SDL_RenderLine( render,
+                                                u->position_get().getXGraphic(s.map_get()),
+                                                u->position_get().getYGraphic(s.map_get()),
+                                                ennemyU->position_get().getXGraphic(s.map_get()),
+                                                ennemyU->position_get().getYGraphic(s.map_get())); 
+                            }
+                            break;
+                        default:
+                            cout << "Error : invalid action to do in non-zero vec" << endl;
+                        }
+                        action_index++;
+                    }
+                }
             }
             
             SDL_SetRenderDrawColor(render, 0, 0, 0, 255);
@@ -130,7 +154,26 @@ class graphic {
             SDL_UpdateWindowSurface(window);
             while( SDL_PollEvent(&e) ){ 
                     if( e.type == SDL_EVENT_QUIT ) 
-                        quit = true; 
+                        quit = true;
+                    if( e.type == SDL_EVENT_MOUSE_WHEEL){
+                        if(e.wheel.y > 0){
+                            zoom++;
+                        }else if(e.wheel.y < 0){
+                            if(zoom-1 > 0)
+                                zoom--;
+                        }
+                    }
+                    if( e.type == SDL_EVENT_KEY_DOWN ){
+                        if(e.key.keysym.sym == SDLK_RIGHT){
+                            x_shift--;
+                        }else if(e.key.keysym.sym == SDLK_LEFT){
+                            x_shift++;
+                        }else if(e.key.keysym.sym == SDLK_UP){
+                            y_shift++;
+                        }else if(e.key.keysym.sym == SDLK_DOWN){
+                            y_shift--;
+                        }
+                    }
             }
             return quit;
         }
@@ -139,4 +182,7 @@ class graphic {
         SDL_Window* window;
         SDL_Surface* screenSurface;
         SDL_Renderer *render;
+        int zoom = 5;
+        int x_shift = 0;
+        int y_shift = 0;
 };

@@ -8,6 +8,12 @@ public:
     int distance(position p, map_class *map){
         return map->get_tile(_q, _r)->distance(map->get_tile(p._q, p._r));
     }
+    int getXGraphic(map_class *map){
+        return map->get_tile(_q, _r)->xGraphic();
+    }
+    int getYGraphic(map_class *map){
+        return map->get_tile(_q, _r)->yGraphic();
+    }
     int getQ(){
         return _q;
     }
