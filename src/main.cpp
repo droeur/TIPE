@@ -61,18 +61,19 @@ int main(int argc, char *argv[]) {
 
     if(argc > 1){
         test_func(map, s, game_graphic);
-    }
+    } else {
 
-    //boucle du jeu
-    bool quit = false; 
-    while(!quit){
-        uint64_t beginFrame = SDL_GetPerformanceCounter();
-        g.play(s, P);
-        quit = game_graphic.update(s);
-        uint64_t endFrame = SDL_GetPerformanceCounter();
-        double elapsed = (endFrame - beginFrame) / (double)SDL_GetPerformanceFrequency();
-        s.fps_set(1.0/elapsed);
-        // cout << s.fps_get() << endl;
+        //boucle du jeu
+        bool quit = false; 
+        while(!quit){
+            uint64_t beginFrame = SDL_GetPerformanceCounter();
+            g.play(s, P);
+            quit = game_graphic.update(s);
+            uint64_t endFrame = SDL_GetPerformanceCounter();
+            double elapsed = (endFrame - beginFrame) / (double)SDL_GetPerformanceFrequency();
+            s.fps_set(1.0/elapsed);
+            // cout << s.fps_get() << endl;
+        }
     }
     game_graphic.quit();
     return EXIT_SUCCESS;
