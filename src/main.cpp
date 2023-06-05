@@ -16,7 +16,7 @@ using namespace std;
 #include "graphics.hpp"
 
 
-int main() {
+int main(int argc, char *argv[]) {
     YAML::Node config = YAML::LoadFile("config.yaml");
     if (config["player1"]) {
         for(YAML::const_iterator u_yaml=config.begin();u_yaml != config.end();++u_yaml){
@@ -59,14 +59,9 @@ int main() {
     s.unitList_add(unitlist1);
     s.unitList_add(unitlist2);
 
-
-    hex_tile start{1,0}, end{0,25};
-    hex_tile start2{5,5}, end2{2,9};
-    vector<hex_tile*> chemin = map.chemin(start, end);
-    // vector<hex_tile*> chemin2 = map.chemin(start2, end2);
-    game_graphic.dessin(s, map, chemin);
-    // game_graphic.dessin(s, map, chemin2);
-
+    if(argc > 1){
+        test_func(map, s, game_graphic);
+    }
 
     //boucle du jeu
     bool quit = false; 
@@ -77,7 +72,7 @@ int main() {
         uint64_t endFrame = SDL_GetPerformanceCounter();
         double elapsed = (endFrame - beginFrame) / (double)SDL_GetPerformanceFrequency();
         s.fps_set(1.0/elapsed);
-        cout << s.fps_get() << endl;
+        // cout << s.fps_get() << endl;
     }
     game_graphic.quit();
     return EXIT_SUCCESS;

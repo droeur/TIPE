@@ -1,8 +1,34 @@
 #include <iostream>
+#include <assert.h>
 #include "state.hpp"
 #include "game.hpp"
 #include "player.hpp"
 #include "test.hpp"
 #include "hex_map.hpp"
+#include "graphics.hpp"
 
 using namespace std;
+
+void test_func(map_class &map, state &s, graphic &game_graphic){
+    hex_tile start{1,0}, end{0,5};
+    hex_tile start2{0,0}, end2{64,64};
+    vector<hex_tile*> chemin = map.chemin(start, end);
+    vector<hex_tile*> chemin2 = map.chemin(start2, end2);
+    vector<hex_tile*> bon_chemin{   new hex_tile{1,0},
+                                    new hex_tile{2,0},
+                                    new hex_tile{2,1},
+                                    new hex_tile{1,2},
+                                    new hex_tile{0,3},
+                                    new hex_tile{0,4},
+                                    new hex_tile{0,5}};
+    assert(chemin.size() == bon_chemin.size());
+    bool bon = true;
+    for(int i = 0; i < chemin.size(); i++){
+        bon = bon && (*chemin[i] == *bon_chemin[i]);
+    }
+    assert(bon);
+    assert(chemin2.empty());
+    game_graphic.dessin(s, map, chemin);
+    game_graphic.dessin(s, map, chemin2);
+    cout << "tests bons !" << endl;
+}

@@ -85,6 +85,10 @@ add_subdirectory(external/sdl)
 
 target_link_libraries(${LOCAL_PROJECT_NAME} SDL3::SDL3)
 
+add_subdirectory(external/sdl-image)
+
+target_link_libraries(${LOCAL_PROJECT_NAME} SDL3_image)
+
 #YAML-CPP
 add_subdirectory(external/yaml-cpp)
 
