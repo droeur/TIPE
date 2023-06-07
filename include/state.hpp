@@ -14,7 +14,7 @@ typedef int frame;
 
 class state {
 public:
-    state(map_class &map, game* g) {
+    state(map_class* map, game* g) {
         _frame = 0;
         this->_map = map;
         this->g = g;
@@ -51,14 +51,14 @@ public:
         return fps;
     }
     map_class *map_get(){
-        return &_map;
+        return _map;
     }
 private:
     frame _frame;
     vector<vector<unit>> _U_list;
     vector<vector<unitAction>> _possibles_actions[NUMBER_OF_PLAYERS]; //vector of possible actions
     vector<unitAction> _choosed_actions[NUMBER_OF_PLAYERS]; //vector of possible actions
-    map_class _map;
+    map_class *_map;
     game *g;
     double fps;
 };

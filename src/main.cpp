@@ -1,47 +1,35 @@
 #include <iostream>
 #include <vector>
-#include <rapidcsv.h>
 #include <memory>
 #include <stdio.h>
-#include <yaml-cpp/yaml.h>
 
 #include "game.hpp"
 #include "hex_map.hpp"
 #include "player.hpp"
 #include "player_random.hpp"
-#include "test.hpp"
+#include "parser.hpp"
+
 
 using namespace std;
 
 #include "graphics.hpp"
-
+#include "test.hpp"
 
 int main(int argc, char *argv[]) {
-    YAML::Node config = YAML::LoadFile("config.yaml");
-    if (config["player1"]) {
-        for(YAML::const_iterator u_yaml=config.begin();u_yaml != config.end();++u_yaml){
-            
-        }
-    }
+    // On lit le fichier parametres
+    settings_parse();
 
-    hex_tile tile();
+    // On lit et cree la carte
+    map_class map{"map.csv"};
+
+    // Initialisation des graphismes SDL
     graphic game_graphic;
-    // Load map
-    rapidcsv::Document map_doc("map.csv", rapidcsv::LabelParams(-1, -1));
-    map_class map;
-    for(int q = 0; q < map_doc.GetColumnCount(); q++){
-        vector<hex_tile> column;
-        for(int r = 0; r < map_doc.GetColumn<int>(q).size(); r++) {
-            bool passable = map_doc.GetColumn<int>(q).at(r) != 0;
-            hex_tile t{q-(r + (r & 1))/2,r,passable};
-            column.push_back(t);
-        }
-        map.add_column(column);
-    }
 
-
+    // Classes jeu et etat
     game g;
-    state s{map, &g};
+    state s{&map, &g};
+
+    // TODO: partie temporaire pour creer les unitees et les joueurs
     vector<player*> P;
     player *tempPlayer;
 

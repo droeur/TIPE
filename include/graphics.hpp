@@ -104,8 +104,6 @@ public:
         rect.w = 3;
         rect.h = 3;
 
-        float dec = 0.5;
-
         SDL_FRect map_tile_rect[Q_TAILLE][R_TAILLE];
 
         SDL_SetRenderDrawColor(render, RED);
@@ -148,7 +146,6 @@ public:
                     case uActionID::ATTACK:
                         {
                             unit *ennemyU = action.targetUnit_get();
-                            double distance = u->position_get().distance(ennemyU->position_get(), s.map_get());
                             SDL_RenderLine( render,
                                             u->position_get().getXGraphic(s.map_get()),
                                             u->position_get().getYGraphic(s.map_get()),

@@ -23,7 +23,7 @@ void test_func(map_class &map, state &s, graphic &game_graphic){
                                     new hex_tile{0,5}};
     assert(chemin.size() == bon_chemin.size());
     bool bon = true;
-    for(int i = 0; i < chemin.size(); i++){
+    for(unsigned int i = 0; i < chemin.size(); i++){
         bon = bon && (*chemin[i] == *bon_chemin[i]);
     }
     assert(bon);
