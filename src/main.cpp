@@ -10,6 +10,7 @@
 #include "player.hpp"
 #include "player_random.hpp"
 #include "test.hpp"
+#include "food.hpp"
 
 using namespace std;
 
@@ -53,8 +54,9 @@ int main(int argc, char *argv[]) {
     tempPlayer = &player2;
     P.push_back(tempPlayer);
     unit u11{0, 0, (PlayerID)0, 100};
+    unit u12{4, 5, (PlayerID)0, 100};
     unit u21{0, 20, (PlayerID)1, 100};
-    vector<unit> unitlist1{u11};
+    vector<unit> unitlist1{u11, u12};
     vector<unit> unitlist2{u21};
     s.unitList_add(unitlist1);
     s.unitList_add(unitlist2);
@@ -72,6 +74,8 @@ int main(int argc, char *argv[]) {
             uint64_t endFrame = SDL_GetPerformanceCounter();
             double elapsed = (endFrame - beginFrame) / (double)SDL_GetPerformanceFrequency();
             s.fps_set(1.0/elapsed);
+            cout << game_graphic.getMouseQ() << " ";
+            cout << game_graphic.getMouseR() << endl;
             // cout << s.fps_get() << endl;
         }
     }
