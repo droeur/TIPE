@@ -52,12 +52,8 @@ vector<hex_tile*> map_class::chemin(hex_tile &start, hex_tile &end){
     pathfinding_node* listeEnfants[Q_TAILLE][R_TAILLE];
 
     pathfinding_node *depart = new pathfinding_node{start.q(), start.r(), start.passable()};
-    pathfinding_node *arrivee = new pathfinding_node{end.q(), end.r(), end.passable()};
     pathfinding_node *current_node = NULL;
-    pathfinding_node *temporary_node = NULL;
     pathfinding_node *children = NULL;
-
-    int index = 0, current_index = 0, children_index = 0;
     
     if(start == end){
         path.push_back(&start);

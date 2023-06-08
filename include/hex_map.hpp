@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <vector>
-#include <map>
+#include <rapidcsv.h>
 
 #define Q_TAILLE 64
 #define R_TAILLE 64
@@ -25,10 +25,10 @@ public:
     hex_tile(int q, int r, int s) : _q(q), _r(r), _s(s), _xGraphic(q + ((double)r)/2){
 
     }
-    hex_tile(int q, int r, int s, bool passable) : _q(q), _r(r), _s(s), _xGraphic(q + ((double)r)/2), _passable(passable){
+    hex_tile(int q, int r, int s, bool passable) : _q(q), _r(r), _s(s), _passable(passable), _xGraphic(q + ((double)r)/2){
 
     }
-    hex_tile(int q, int r, bool passable) : _q(q), _r(r), _s(-q-r), _xGraphic(q + ((double)r)/2), _passable(passable){
+    hex_tile(int q, int r, bool passable) : _q(q), _r(r), _s(-q-r), _passable(passable), _xGraphic(q + ((double)r)/2){
 
     }
     bool operator== (hex_tile a) {
@@ -115,6 +115,18 @@ public:
 
 class map_class{
 public:
+    map_class(string file_name){
+        rapidcsv::Document map_doc(file_name, rapidcsv::LabelParams(-1, -1));
+        for(int q = 0; (unsigned int)q < map_doc.GetColumnCount(); q++){
+            vector<hex_tile> column;
+            for(int r = 0; (unsigned int)r < map_doc.GetColumn<int>(q).size(); r++) {
+                bool passable = map_doc.GetColumn<int>(q).at(r) != 0;
+                hex_tile t{q-(r + (r & 1))/2,r,passable};
+                column.push_back(t);
+            }
+            this->add_column(column);
+        }
+    };
     vector<hex_tile*> chemin(hex_tile &start, hex_tile &end);
     hex_tile *get_tile(int q, int r){
         return &_tiles_map[q + (r + (r & 1))/2][r];
