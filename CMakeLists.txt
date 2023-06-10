@@ -32,7 +32,7 @@ set(DEFINES
 
 # Compiler options
 set(OPTIONS
-    -Wall -Wpedantic
+    -Wall
 )
 
 # Project setup
@@ -40,6 +40,8 @@ project(${LOCAL_PROJECT_NAME}
         VERSION ${LOCAL_PROJECT_VERSION}
         DESCRIPTION ${LOCAL_PROJECT_DESCRIPTION}
         LANGUAGES CXX)
+
+include(${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists.txt.user)
 
 add_executable(${LOCAL_PROJECT_NAME})
 

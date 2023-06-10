@@ -18,6 +18,9 @@ void state::unitList_add(vector<unit> U){
 vector<vector<unit>> state::unitList_get(){
     return this->_U_list;
 }
+void state::unitList_append(unit &u, PlayerID joueur){
+    return this->_U_list[(int)joueur].push_back(u);
+}
 
 
 void game::play(state &s, vector<player*> P) {

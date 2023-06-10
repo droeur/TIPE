@@ -43,6 +43,7 @@ public:
 
     void unitList_add(vector<unit> U);
     vector<vector<unit>> unitList_get();
+    void unitList_append(unit &u, PlayerID joueur);
 
     void fps_set(double f){
         fps = f;

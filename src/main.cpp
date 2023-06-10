@@ -62,8 +62,6 @@ int main(int argc, char *argv[]) {
             uint64_t endFrame = SDL_GetPerformanceCounter();
             double elapsed = (endFrame - beginFrame) / (double)SDL_GetPerformanceFrequency();
             s.fps_set(1.0/elapsed);
-            cout << game_graphic.getMouseQ() << " ";
-            cout << game_graphic.getMouseR() << endl;
             // cout << s.fps_get() << endl;
         }
     }

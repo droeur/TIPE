@@ -68,8 +68,8 @@ vector<hex_tile*> map_class::chemin(hex_tile &start, hex_tile &end){
     depart->parentS = depart->s();
 
     listeOuverte.push(depart);
-
-    while(listeOuverte.size() > 0) {
+    int i = 0;
+    while(listeOuverte.size() > 0 && i < MAX_ASTAR_DEPTH) {
         current_node = listeOuverte.top();
         listeFermee[current_node->xIndex()][current_node->yIndex()] = true;
         listeEnfants[current_node->xIndex()][current_node->yIndex()] = current_node;
@@ -98,6 +98,7 @@ vector<hex_tile*> map_class::chemin(hex_tile &start, hex_tile &end){
             }
         }
         listeFermee[current_node->xIndex()][current_node->yIndex()] = true;
+        i++;
     }
     return path;
 }

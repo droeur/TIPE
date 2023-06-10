@@ -52,10 +52,10 @@ public:
     bool update(state &s);
 
     int getMouseQ(){
-        return ((sqrt(3)/3)*xMouse - (1.0/3)*yMouse)/(zoom*2);
+        return xMouse/zoom - yMouse/(zoom*HEX_HEIGHT_COEFF*2) - y_shift/(HEX_HEIGHT_COEFF*2) - x_shift/zoom + 1;
     }
     int getMouseR(){
-        return (2.0/3)*(yMouse/(zoom*2));
+        return yMouse/(zoom*HEX_HEIGHT_COEFF) - 0.5 - y_shift/HEX_HEIGHT_COEFF;
     }
 private:
     SDL_Window* window;

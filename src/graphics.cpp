@@ -29,22 +29,22 @@ bool graphic::update(state &s){
     unitRect.w = 0.5*zoom;
     unitRect.h = 0.5*zoom;
 
-    float dec = 0.5;
-
     SDL_FRect map_tile_rect[Q_TAILLE][R_TAILLE];
 
     SDL_SetRenderDrawColor(render, RED);
     int x = 0,y = 0;
     for(auto col : s.map_get()->getTilesMap()){
         for(auto hex:col){
-            map_tile_rect[x][y].x = (hex.xGraphic() - 0.5)*zoom + x_shift*zoom;
-            map_tile_rect[x][y].y = (hex.yGraphic() - 0.5)*HEX_HEIGHT_COEFF*zoom + y_shift*zoom;
-            map_tile_rect[x][y].w = 1 * zoom;
-            map_tile_rect[x][y].h = 1 * zoom;
-            if(hex.passable())
-                SDL_RenderTexture(render, hexa_passable_texture, NULL, &map_tile_rect[x][y]);
-            else
-                SDL_RenderTexture(render, hexa_blocked_texture, NULL, &map_tile_rect[x][y]);
+            if(hex.q() != getMouseQ() || hex.r() != getMouseR()){
+                map_tile_rect[x][y].x = (hex.xGraphic() - 0.5)*zoom + x_shift*zoom;
+                map_tile_rect[x][y].y = (hex.yGraphic() - 0.5)*HEX_HEIGHT_COEFF*zoom + y_shift*zoom;
+                map_tile_rect[x][y].w = 1 * zoom;
+                map_tile_rect[x][y].h = 1 * zoom;
+                if(hex.passable())
+                    SDL_RenderTexture(render, hexa_passable_texture, NULL, &map_tile_rect[x][y]);
+                else
+                    SDL_RenderTexture(render, hexa_blocked_texture, NULL, &map_tile_rect[x][y]);
+            }
             y++;
         }
         x++;
@@ -57,7 +57,7 @@ bool graphic::update(state &s){
         for(auto u:U_list){
             if(u.getHP() > 0){
                 tile = s.map_get()->get_tile(u.getQ(),u.getR());
-                unitRect.x = (tile->xGraphic())*zoom  - unitRect.w/2 + x_shift*zoom;
+                unitRect.x = (tile->xGraphic())* zoom  - unitRect.w/2 + x_shift*zoom;
                 unitRect.y = (tile->yGraphic() * HEX_HEIGHT_COEFF) * zoom  - unitRect.h/2 + y_shift*zoom;
                 SDL_RenderFillRect(render, &unitRect);
             }
@@ -73,7 +73,6 @@ bool graphic::update(state &s){
                 case uActionID::ATTACK:
                     {
                         unit *ennemyU = action.targetUnit_get();
-                        double distance = u->position_get().distance(ennemyU->position_get(), s.map_get());
                         SDL_RenderLine( render,
                                         u->position_get().getXGraphic(s.map_get()),
                                         u->position_get().getYGraphic(s.map_get()),
@@ -116,6 +115,18 @@ bool graphic::update(state &s){
         }
         if( e.type == SDL_EVENT_MOUSE_MOTION ){
             SDL_GetGlobalMouseState(&xMouse,&yMouse);
+        }
+        if( e.type == SDL_EVENT_MOUSE_BUTTON_DOWN ){
+            if(e.button.button == SDL_BUTTON_LEFT && s.map_get()->inMap(getMouseQ(), getMouseR()) && s.map_get()->passable(getMouseQ(), getMouseR())){
+                unit u{getMouseQ(), getMouseR(), (PlayerID)0, 100};
+                cout << getMouseQ() << " " << getMouseR() << endl;
+                s.unitList_append(u, (PlayerID)0);
+            }
+            if(e.button.button == SDL_BUTTON_RIGHT && s.map_get()->inMap(getMouseQ(), getMouseR()) && s.map_get()->passable(getMouseQ(), getMouseR())){
+                unit u{getMouseQ(), getMouseR(), (PlayerID)1, 100};
+                cout << getMouseQ() << " " << getMouseR() << endl;
+                s.unitList_append(u, (PlayerID)1);
+            }
         }
     }
     SDL_DestroySurface(hexa_passable_surface);

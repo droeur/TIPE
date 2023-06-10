@@ -49,11 +49,19 @@ void state::moves_make(){
                         if(ATTACK_DISTANCE > distance){
                             u->attack(ennemyU);
                             _choosed_actions[player].erase(_choosed_actions[player].begin() + action_index);
+                            u->getPath()->clear();
                         } else {
                             hex_tile start{u->position_get().getQ(), u->position_get().getR()};
                             hex_tile end{ennemyU->position_get().getQ(), ennemyU->position_get().getR()};
-                            vector<hex_tile*> chemin = _map->chemin(start, end);
-                            u->position_set(chemin[1]->q(), chemin[1]->r());
+                            cout << u->getPath()->size() << endl;
+                            if(u->getPath()->size() == 0){
+                                vector<hex_tile*> chemin = _map->chemin(start, end);
+                                u->setPath(chemin);
+                            }
+                            if(u->getPath()->size() > 0){
+                                u->position_set((*u->getPath())[1]->q(), (*u->getPath())[1]->r());
+                                u->getPath()->erase(u->getPath()->begin() + 1);
+                            }
                         }
                     }
                     break;

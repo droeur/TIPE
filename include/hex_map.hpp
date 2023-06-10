@@ -8,6 +8,7 @@
 
 #define Q_TAILLE 64
 #define R_TAILLE 64
+#define MAX_ASTAR_DEPTH Q_TAILLE * R_TAILLE
 
 using namespace std;
 /**
@@ -139,6 +140,9 @@ public:
     }
     bool inMap(int q, int r){
         return q + (r + (r & 1))/2 >= 0 && r >= 0;
+    }
+    bool passable(int q, int r){
+        return _tiles_map[q + (r + (r & 1))/2][r].passable();
     }
 private:
     int _x_size;

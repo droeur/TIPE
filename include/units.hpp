@@ -54,13 +54,13 @@ protected:
 
 class unit {
 public:
-    unit(double q, double r, PlayerID id, int hp){
+    unit(int q, int r, PlayerID id, int hp){
         p.setQ(q);
         p.setR(r);
         t_a = 0;
         t_m = 0;
         actualAction = NULL;
-        joueur = id;
+        _joueur = id;
         this->hp = hp;
     }
     void setActualAction(unitAction *action){
@@ -105,11 +105,18 @@ public:
     int getHP(){
         return hp;
     }
+    void setPath(vector<hex_tile*> &path){
+        _path = path;
+    }
+    vector<hex_tile*>* getPath(){
+        return &_path;
+    }
 private:
-    PlayerID joueur;
+    PlayerID _joueur;
     position p;
     int hp;
     int t_a, t_m; // attack cooldown and move cooldown
     uType type;
     unitAction *actualAction;
+    vector<hex_tile*> _path;
 };
