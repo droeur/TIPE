@@ -28,7 +28,5 @@ void test_func(map_class &map, state &s, graphic &game_graphic){
     }
     assert(bon);
     assert(chemin2.empty());
-    game_graphic.dessin(s, map, chemin);
-    game_graphic.dessin(s, map, chemin2);
     cout << "tests bons !" << endl;
 }

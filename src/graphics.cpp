@@ -10,11 +10,14 @@
 #include "state.hpp"
 
 bool graphic::update(state &s){
-    vector<vector<unit>> list_of_U_list = s.unitList_get();
     bool quit = false; 
     SDL_Event e;
     SDL_RenderClear(render);
 
+    /**
+     * Drawing map
+     * 
+     */
     SDL_Surface* hexa_passable_surface = IMG_Load("hexa_p.png");
     SDL_Surface* hexa_blocked_surface = IMG_Load("hexa_b.png");
     if(!(hexa_passable_surface && hexa_blocked_surface)){
@@ -22,12 +25,6 @@ bool graphic::update(state &s){
     }
     SDL_Texture* hexa_passable_texture = SDL_CreateTextureFromSurface(render, hexa_passable_surface);
     SDL_Texture* hexa_blocked_texture = SDL_CreateTextureFromSurface(render, hexa_blocked_surface);
-
-    SDL_FRect unitRect;
-    unitRect.x = 0;
-    unitRect.y = 0;
-    unitRect.w = 0.5*zoom;
-    unitRect.h = 0.5*zoom;
 
     SDL_FRect map_tile_rect[Q_TAILLE][R_TAILLE];
 
@@ -51,7 +48,18 @@ bool graphic::update(state &s){
         y=0;
     }
 
+
+    /**
+     * Draw units
+     * 
+     */
+    SDL_FRect unitRect;
+    unitRect.x = 0;
+    unitRect.y = 0;
+    unitRect.w = 0.5*zoom;
+    unitRect.h = 0.5*zoom;
     SDL_SetRenderDrawColor(render, BLUE);
+    vector<vector<unit>> list_of_U_list = s.unitList_get();
     hex_tile *tile;
     for(auto U_list: list_of_U_list){
         for(auto u:U_list){
@@ -64,6 +72,8 @@ bool graphic::update(state &s){
         }
         SDL_SetRenderDrawColor(render, RED);
     }
+    
+    SDL_SetRenderDrawColor(render, BLUE);
     for(int player = 0; player < NUMBER_OF_PLAYERS; player++){
         if(s.choosed_actions_get((PlayerID)player).size()){
             int action_index = 0;
@@ -74,10 +84,10 @@ bool graphic::update(state &s){
                     {
                         unit *ennemyU = action.targetUnit_get();
                         SDL_RenderLine( render,
-                                        u->position_get().getXGraphic(s.map_get()),
-                                        u->position_get().getYGraphic(s.map_get()),
-                                        ennemyU->position_get().getXGraphic(s.map_get()),
-                                        ennemyU->position_get().getYGraphic(s.map_get())); 
+                                        u->position_get().getXGraphic(s.map_get())* zoom  - unitRect.w/2 + x_shift*zoom,
+                                        (u->position_get().getYGraphic(s.map_get()) * HEX_HEIGHT_COEFF) * zoom  - unitRect.h/2 + y_shift*zoom,
+                                        ennemyU->position_get().getXGraphic(s.map_get())* zoom  - unitRect.w/2 + x_shift*zoom,
+                                        (ennemyU->position_get().getYGraphic(s.map_get()) * HEX_HEIGHT_COEFF) * zoom  - unitRect.h/2 + y_shift*zoom); 
                     }
                     break;
                 default:
@@ -86,8 +96,43 @@ bool graphic::update(state &s){
                 action_index++;
             }
         }
+        SDL_SetRenderDrawColor(render, RED);
     }
     
+
+    /**
+     * draw food
+     * 
+     */
+    SDL_SetRenderDrawColor(render, GREEN);
+    vector<food_class>* food_list =  s.foodList_get();
+    for(food_class food: *food_list){
+        tile = s.map_get()->get_tile(food.getQ(),food.getR());
+        unitRect.x = (tile->xGraphic())* zoom  - unitRect.w/2 + x_shift*zoom;
+        unitRect.y = (tile->yGraphic() * HEX_HEIGHT_COEFF) * zoom  - unitRect.h/2 + y_shift*zoom;
+        SDL_RenderFillRect(render, &unitRect);
+    }
+
+
+    /**
+     * draw bases
+     * 
+     */
+    SDL_SetRenderDrawColor(render, BLACK);
+    vector<base_class>* base_list =  s.baseList_get();
+    for(base_class base: *base_list){
+        tile = s.map_get()->get_tile(base.getQ(),base.getR());
+        unitRect.x = (tile->xGraphic())* zoom  - unitRect.w/2 + x_shift*zoom;
+        unitRect.y = (tile->yGraphic() * HEX_HEIGHT_COEFF) * zoom  - unitRect.h/2 + y_shift*zoom;
+        SDL_RenderFillRect(render, &unitRect);
+    }
+
+
+
+    /**
+     * Gerer la souris
+     * 
+     */
     SDL_SetRenderDrawColor(render, 0, 0, 0, 255);
     SDL_RenderPresent(render);
     SDL_UpdateWindowSurface(window);
@@ -117,15 +162,17 @@ bool graphic::update(state &s){
             SDL_GetGlobalMouseState(&xMouse,&yMouse);
         }
         if( e.type == SDL_EVENT_MOUSE_BUTTON_DOWN ){
-            if(e.button.button == SDL_BUTTON_LEFT && s.map_get()->inMap(getMouseQ(), getMouseR()) && s.map_get()->passable(getMouseQ(), getMouseR())){
+            if(e.button.button == SDL_BUTTON_LEFT && s.map_get()->passable(getMouseQ(), getMouseR())){
                 unit u{getMouseQ(), getMouseR(), (PlayerID)0, 100};
-                cout << getMouseQ() << " " << getMouseR() << endl;
-                s.unitList_append(u, (PlayerID)0);
+                s.unit_append(u, (PlayerID)0);
             }
-            if(e.button.button == SDL_BUTTON_RIGHT && s.map_get()->inMap(getMouseQ(), getMouseR()) && s.map_get()->passable(getMouseQ(), getMouseR())){
+            if(e.button.button == SDL_BUTTON_RIGHT && s.map_get()->passable(getMouseQ(), getMouseR())){
                 unit u{getMouseQ(), getMouseR(), (PlayerID)1, 100};
-                cout << getMouseQ() << " " << getMouseR() << endl;
-                s.unitList_append(u, (PlayerID)1);
+                s.unit_append(u, (PlayerID)1);
+            }
+            if(e.button.button == SDL_BUTTON_MIDDLE && s.map_get()->passable(getMouseQ(), getMouseR())){
+                food_class food{getMouseQ(), getMouseR()};
+                s.food_append(food);
             }
         }
     }
@@ -134,43 +181,4 @@ bool graphic::update(state &s){
     SDL_DestroyTexture(hexa_passable_texture);
     SDL_DestroyTexture(hexa_blocked_texture);
     return quit;
-}
-
-void graphic::dessin(state &s, map_class &m, vector<hex_tile*> &tiles){
-    float dec = 0.5;
-    if(tiles.empty())
-        return;
-    float previousQ = tiles[0]->q() + dec * tiles[0]->r();
-    float previousR = tiles[0]->r();
-
-    SDL_FRect rect;
-    rect.x = 0;
-    rect.y = 0;
-    rect.w = 2*ZOOM;
-    rect.h = 2*ZOOM;
-
-    SDL_SetRenderDrawColor(render, RED);
-    for(auto col:m.getTilesMap()){
-        for(auto hex:col){
-            rect.x = (hex.q() + hex.r() * dec)*ZOOM - 0.5*ZOOM;
-            rect.y = (hex.r())*ZOOM - 0.5*ZOOM;
-            if(hex.passable())
-                SDL_SetRenderDrawColor(render, GREEN);
-            else
-                SDL_SetRenderDrawColor(render, BLACK);
-
-            SDL_RenderRect(render, &rect);
-        }
-    }
-    SDL_SetRenderDrawColor(render, BLUE);
-    for(auto t:tiles){
-        float q = t->q() + t->r() * dec;
-        float r = t->r();
-        SDL_RenderLine(render, q*ZOOM, r*ZOOM, previousQ*ZOOM, previousR*ZOOM);
-        previousQ = q;
-        previousR = r;
-    }
-    SDL_RenderPresent(render);
-    SDL_UpdateWindowSurface(window);
-
 }

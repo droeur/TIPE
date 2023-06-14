@@ -3,6 +3,22 @@
 #include "state.hpp"
 #include "units.hpp"
 
+void state::frame_increment(){
+    this->_frame++;
+}
+frame state::frame_get(){
+    return _frame;
+}
+void state::unitList_add(vector<unit> U){
+    this->_U_list.push_back(U);
+}
+vector<vector<unit>> state::unitList_get(){
+    return this->_U_list;
+}
+void state::unit_append(unit &u, PlayerID joueur){
+    return this->_U_list[(int)joueur].push_back(u);
+}
+
 void state::moves_generate(){
     vector<uActionID> v{uActionID::ERROR, uActionID::MOVE, uActionID::ATTACK, uActionID::WAIT};
     PlayerID ennemyPlayer;
@@ -58,7 +74,7 @@ void state::moves_make(){
                                 vector<hex_tile*> chemin = _map->chemin(start, end);
                                 u->setPath(chemin);
                             }
-                            if(u->getPath()->size() > 0){
+                            if(u->getPath()->size() > 1){
                                 u->position_set((*u->getPath())[1]->q(), (*u->getPath())[1]->r());
                                 u->getPath()->erase(u->getPath()->begin() + 1);
                             }

@@ -1,13 +1,11 @@
 #pragma once
 
-#include "position.hpp"
+#include "object.hpp"
 
-class food_class{
+class food_class : public object_abstract_class{
 public:
-    food_class(int q, int r){
-        p.setQ(q);
-        p.setR(r);
-    }
+    food_class(int q, int r) : object_abstract_class(q,r){
+
+    };
 private:
-    position p;
 };

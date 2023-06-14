@@ -139,9 +139,11 @@ public:
         return _tiles_map;
     }
     bool inMap(int q, int r){
-        return q + (r + (r & 1))/2 >= 0 && r >= 0;
+        return q + (r + (r & 1))/2 >= 0 && r >= 0 && q + (r + (r & 1))/2 < Q_TAILLE && r < R_TAILLE;
     }
     bool passable(int q, int r){
+        if(!inMap(q,r))
+            return false;
         return _tiles_map[q + (r + (r & 1))/2][r].passable();
     }
 private:

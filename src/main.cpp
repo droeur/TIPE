@@ -8,7 +8,7 @@
 #include "player.hpp"
 #include "player_random.hpp"
 #include "parser.hpp"
-#include "food.hpp"
+#include "base.hpp"
 
 
 using namespace std;
@@ -49,6 +49,11 @@ int main(int argc, char *argv[]) {
     s.unitList_add(unitlist1);
     s.unitList_add(unitlist2);
 
+    base_class base1(10, 10);
+    base_class base2(30, 30);
+    s.base_append(base1);
+    s.base_append(base2);
+
     if(argc > 1){
         test_func(map, s, game_graphic);
     } else {
@@ -57,12 +62,16 @@ int main(int argc, char *argv[]) {
         bool quit = false; 
         while(!quit){
             uint64_t beginFrame = SDL_GetPerformanceCounter();
+            
             g.play(s, P);
             quit = game_graphic.update(s);
-            uint64_t endFrame = SDL_GetPerformanceCounter();
-            double elapsed = (endFrame - beginFrame) / (double)SDL_GetPerformanceFrequency();
-            s.fps_set(1.0/elapsed);
-            // cout << s.fps_get() << endl;
+            
+            uint64_t endFrameBefore = SDL_GetPerformanceCounter();
+            float elapsedMSBefore = (endFrameBefore - beginFrame) / (double)SDL_GetPerformanceFrequency();
+            SDL_Delay(floor(33.3333f - elapsedMSBefore));
+            uint64_t endFrameAfter = SDL_GetPerformanceCounter();
+            float elapsedMSAfter = (endFrameAfter - beginFrame) / (double)SDL_GetPerformanceFrequency();
+            s.fps_set(1.0f/elapsedMSAfter);
         }
     }
     game_graphic.quit();

@@ -7,6 +7,8 @@ class state;
 #include "units.hpp"
 #include "hex_map.hpp"
 #include "game.hpp"
+#include "food.hpp"
+#include "base.hpp"
 
 using namespace std;
 
@@ -43,7 +45,20 @@ public:
 
     void unitList_add(vector<unit> U);
     vector<vector<unit>> unitList_get();
-    void unitList_append(unit &u, PlayerID joueur);
+    void unit_append(unit &u, PlayerID joueur);
+
+    void food_append(food_class &f){
+        _food_list.push_back(f);
+    };
+    vector<food_class>* foodList_get(){
+        return &_food_list;
+    }
+    void base_append(base_class &f){
+        _base_list.push_back(f);
+    };
+    vector<base_class>* baseList_get(){
+        return &_base_list;
+    }
 
     void fps_set(double f){
         fps = f;
@@ -62,4 +77,6 @@ private:
     map_class *_map;
     game *g;
     double fps;
+    vector<food_class> _food_list;
+    vector<base_class> _base_list;
 };

@@ -83,12 +83,13 @@ set( SDL_LIBC ON CACHE BOOL "" FORCE )
 set( SDL_TEST OFF CACHE BOOL "" FORCE )
 
 add_subdirectory(external/sdl)
-
 target_link_libraries(${LOCAL_PROJECT_NAME} SDL3::SDL3)
 
 add_subdirectory(external/sdl-image)
-
 target_link_libraries(${LOCAL_PROJECT_NAME} SDL3_image)
+
+add_subdirectory(external/sdl-ttf)
+target_link_libraries(${LOCAL_PROJECT_NAME} SDL3_ttf)
 
 #YAML-CPP
 add_subdirectory(external/yaml-cpp)

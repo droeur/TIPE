@@ -16,6 +16,7 @@ enum class uActionID {ERROR, MOVE, ATTACK, WAIT};
 
 class unit;
 class unitAction;
+#include "object.hpp"
 #include "game.hpp"
 #include "position.hpp"
 #include "player.hpp"
@@ -52,11 +53,9 @@ protected:
     position p;
 };
 
-class unit {
+class unit : public object_abstract_class {
 public:
-    unit(int q, int r, PlayerID id, int hp){
-        p.setQ(q);
-        p.setR(r);
+    unit(int q, int r, PlayerID id, int hp) : object_abstract_class(q,r){
         t_a = 0;
         t_m = 0;
         actualAction = NULL;
@@ -88,20 +87,6 @@ public:
             t_a = 0;
     }
 
-    void position_set(int q, int r) {
-        this->p.setQ(q);
-        this->p.setR(r);
-    }
-
-    double getQ(){
-        return this->p.getQ();
-    }
-    double getR(){
-        return this->p.getR();
-    }
-    position position_get(){
-        return this->p;
-    }
     int getHP(){
         return hp;
     }
@@ -113,7 +98,6 @@ public:
     }
 private:
     PlayerID _joueur;
-    position p;
     int hp;
     int t_a, t_m; // attack cooldown and move cooldown
     uType type;

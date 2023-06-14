@@ -15,9 +15,9 @@
 #define ZOOM 1
 #define HEX_HEIGHT_COEFF 0.78
 
-#define RED 249, 137, 137, 255
-#define BLUE 137, 223, 249, 255
-#define GREEN 85, 180, 93, 255
+#define RED 255, 0, 0, 255
+#define GREEN 0, 255, 0, 255
+#define BLUE 0, 0, 255, 255
 #define BLACK 55, 55, 55, 255
 
 class graphic {
@@ -35,7 +35,7 @@ public:
             cout << "SDL image not avaible" << endl;
             exit(EXIT_FAILURE);
         }
-        window = SDL_CreateWindow( "TIPE", SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_RESIZABLE);
+        window = SDL_CreateWindow( "TIPE", SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED);
         screenSurface = SDL_GetWindowSurface(window);
         render = SDL_CreateRenderer(window, NULL, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     }
@@ -61,7 +61,7 @@ private:
     SDL_Window* window;
     SDL_Surface* screenSurface;
     SDL_Renderer *render;
-    int zoom = 5;
+    int zoom = 20;
     int x_shift = 0;
     int y_shift = 0;
     SDL_Texture* hexaImage;
