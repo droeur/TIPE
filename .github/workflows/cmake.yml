@@ -30,13 +30,6 @@ jobs:
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
       run: cmake -B ${{github.workspace}}/build
 
-    - name: Build freetype
-      run: | 
-        cd ${{github.workspace}}/external/SDL-ttf/external/freetype\
-        cmake -B build -D BUILD_SHARED_LIBS=true -D CMAKE_BUILD_TYPE=Release\
-        cmake --build build --target install\
-        cd ${{github.workspace}}
-
     - name: Build
       # Build your program with the given configuration
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
