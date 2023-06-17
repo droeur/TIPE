@@ -41,7 +41,9 @@ project(${LOCAL_PROJECT_NAME}
         DESCRIPTION ${LOCAL_PROJECT_DESCRIPTION}
         LANGUAGES CXX)
 
-include(${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists.txt.user)
+if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists.txt.user)
+    include(${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists.txt.user)
+endif()
 
 add_executable(${LOCAL_PROJECT_NAME})
 
