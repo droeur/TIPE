@@ -85,6 +85,13 @@ vector<hex_tile*> map_class::chemin(hex_tile &start, hex_tile &end){
                         current_node = listeEnfants[current_node->parentX()][current_node->parentY()];
                     }
                     reverse(path.begin(), path.end());
+                    for(auto t : path){
+                        vector<int> a = {0};
+                        if(t->q() > 100 || t->r() > 100){
+                            a[3] = 10;
+                            cout << "error";
+                        }
+                    }
                     return path;
                 }
                 children = new pathfinding_node{current_node->voisin(dir).q(), current_node->voisin(dir).r(), current_node->voisin(dir).passable()};

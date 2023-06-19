@@ -4,12 +4,12 @@
 void unit::move(double x ,double y){
     
 }
-void unit::attack(unit* b){
-    b->hp -= 10;
-    if(b->hp < 0){
-        b->hp = 0;
+void unit::attack(object_abstract_class* b){
+    b->removeHP(1);
+    if(b->getHP() < 0){
+        b->setHP(0);
     }
-    cout << "unit " << this << " ,player " << _joueur << " attacked unit " << b << " ,player " << b->_joueur << " hp = " << b->hp << endl;
+    cout << "unit " << this << " ,player " << (int)_joueur << " attacked unit " << b << " ,player " << (int)b->getPlayer() << " hp = " << b->getHP() << endl;
     t_a = ATTACK_COOLDOWN;
 }
 void unit::wait(time_t t){

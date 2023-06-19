@@ -37,11 +37,20 @@ void state::moves_generate(){
                         thisUnitAction.push_back(action);
                     }
                 }
+                for(base_class& base : _base_list){
+                    if(base.getHP() > 0 && base.getPlayer() == ennemyPlayer){
+                        unitAction action{&u, uActionID::ATTACK, &base, ATTACK_COOLDOWN};
+                        thisUnitAction.push_back(action);
+                    }
+                }
             }
             if(u.canMove()){
+                for(food_class& food:_food_list){
+                    unitAction action{&u, uActionID::PICK, &food, MOVE_COOLDOWN};
+                    thisUnitAction.push_back(action);
+                }
             }
             _possibles_actions[player].push_back(thisUnitAction);
-
         }
 
     }
@@ -60,7 +69,7 @@ void state::moves_make(){
                 switch(action.actionType_get()){
                 case uActionID::ATTACK:
                     {
-                        unit *ennemyU = action.targetUnit_get();
+                        object_abstract_class *ennemyU = action.targetUnit_get();
                         double distance = u->position_get().distance(ennemyU->position_get(), _map);
                         if(ATTACK_DISTANCE > distance){
                             u->attack(ennemyU);
@@ -69,16 +78,41 @@ void state::moves_make(){
                         } else {
                             hex_tile start{u->position_get().getQ(), u->position_get().getR()};
                             hex_tile end{ennemyU->position_get().getQ(), ennemyU->position_get().getR()};
-                            cout << u->getPath()->size() << endl;
+                            if(u->getPath()->size() == 0){
+                                vector<hex_tile*> chemin = _map->chemin(start, end);
+                                u->setPath(chemin);
+                            }
+                            if(u->getPath()->size() > 2){
+                                u->position_set((*u->getPath())[1]->q(), (*u->getPath())[1]->r());
+                                u->getPath()->erase(u->getPath()->begin() + 1);
+                            }
+                        }
+                    }
+                    break;
+                case uActionID::PICK:
+                    {
+                        object_abstract_class* food = action.targetUnit_get();
+                        double distance = u->position_get().distance(food->position_get(), _map);
+                        if(distance < 1){
+                            _choosed_actions[player].erase(_choosed_actions[player].begin() + action_index);
+                            u->getPath()->clear();
+                        } else {
+                            hex_tile start{u->position_get().getQ(), u->position_get().getR()};
+                            hex_tile end{food->position_get().getQ(), food->position_get().getR()};
                             if(u->getPath()->size() == 0){
                                 vector<hex_tile*> chemin = _map->chemin(start, end);
                                 u->setPath(chemin);
                             }
                             if(u->getPath()->size() > 1){
-                                u->position_set((*u->getPath())[1]->q(), (*u->getPath())[1]->r());
-                                u->getPath()->erase(u->getPath()->begin() + 1);
+                                if(!_map->inMap((*u->getPath())[1]->q(), (*u->getPath())[1]->r())){
+                                    u->getPath()->clear();
+                                } else {
+                                    u->position_set((*u->getPath())[1]->q(), (*u->getPath())[1]->r());
+                                    u->getPath()->erase(u->getPath()->begin() + 1);
+                                }
                             }
                         }
+
                     }
                     break;
                 default:

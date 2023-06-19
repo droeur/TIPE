@@ -7,6 +7,7 @@
 #include <GLFW/glfw3.h>
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_image.h>
+#include <SDL3/SDL_ttf.h>
 #include "hex_map.hpp"
 #include "state.hpp"
 
@@ -19,6 +20,8 @@
 #define GREEN 0, 255, 0, 255
 #define BLUE 0, 0, 255, 255
 #define BLACK 55, 55, 55, 255
+#define DARK_RED 80, 0, 0, 255
+#define DARK_BLUE 0, 0, 80, 255
 
 class graphic {
 public:
@@ -38,9 +41,22 @@ public:
         window = SDL_CreateWindow( "TIPE", SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED);
         screenSurface = SDL_GetWindowSurface(window);
         render = SDL_CreateRenderer(window, NULL, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+
+        if(TTF_Init() < 0){
+            cout << "SDL ttf not avaible" << endl;
+            exit(EXIT_FAILURE);
+        }
+        font = TTF_OpenFont( "Anonymous_Pro.ttf", 50 );
+        if( font == NULL ) { 
+            cout << "no Anonymous_Pro.ttf file" << endl;
+            exit(EXIT_FAILURE);
+        } 
+
     }
 
     void quit(){
+        TTF_CloseFont(font);
+        
         //Destroy window
         SDL_DestroyWindow(window);
 
@@ -67,4 +83,5 @@ private:
     SDL_Texture* hexaImage;
     float xMouse;
     float yMouse;
+    TTF_Font *font; 
 };

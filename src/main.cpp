@@ -41,16 +41,16 @@ int main(int argc, char *argv[]) {
     randPlayer player2((PlayerID)1);
     tempPlayer = &player2;
     P.push_back(tempPlayer);
-    unit u11{0, 0, (PlayerID)0, 100};
-    unit u12{4, 5, (PlayerID)0, 100};
-    unit u21{0, 20, (PlayerID)1, 100};
+    unit u11{0, 0, (PlayerID)0, UNIT_HP};
+    unit u12{4, 5, (PlayerID)0, UNIT_HP};
+    unit u21{0, 20, (PlayerID)1, UNIT_HP};
     vector<unit> unitlist1{u11, u12};
     vector<unit> unitlist2{u21};
     s.unitList_add(unitlist1);
     s.unitList_add(unitlist2);
 
-    base_class base1(10, 10);
-    base_class base2(30, 30);
+    base_class base1(0, 5, (PlayerID)0);
+    base_class base2(0, 25, (PlayerID)1);
     s.base_append(base1);
     s.base_append(base2);
 

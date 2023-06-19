@@ -5,6 +5,7 @@
 #include <GLFW/glfw3.h>
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_image.h>
+#include <SDL3/SDL_ttf.h>
 #include "hex_map.hpp"
 #include "graphics.hpp"
 #include "state.hpp"
@@ -13,7 +14,6 @@ bool graphic::update(state &s){
     bool quit = false; 
     SDL_Event e;
     SDL_RenderClear(render);
-
     /**
      * Drawing map
      * 
@@ -49,6 +49,9 @@ bool graphic::update(state &s){
     }
 
 
+    SDL_FRect lifeRect;
+    lifeRect.h = 0.1*zoom;
+
     /**
      * Draw units
      * 
@@ -58,19 +61,30 @@ bool graphic::update(state &s){
     unitRect.y = 0;
     unitRect.w = 0.5*zoom;
     unitRect.h = 0.5*zoom;
-    SDL_SetRenderDrawColor(render, BLUE);
     vector<vector<unit>> list_of_U_list = s.unitList_get();
     hex_tile *tile;
     for(auto U_list: list_of_U_list){
         for(auto u:U_list){
             if(u.getHP() > 0){
+                if(u.getPlayer() == (PlayerID)0){
+                    SDL_SetRenderDrawColor(render, BLUE);
+                } else {
+                    SDL_SetRenderDrawColor(render, RED);
+                }
                 tile = s.map_get()->get_tile(u.getQ(),u.getR());
                 unitRect.x = (tile->xGraphic())* zoom  - unitRect.w/2 + x_shift*zoom;
                 unitRect.y = (tile->yGraphic() * HEX_HEIGHT_COEFF) * zoom  - unitRect.h/2 + y_shift*zoom;
                 SDL_RenderFillRect(render, &unitRect);
+
+                lifeRect.w = 0.1*UNIT_HP*zoom;
+                lifeRect.x = unitRect.x + unitRect.w/2 - lifeRect.w/2;
+                lifeRect.y = unitRect.y + 0.7*zoom;
+                SDL_RenderRect(render, &lifeRect);
+
+                lifeRect.w = 0.1*u.getHP()*zoom;
+                SDL_RenderFillRect(render, &lifeRect);
             }
         }
-        SDL_SetRenderDrawColor(render, RED);
     }
     
     SDL_SetRenderDrawColor(render, BLUE);
@@ -80,9 +94,10 @@ bool graphic::update(state &s){
             for(unitAction action:s.choosed_actions_get((PlayerID)player)){
                 unit *u = action.unit_get();
                 switch(action.actionType_get()){
+                case uActionID::PICK:
                 case uActionID::ATTACK:
                     {
-                        unit *ennemyU = action.targetUnit_get();
+                        object_abstract_class *ennemyU = action.targetUnit_get();
                         SDL_RenderLine( render,
                                         u->position_get().getXGraphic(s.map_get())* zoom  - unitRect.w/2 + x_shift*zoom,
                                         (u->position_get().getYGraphic(s.map_get()) * HEX_HEIGHT_COEFF) * zoom  - unitRect.h/2 + y_shift*zoom,
@@ -104,13 +119,18 @@ bool graphic::update(state &s){
      * draw food
      * 
      */
+    SDL_FRect foodRect;
+    foodRect.x = 0;
+    foodRect.y = 0;
+    foodRect.w = 0.2*zoom;
+    foodRect.h = 0.2*zoom;
     SDL_SetRenderDrawColor(render, GREEN);
     vector<food_class>* food_list =  s.foodList_get();
     for(food_class food: *food_list){
         tile = s.map_get()->get_tile(food.getQ(),food.getR());
-        unitRect.x = (tile->xGraphic())* zoom  - unitRect.w/2 + x_shift*zoom;
-        unitRect.y = (tile->yGraphic() * HEX_HEIGHT_COEFF) * zoom  - unitRect.h/2 + y_shift*zoom;
-        SDL_RenderFillRect(render, &unitRect);
+        foodRect.x = (tile->xGraphic())* zoom  - foodRect.w/2 + x_shift*zoom;
+        foodRect.y = (tile->yGraphic() * HEX_HEIGHT_COEFF) * zoom  - foodRect.h/2 + y_shift*zoom;
+        SDL_RenderFillRect(render, &foodRect);
     }
 
 
@@ -118,24 +138,39 @@ bool graphic::update(state &s){
      * draw bases
      * 
      */
+    SDL_FRect baseRect;
+    baseRect.w = zoom;
+    baseRect.h = zoom;
     SDL_SetRenderDrawColor(render, BLACK);
     vector<base_class>* base_list =  s.baseList_get();
     for(base_class base: *base_list){
         tile = s.map_get()->get_tile(base.getQ(),base.getR());
-        unitRect.x = (tile->xGraphic())* zoom  - unitRect.w/2 + x_shift*zoom;
-        unitRect.y = (tile->yGraphic() * HEX_HEIGHT_COEFF) * zoom  - unitRect.h/2 + y_shift*zoom;
-        SDL_RenderFillRect(render, &unitRect);
+        baseRect.x = (tile->xGraphic())* zoom  - baseRect.w/2 + x_shift*zoom;
+        baseRect.y = (tile->yGraphic() * HEX_HEIGHT_COEFF) * zoom  - baseRect.h/2 + y_shift*zoom;
+        if(base.playerId_get() == (PlayerID)0)
+            SDL_SetRenderDrawColor(render, DARK_BLUE);
+        else
+            SDL_SetRenderDrawColor(render, DARK_RED);
+
+        SDL_RenderFillRect(render, &baseRect);
+        
+        lifeRect.x = baseRect.x;
+        lifeRect.y = baseRect.y + 1.5*zoom;
+        lifeRect.w = 0.01*BASE_HP*zoom;
+        SDL_RenderRect(render, &lifeRect);
+
+        lifeRect.w = 0.01*base.getHP()*zoom;
+        SDL_RenderFillRect(render, &lifeRect);
     }
 
-
+    SDL_SetRenderDrawColor(render, 0, 0, 0, 255);
+    SDL_RenderPresent(render);
+    SDL_UpdateWindowSurface(window);
 
     /**
      * Gerer la souris
      * 
      */
-    SDL_SetRenderDrawColor(render, 0, 0, 0, 255);
-    SDL_RenderPresent(render);
-    SDL_UpdateWindowSurface(window);
     while( SDL_PollEvent(&e) ){ 
         if( e.type == SDL_EVENT_QUIT ) 
             quit = true;
@@ -163,11 +198,11 @@ bool graphic::update(state &s){
         }
         if( e.type == SDL_EVENT_MOUSE_BUTTON_DOWN ){
             if(e.button.button == SDL_BUTTON_LEFT && s.map_get()->passable(getMouseQ(), getMouseR())){
-                unit u{getMouseQ(), getMouseR(), (PlayerID)0, 100};
+                unit u{getMouseQ(), getMouseR(), (PlayerID)0, UNIT_HP};
                 s.unit_append(u, (PlayerID)0);
             }
             if(e.button.button == SDL_BUTTON_RIGHT && s.map_get()->passable(getMouseQ(), getMouseR())){
-                unit u{getMouseQ(), getMouseR(), (PlayerID)1, 100};
+                unit u{getMouseQ(), getMouseR(), (PlayerID)1, UNIT_HP};
                 s.unit_append(u, (PlayerID)1);
             }
             if(e.button.button == SDL_BUTTON_MIDDLE && s.map_get()->passable(getMouseQ(), getMouseR())){

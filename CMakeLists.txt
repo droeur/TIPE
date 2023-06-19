@@ -80,6 +80,9 @@ target_link_libraries(${LOCAL_PROJECT_NAME} OpenGL::GL)
 
 
 #SDL3
+set( BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE )
+set( SDL_LIBC ON CACHE BOOL "" FORCE )
+set( SDL_TEST OFF CACHE BOOL "" FORCE )
 
 add_subdirectory(external/sdl)
 target_link_libraries(${LOCAL_PROJECT_NAME} SDL3::SDL3)

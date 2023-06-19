@@ -70,6 +70,7 @@
         "valarray": "cpp",
         "shared_mutex": "cpp",
         "queue": "cpp",
-        "any": "cpp"
+        "any": "cpp",
+        "cfenv": "cpp"
     }
 }
