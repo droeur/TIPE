@@ -5,6 +5,7 @@
 #include <assert.h>
 #include <vector>
 #include <rapidcsv.h>
+#include <float.h>
 
 #define Q_TAILLE 64
 #define R_TAILLE 64
@@ -95,6 +96,33 @@ public:
     double yGraphic(){
         return _r;
     }
+    
+    int parentQ = -1;
+    int parentR = -1;
+    int parentS = -1;
+    float gCost = FLT_MAX; //couts
+    float hCost = FLT_MAX; //heuristique
+    float fCost = FLT_MAX; //g+h
+
+    int parentX(){
+        return parentR;
+    }
+    int parentY(){
+        return parentQ + (parentR + (parentR & 1)) / 2;
+    }
+
+    bool operator< (const hex_tile &a){
+        return this->fCost < a.fCost;
+    }
+    bool operator> (const hex_tile &a){
+        return this->fCost > a.fCost;
+    }
+    explicit operator hex_tile(){
+        return hex_tile(this->_q, this->_r);
+    }
+    bool estValide(){
+        return this->_passable;
+    }
 
 protected:
     int _q = -1;
@@ -128,7 +156,7 @@ public:
             this->add_column(column);
         }
     };
-    vector<hex_tile*> chemin(hex_tile &start, hex_tile &end);
+    vector<hex_tile*> chemin(hex_tile *start, hex_tile *end);
     hex_tile *get_tile(int q, int r){
         return &_tiles_map[q + (r + (r & 1))/2][r];
     }

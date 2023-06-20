@@ -33,6 +33,13 @@ public:
         _cible(cible),
         _frameRestantes(frameRestantes){
     };
+    unitAction(unit* u, uActionID type, position cible, frame frameRestantes) : 
+        _u(u), 
+        _actionType(type),
+        _frameRestantes(frameRestantes)
+        {
+            p = cible;
+    };
     ~unitAction(){
         
     };
@@ -99,9 +106,17 @@ public:
     vector<hex_tile*>* getPath(){
         return &_path;
     }
+
+    bool carry_food_get(){
+        return _carry_food;
+    }
+    void carry_food_set(bool c){
+        _carry_food = c;
+    }
 private:
     int t_a, t_m; // attack cooldown and move cooldown
     uType type;
     unitAction *actualAction;
     vector<hex_tile*> _path;
+    bool _carry_food = false;
 };

@@ -7,7 +7,7 @@
 using namespace std;
 #include "position.hpp"
 
-typedef unsigned char PlayerID;
+typedef int PlayerID;
 
 class object_abstract_class{
 public:
@@ -59,8 +59,15 @@ public:
     virtual void setPlayer(PlayerID joueur){
         this->_joueur = joueur;
     }
+    virtual int ID_get(){
+        return this->_ID;
+    }
+    virtual void ID_set(int ID){
+        this->_ID = ID;
+    }
 protected:
     position p;
     int _HP;
-    PlayerID _joueur;
+    PlayerID _joueur = (PlayerID)-1;
+    int _ID = -1;
 };

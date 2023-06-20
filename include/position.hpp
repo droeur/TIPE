@@ -32,6 +32,10 @@ public:
     void addR(int r){
         _r += r;
     }
+
+    bool operator==(position p){
+        return this->_q == p._q && this->_r == p._r;
+    }
 protected:
     int _q, _r;
 };

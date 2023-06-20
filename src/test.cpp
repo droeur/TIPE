@@ -10,8 +10,8 @@
 using namespace std;
 
 void test_func(map_class &map, state &s, graphic &game_graphic){
-    hex_tile start{1,0}, end{0,5};
-    hex_tile start2{0,0}, end2{64,64};
+    hex_tile *start = map.get_tile(0,0), *end = map.get_tile(0,5);
+    hex_tile *start2 = map.get_tile(0,0), *end2 = map.get_tile(64,64);
     vector<hex_tile*> chemin = map.chemin(start, end);
     vector<hex_tile*> chemin2 = map.chemin(start2, end2);
     vector<hex_tile*> bon_chemin{   new hex_tile{1,0},

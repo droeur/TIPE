@@ -1,3 +1,3 @@
 #pragma once
 
-typedef unsigned char PlayerID;
+typedef int PlayerID;
