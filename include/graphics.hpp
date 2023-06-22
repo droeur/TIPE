@@ -46,7 +46,7 @@ public:
             cout << "SDL ttf not avaible" << endl;
             exit(EXIT_FAILURE);
         }
-        font = TTF_OpenFont( "Anonymous_Pro.ttf", 50 );
+        font = TTF_OpenFont( "Anonymous_Pro.ttf", 20 );
         if( font == NULL ) { 
             cout << "no Anonymous_Pro.ttf file" << endl;
             exit(EXIT_FAILURE);
@@ -74,6 +74,8 @@ public:
         return yMouse/(zoom*HEX_HEIGHT_COEFF) - 0.5 - y_shift/HEX_HEIGHT_COEFF;
     }
 private:
+    void print(float x, float y, char *text, SDL_Color &textColor);
+    void printR(int width, float y, char *text, SDL_Color &textColor);
     SDL_Window* window;
     SDL_Surface* screenSurface;
     SDL_Renderer *render;

@@ -100,7 +100,6 @@ public:
     }
 
     void setPath(vector<hex_tile*> &path){
-        cout << this << " : " << path.size() << endl;
         _path = path;
     }
     vector<hex_tile*>* getPath(){

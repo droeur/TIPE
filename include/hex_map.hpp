@@ -62,7 +62,7 @@ public:
     }
 
     hex_tile direction(int dir){
-        vector<hex_tile> hex_tile_directions = {
+        hex_tile hex_tile_directions[6] = {
             hex_tile(1, 0), hex_tile(1, -1), hex_tile(0, -1), 
             hex_tile(-1, 0), hex_tile(-1, 1), hex_tile(0, 1)
         };

@@ -35,10 +35,10 @@ public:
         this->p.setQ(q);
         this->p.setR(r);
     }
-    virtual double getQ(){
+    virtual const double getQ(){
         return this->p.getQ();
     }
-    virtual double getR(){
+    virtual const double getR(){
         return this->p.getR();
     }
     virtual position position_get(){
@@ -67,7 +67,7 @@ public:
     }
 protected:
     position p;
-    int _HP;
+    int _HP = 0;
     PlayerID _joueur = (PlayerID)-1;
     int _ID = -1;
 };

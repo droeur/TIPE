@@ -10,9 +10,37 @@
 #include "graphics.hpp"
 #include "state.hpp"
 
+void graphic::print(float x, float y, char *text, SDL_Color &textColor){
+    SDL_FRect mess_rect = {x,y,0,0};
+    int w,h;
+    SDL_Surface *mess_FPS = TTF_RenderText_Solid(font, text, textColor ); 
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(render, mess_FPS);
+    TTF_SizeText(font, text, &w, &h);
+    mess_rect.w = w;
+    mess_rect.h = h;
+    SDL_RenderTexture(render, texture, NULL, &mess_rect);
+    SDL_DestroySurface(mess_FPS); 
+    SDL_DestroyTexture(texture);
+}
+void graphic::printR(int width, float y, char *text, SDL_Color &textColor){
+    SDL_FRect mess_rect = {0,y,0,0};
+    int w,h;
+    SDL_Surface *mess_FPS = TTF_RenderText_Solid(font, text, textColor ); 
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(render, mess_FPS);
+    TTF_SizeText(font, text, &w, &h);
+    mess_rect.x = width - w;
+    mess_rect.w = w;
+    mess_rect.h = h;
+    SDL_RenderTexture(render, texture, NULL, &mess_rect);
+    SDL_DestroySurface(mess_FPS); 
+    SDL_DestroyTexture(texture);
+}
+
 bool graphic::update(state &s){
     bool quit = false; 
     SDL_Event e;
+    vector<object_abstract_class*> pointed_objects;
+
     SDL_RenderClear(render);
     /**
      * Drawing map
@@ -62,9 +90,9 @@ bool graphic::update(state &s){
     unitRect.w = 0.5*zoom;
     unitRect.h = 0.5*zoom;
     vector<vector<unit>> list_of_U_list = s.unitList_get();
-    hex_tile *tile;
-    for(auto U_list: list_of_U_list){
-        for(auto u:U_list){
+    for(auto &U_list: list_of_U_list){
+        for(auto &u:U_list){
+            hex_tile *tile = NULL;
             if(u.getHP() > 0){
                 if(u.getPlayer() == (PlayerID)0){
                     SDL_SetRenderDrawColor(render, BLUE);
@@ -83,6 +111,9 @@ bool graphic::update(state &s){
 
                 lifeRect.w = 0.1*u.getHP()*zoom;
                 SDL_RenderFillRect(render, &lifeRect);
+                if(u.getQ() == getMouseQ() && u.getR() == getMouseR()){
+                    pointed_objects.push_back((object_abstract_class*)&u);
+                }
             }
         }
     }
@@ -126,11 +157,15 @@ bool graphic::update(state &s){
     foodRect.h = 0.2*zoom;
     SDL_SetRenderDrawColor(render, GREEN);
     vector<food_class>* food_list =  s.foodList_get();
-    for(food_class food: *food_list){
+    for(food_class &food: *food_list){
+        hex_tile *tile = NULL;
         tile = s.map_get()->get_tile(food.getQ(),food.getR());
         foodRect.x = (tile->xGraphic())* zoom  - foodRect.w/2 + x_shift*zoom;
         foodRect.y = (tile->yGraphic() * HEX_HEIGHT_COEFF) * zoom  - foodRect.h/2 + y_shift*zoom;
         SDL_RenderFillRect(render, &foodRect);
+        if(food.getQ() == getMouseQ() && food.getR() == getMouseR()){
+            pointed_objects.push_back((object_abstract_class*)&food);
+        }
     }
 
 
@@ -143,7 +178,8 @@ bool graphic::update(state &s){
     baseRect.h = zoom;
     SDL_SetRenderDrawColor(render, BLACK);
     vector<base_class>* base_list =  s.baseList_get();
-    for(base_class base: *base_list){
+    for(base_class &base: *base_list){
+        hex_tile *tile = NULL;
         tile = s.map_get()->get_tile(base.getQ(),base.getR());
         baseRect.x = (tile->xGraphic())* zoom  - baseRect.w/2 + x_shift*zoom;
         baseRect.y = (tile->yGraphic() * HEX_HEIGHT_COEFF) * zoom  - baseRect.h/2 + y_shift*zoom;
@@ -161,9 +197,50 @@ bool graphic::update(state &s){
 
         lifeRect.w = 0.01*base.getHP()*zoom;
         SDL_RenderFillRect(render, &lifeRect);
+        if(base.getQ() == getMouseQ() && base.getR() == getMouseR()){
+            pointed_objects.push_back((object_abstract_class*)&base);
+        }
     }
 
-    SDL_SetRenderDrawColor(render, 0, 0, 0, 255);
+    /**
+     * Textes
+     * 
+     */
+    SDL_Color text_white{255, 255, 255, 255};
+    SDL_Color text_red{255, 0, 0, 255};
+    SDL_Color text_blue{0, 0, 255, 255};
+    SDL_Color text_green{0, 255, 0, 255};
+    int windowW, windowH;
+
+    SDL_GetWindowSize(window, &windowW, &windowH);
+
+    char arr_FPS[3];
+    sprintf(arr_FPS, "%d", (int)s.fps_get());
+    print(2, 2, arr_FPS, text_white);
+
+    char arr_Size[3];
+    sprintf(arr_Size, "%d", (int)pointed_objects.size());
+    print(50, 2, arr_Size, text_white);
+    int i = 0;
+    for(object_abstract_class* obj:pointed_objects){
+        char arr_info[20];
+        SDL_Color text_color = text_white;
+        if(obj->getPlayer() == -1){
+            text_color = text_green;
+        } else if (obj->getPlayer() == 0) {
+            text_color = text_blue;
+        } else if (obj->getPlayer() == 1) {
+            text_color = text_red;
+        }
+        sprintf(arr_info, "%d", obj->getHP());
+        printR(windowW, 2 + i * 20, arr_info, text_color);
+        i++;
+        sprintf(arr_info, "%d %d", (int)obj->getQ(), (int)obj->getR());
+        printR(windowW, 2 + i * 20, arr_info, text_color);
+        i+=2;
+    }
+
+    SDL_SetRenderDrawColor(render, BLACK); // background
     SDL_RenderPresent(render);
     SDL_UpdateWindowSurface(window);
 
