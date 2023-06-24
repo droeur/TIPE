@@ -66,7 +66,6 @@ public:
             hex_tile(1, 0), hex_tile(1, -1), hex_tile(0, -1), 
             hex_tile(-1, 0), hex_tile(-1, 1), hex_tile(0, 1)
         };
-        assert (0 <= dir && dir < 6);
         return hex_tile_directions[dir];
     }
     hex_tile voisin(int dir){

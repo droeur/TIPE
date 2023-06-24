@@ -10,7 +10,7 @@
 #include "graphics.hpp"
 #include "state.hpp"
 
-void graphic::print(float x, float y, char *text, SDL_Color &textColor){
+void graphic::print(float x, float y, const char *text, SDL_Color &textColor){
     SDL_FRect mess_rect = {x,y,0,0};
     int w,h;
     SDL_Surface *mess_FPS = TTF_RenderText_Solid(font, text, textColor ); 
@@ -22,7 +22,7 @@ void graphic::print(float x, float y, char *text, SDL_Color &textColor){
     SDL_DestroySurface(mess_FPS); 
     SDL_DestroyTexture(texture);
 }
-void graphic::printR(int width, float y, char *text, SDL_Color &textColor){
+void graphic::printR(int width, float y, const char *text, SDL_Color &textColor){
     SDL_FRect mess_rect = {0,y,0,0};
     int w,h;
     SDL_Surface *mess_FPS = TTF_RenderText_Solid(font, text, textColor ); 
@@ -130,10 +130,10 @@ bool graphic::update(state &s){
                     {
                         object_abstract_class *ennemyU = action.targetUnit_get();
                         SDL_RenderLine( render,
-                                        u->position_get().getXGraphic(s.map_get())* zoom  - unitRect.w/2 + x_shift*zoom,
-                                        (u->position_get().getYGraphic(s.map_get()) * HEX_HEIGHT_COEFF) * zoom  - unitRect.h/2 + y_shift*zoom,
-                                        ennemyU->position_get().getXGraphic(s.map_get())* zoom  - unitRect.w/2 + x_shift*zoom,
-                                        (ennemyU->position_get().getYGraphic(s.map_get()) * HEX_HEIGHT_COEFF) * zoom  - unitRect.h/2 + y_shift*zoom); 
+                                        (u->position_get().getXGraphic(s.map_get()) + x_shift)* zoom,
+                                        (u->position_get().getYGraphic(s.map_get()) * HEX_HEIGHT_COEFF) * zoom  + y_shift*zoom,
+                                        ennemyU->position_get().getXGraphic(s.map_get())* zoom  + x_shift*zoom,
+                                        (ennemyU->position_get().getYGraphic(s.map_get()) * HEX_HEIGHT_COEFF) * zoom  + y_shift*zoom); 
                     }
                     break;
                 default:
@@ -225,6 +225,7 @@ bool graphic::update(state &s){
     for(object_abstract_class* obj:pointed_objects){
         char arr_info[20];
         SDL_Color text_color = text_white;
+        string path;
         if(obj->getPlayer() == -1){
             text_color = text_green;
         } else if (obj->getPlayer() == 0) {
@@ -232,11 +233,28 @@ bool graphic::update(state &s){
         } else if (obj->getPlayer() == 1) {
             text_color = text_red;
         }
-        sprintf(arr_info, "%d", obj->getHP());
+        if(obj->object_type_get() == object_type::UNIT){
+            unit* u = (unit*) obj;
+            vector<hex_tile*> *p = u->getPath();
+            path += "[";
+            path += to_string(p->size());
+            path += "]: ";
+            for(hex_tile *t:*p){
+                path += to_string(t->q());
+                path += " ";
+                path += to_string(t->r());
+                path += " / ";
+            }
+            sprintf(arr_info, "HP: %d carry: %s", u->getHP(), u->carry_food_get()? "true" : "false");
+        } else {
+            sprintf(arr_info, "HP: %d", obj->getHP());
+        }
         printR(windowW, 2 + i * 20, arr_info, text_color);
         i++;
         sprintf(arr_info, "%d %d", (int)obj->getQ(), (int)obj->getR());
         printR(windowW, 2 + i * 20, arr_info, text_color);
+        i++;
+        printR(windowW, 2 + i * 20, path.c_str(), text_color);
         i+=2;
     }
 

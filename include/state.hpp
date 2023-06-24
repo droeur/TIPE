@@ -70,6 +70,7 @@ public:
         return _map;
     }
 private:
+    void move_to_place(unit *u, position &p);
     frame _frame;
     vector<vector<unit>> _U_list;
     vector<vector<unitAction>> _possibles_actions[NUMBER_OF_PLAYERS]; //vector of possible actions

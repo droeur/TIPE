@@ -64,6 +64,19 @@ void state::moves_generate(){
     }
 }
 
+void state::move_to_place(unit *u, position &p){
+    hex_tile* start = _map->get_tile(u->getQ(), u->getR());
+    hex_tile* end = _map->get_tile(p.getQ(), p.getR());
+    if(u->getPath()->size() == 0){
+        vector<hex_tile*> chemin = _map->chemin(start, end);
+        u->setPath(chemin);
+    }
+    if(u->getPath()->size() >= 1){
+        u->position_set((*u->getPath())[0]->q(), (*u->getPath())[0]->r());
+        u->getPath()->erase(u->getPath()->begin());
+    }
+}
+
 /**
  * @brief Pour update tout -> fait les actions et réduits les cooldowns
  * 
@@ -84,16 +97,8 @@ void state::moves_make(){
                             _choosed_actions[player].erase(_choosed_actions[player].begin() + action_index);
                             u->getPath()->clear();
                         } else {
-                            hex_tile* start = _map->get_tile(u->getQ(), u->getR());
-                            hex_tile* end = _map->get_tile(ennemyU->getQ(), ennemyU->getR());
-                            if(u->getPath()->size() == 0){
-                                vector<hex_tile*> chemin = _map->chemin(start, end);
-                                u->setPath(chemin);
-                            }
-                            if(u->getPath()->size() > 1){
-                                u->position_set((*u->getPath())[0]->q(), (*u->getPath())[0]->r());
-                                u->getPath()->erase(u->getPath()->begin());
-                            }
+                            position p = ennemyU->position_get();
+                            move_to_place(u, p);
                         }
                     }
                     break;
@@ -104,8 +109,10 @@ void state::moves_make(){
                         if(distance < 1){
                             _choosed_actions[player].erase(_choosed_actions[player].begin() + action_index);
                             u->getPath()->clear();
-                            if(food->ID_get() == -1){ // pour éviter bug duplication
+                            cout << food->ID_get() << u->carry_food_get() << endl;
+                            if(food->ID_get() == -1 && !u->carry_food_get()){ // pour éviter bug duplication
                                 u->carry_food_set(true);
+                                food->ID_set(0);
                                 int i = 0;
                                 for(food_class f : _food_list){
                                     if(f.position_get() == food->position_get()){
@@ -113,23 +120,10 @@ void state::moves_make(){
                                     }
                                     i++;
                                 }
-                                food->ID_set(0);
                             }
                         } else {
-                            hex_tile* start = _map->get_tile(u->getQ(), u->getR());
-                            hex_tile* end = _map->get_tile(food->getQ(), food->getR());
-                            if(u->getPath()->size() == 0){
-                                vector<hex_tile*> chemin = _map->chemin(start, end);
-                                u->setPath(chemin);
-                            }
-                            if(u->getPath()->size() > 1){
-                                if(!_map->inMap((*u->getPath())[1]->q(), (*u->getPath())[1]->r())){
-                                    u->getPath()->clear();
-                                } else {
-                                    u->position_set((*u->getPath())[1]->q(), (*u->getPath())[1]->r());
-                                    u->getPath()->erase(u->getPath()->begin() + 1);
-                                }
-                            }
+                            position p = food->position_get();
+                            move_to_place(u, p);
                         }
 
                     }
@@ -142,20 +136,7 @@ void state::moves_make(){
                             _choosed_actions[player].erase(_choosed_actions[player].begin() + action_index);
                             u->getPath()->clear();
                         } else {
-                            hex_tile* start = _map->get_tile(u->getQ(), u->getR());
-                            hex_tile* end = _map->get_tile(p.getQ(), p.getR());
-                            if(u->getPath()->size() == 0){
-                                vector<hex_tile*> chemin = _map->chemin(start, end);
-                                u->setPath(chemin);
-                            }
-                            if(u->getPath()->size() > 1){
-                                if(!_map->inMap((*u->getPath())[1]->q(), (*u->getPath())[1]->r())){
-                                    u->getPath()->clear();
-                                } else {
-                                    u->position_set((*u->getPath())[1]->q(), (*u->getPath())[1]->r());
-                                    u->getPath()->erase(u->getPath()->begin() + 1);
-                                }
-                            }
+                            move_to_place(u, p);
                         }
                     }
                 default:

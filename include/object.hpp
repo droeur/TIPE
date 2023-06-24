@@ -9,22 +9,35 @@ using namespace std;
 
 typedef int PlayerID;
 
+enum class object_type{
+    UNDEFINED,
+    BASE,
+    UNIT,
+    FOOD
+};
+
 class object_abstract_class{
 public:
-    object_abstract_class(int q, int r){
-        p.setQ(q);
-        p.setR(r);
+    object_abstract_class(int q, int r, object_type t){
+        this->p.setQ(q);
+        this->p.setR(r);
+        this->_type = t;
     }
-    object_abstract_class(int q, int r, int hp){
-        p.setQ(q);
-        p.setR(r);
+    object_abstract_class(int q, int r, int hp, object_type t){
+        this->p.setQ(q);
+        this->p.setR(r);
         this->_HP = hp;
+        this->_type = t;
     }
-    object_abstract_class(int q, int r, int hp, PlayerID id){
-        p.setQ(q);
-        p.setR(r);
+    object_abstract_class(int q, int r, int hp, PlayerID id, object_type t){
+        this->p.setQ(q);
+        this->p.setR(r);
         this->_HP = hp;
         this->_joueur = id;
+        this->_type = t;
+    }
+    virtual const object_type object_type_get(){
+        return this->_type;
     }
     virtual void position_set(int q, int r) {
         vector<int> a = {0};
@@ -70,4 +83,5 @@ protected:
     int _HP = 0;
     PlayerID _joueur = (PlayerID)-1;
     int _ID = -1;
+    object_type _type = object_type::UNDEFINED;
 };

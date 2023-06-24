@@ -69,7 +69,7 @@ protected:
 
 class unit : public object_abstract_class {
 public:
-    unit(int q, int r, PlayerID id, int hp) : object_abstract_class(q,r, hp, id){
+    unit(int q, int r, PlayerID id, int hp) : object_abstract_class(q,r, hp, id, object_type::UNIT){
         t_a = 0;
         t_m = 0;
         actualAction = NULL;
