@@ -84,30 +84,30 @@ void state::move_to_place(unit *u, position &p){
 void state::moves_make(){
     for(int player = 0; player < NUMBER_OF_PLAYERS; player++){
         if(_choosed_actions[player].size()){
-            int action_index = 0;
-            for(unitAction action:_choosed_actions[player]){
-                unit *u = action.unit_get();
-                switch(action.actionType_get()){
+            for(vector<unitAction>::iterator action = _choosed_actions[player].begin(); action != _choosed_actions[player].end();){
+                unit *u = action->unit_get();
+                switch(action->actionType_get()){
                 case uActionID::ATTACK:
                     {
-                        object_abstract_class *ennemyU = action.targetUnit_get();
+                        object_abstract_class *ennemyU = action->targetUnit_get();
                         double distance = u->position_get().distance(ennemyU->position_get(), _map);
                         if(ATTACK_DISTANCE > distance){
                             u->attack(ennemyU);
-                            _choosed_actions[player].erase(_choosed_actions[player].begin() + action_index);
+                            action = _choosed_actions[player].erase(action);
                             u->getPath()->clear();
                         } else {
                             position p = ennemyU->position_get();
                             move_to_place(u, p);
+                            ++action;
                         }
                     }
                     break;
                 case uActionID::PICK:
                     {
-                        object_abstract_class* food = action.targetUnit_get();
+                        object_abstract_class* food = action->targetUnit_get();
                         double distance = u->position_get().distance(food->position_get(), _map);
                         if(distance < 1){
-                            _choosed_actions[player].erase(_choosed_actions[player].begin() + action_index);
+                            action = _choosed_actions[player].erase(action);
                             u->getPath()->clear();
                             cout << food->ID_get() << u->carry_food_get() << endl;
                             if(food->ID_get() == -1 && !u->carry_food_get()){ // pour éviter bug duplication
@@ -124,29 +124,41 @@ void state::moves_make(){
                         } else {
                             position p = food->position_get();
                             move_to_place(u, p);
+                            ++action;
                         }
 
                     }
                     break;
                 case uActionID::MOVE:
                     {
-                        position &p = action.position_get();
+                        position &p = action->position_get();
                         double distance = u->position_get().distance(p, _map);
                         if(distance < 1){
-                            _choosed_actions[player].erase(_choosed_actions[player].begin() + action_index);
+                            action = _choosed_actions[player].erase(action);
                             u->getPath()->clear();
                         } else {
                             move_to_place(u, p);
+                            ++action;
                         }
                     }
                 default:
                     cout << "Error : invalid action to do in non-zero vec" << endl;
+                    ++action;
                 }
-                action_index++;
             }
         }
         for(unit &u:_U_list[player]){
             u.update_coolDown();
+            if (u.carry_food_get())
+            {
+                for (base_class& base :_base_list)
+                {
+                    if (base.getPlayer() == player && base.position_get().distance(u.position_get(), _map))
+                    {
+                        unit newU{};
+                    }
+                }
+            }
         }
     }
 }

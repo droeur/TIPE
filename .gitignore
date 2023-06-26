@@ -5,6 +5,8 @@
 *.tmPreferences.cache
 *.stTheme.cache
 *.vscode-workspace
+out/
+.vs/
 
 # CMake
 build/

@@ -214,7 +214,7 @@ bool graphic::update(state &s){
 
     SDL_GetWindowSize(window, &windowW, &windowH);
 
-    char arr_FPS[3];
+    char arr_FPS[20];
     sprintf(arr_FPS, "%d", (int)s.fps_get());
     print(2, 2, arr_FPS, text_white);
 
