@@ -1,3 +1,3 @@
 #pragma once
 
-typedef int PlayerID;
+typedef int player_id;

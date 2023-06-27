@@ -2,19 +2,19 @@
 
 #include "types.hpp"
 #include "units.hpp"
-#include "state.hpp"
 #include <vector>
 
 class player {
 public:
-    virtual vector<unitAction> getMoves(state &s, vector<vector<unitAction>> & possibleActionsVec){
-        vector<unitAction> v;
-        cout << "ERROR : base player" << endl;
+    virtual std::vector<unit_action> getMoves(state& s, std::vector<std::vector<unit_action>>& possibleActionsVec)
+    {
+        std::vector<unit_action> v;
+        std::cout << "ERROR : base player" << std::endl;
         return v;
     };
-    PlayerID getPlayerID(){
+    player_id getPlayerID(){
         return _playerID;
     };
 protected:
-    PlayerID _playerID;
+    player_id _playerID;
 };

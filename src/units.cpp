@@ -1,15 +1,17 @@
 #include "units.hpp"
-#include <time.h>
+
+using namespace std;
 
 void unit::move(double x ,double y){
     
 }
 void unit::attack(object_abstract_class* b){
-    b->removeHP(1);
-    if(b->getHP() < 0){
-        b->setHP(0);
+    b->hp_remove(1);
+    if(b->hp_get() < 0){
+        b->hp_set(0);
     }
-    cout << "unit " << this << " ,player " << (int)_joueur << " attacked unit " << b << " ,player " << (int)b->getPlayer() << " hp = " << b->getHP() << endl;
+    std::cout << "unit " << this << " ,player " << (int)player_ << " attacked unit " << b << " ,player "
+              << (int)b->player_get() << " hp = " << b->hp_get() << std::endl;
     t_a = ATTACK_COOLDOWN;
 }
 void unit::wait(time_t t){

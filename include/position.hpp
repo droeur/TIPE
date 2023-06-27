@@ -9,10 +9,10 @@ public:
         return map->get_tile(_q, _r)->distance(map->get_tile(p._q, p._r));
     }
     int getXGraphic(map_class *map){
-        return map->get_tile(_q, _r)->xGraphic();
+        return map->get_tile(_q, _r)->graphic_x();
     }
     int getYGraphic(map_class *map){
-        return map->get_tile(_q, _r)->yGraphic();
+        return map->get_tile(_q, _r)->graphic_y();
     }
     int getQ(){
         return _q;
@@ -37,5 +37,5 @@ public:
         return this->_q == p._q && this->_r == p._r;
     }
 protected:
-    int _q, _r;
+    int _q = 0, _r = 0;
 };

@@ -7,10 +7,10 @@
 
 class base_class : public object_abstract_class{
 public:
-    base_class(int q, int r, PlayerID joueur) : object_abstract_class(q,r, 100,joueur, object_type::BASE){
+    base_class(int q, int r, player_id joueur) : object_abstract_class(q,r, 100,joueur, object_type::base){
 
     };
-    PlayerID playerId_get(){return _joueur;};
+    player_id playerId_get(){return player_;};
 
 private:
 
