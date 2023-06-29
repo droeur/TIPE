@@ -16,11 +16,11 @@ using namespace std;
 
 int main(int argc, char* argv[])
 {
-    ofstream result{"result.txt", ofstream::out};
+/*    ofstream result{"result.txt", ofstream::out};
     for (int i = 0; i < 100; i++)
-    {
+    {*/
         player_id gagnant = -1;
-        cout << i << endl;
+        // cout << i << endl;
         // On lit le fichier parametres
         // settings_parse();
 
@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
         map_class map{"map_empty.txt"};
 
         // Initialisation des graphismes SDL
-        //graphic game_graphic;
+        graphic game_graphic;
 
         // Classes jeu et etat
         game g;
@@ -60,7 +60,7 @@ int main(int argc, char* argv[])
 
         if (argc > 1)
         {
-          //  test_func(map, s, game_graphic);
+          test_func(map, s, game_graphic);
         }
         else
         {
@@ -69,7 +69,7 @@ int main(int argc, char* argv[])
             bool quit = false;
             while (!quit)
             {
-                //uint64_t begin_frame = SDL_GetPerformanceCounter();
+                uint64_t begin_frame = SDL_GetPerformanceCounter();
 
                 g.play(s, P);
                 for (base_class &b:*s.base_list_get())
@@ -110,7 +110,7 @@ int main(int argc, char* argv[])
                     }
                 }
 
-                /*quit = game_graphic.update(s);
+                quit = game_graphic.update(s);
 
                 uint64_t end_frame_before = SDL_GetPerformanceCounter();
                 double elapsed_ms_before =
@@ -119,11 +119,11 @@ int main(int argc, char* argv[])
                 uint64_t end_frame_after = SDL_GetPerformanceCounter();
                 double elapsed_ms_after =
                     (end_frame_after - begin_frame) / static_cast<double>(SDL_GetPerformanceFrequency());
-                s.fps_set(1.0 / elapsed_ms_after);*/
+                s.fps_set(1.0 / elapsed_ms_after);
             }
         }
-        //game_graphic.quit();
-        result << gagnant << ",";
-    }
+        game_graphic.quit();
+//        result << gagnant << ",";
+//    }
     return EXIT_SUCCESS;
 }
