@@ -15,10 +15,15 @@
 \usepackage{tikz}
 \usetikzlibrary{calc,trees,positioning,arrows,chains,shapes.geometric,%
     decorations.pathreplacing,decorations.pathmorphing,shapes,%
-    matrix,shapes.symbols}
+    matrix,shapes.symbols,fit,arrows.meta,backgrounds}
+
+\usepackage{pgfplots} 
 
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}[section]
+
+\graphicspath{ {./images/} }
+
 
 \begin{document}
 
@@ -37,11 +42,12 @@ la construction de bases et d'armées et le combat contre l'ennemi. Il y a trois
 phases stratégiques : l'attaque, la défense et l'expansion. Dans une partie classique,
 le joueur alterne suivant ces trois phases. Nous n'étudierons ici que l'attaque.
 \\
-Chaque joueur contrôle des unités qu'il peut bouger et qui peuvent effectuer 3
+Chaque joueur contrôle des unités qu'il peut bouger et qui peuvent effectuer 4
 actions :
 \begin{itemize}
     \item Bouger l'unité $a$ à la position $p$
     \item Attaquer l'unité $b$ avec l'unité $a$
+    \item Ramasser la nourriture $f$ avec l'unité $a$
     \item Attendre $t$ secondes
 \end{itemize}
 les unités on une variable "HP" qui définit leur vie, c'est à dire que lorsqu'elle
@@ -147,5 +153,143 @@ La boucle du jeu est :
 \end{center}
 
 On effectue des tests avec un joueur choisissant toutes ses actions de manière aléatoire.
+
+\newpage
+
+\section*{Modèle simple de l'intéraction joueur $\leftrightarrow$ jeu}
+
+\vspace*{2em}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{screen.png}
+    \includegraphics[width=\textwidth]{screen2.png}
+    \caption{Captures d'écrans du programme}
+\end{figure}
+\vspace*{2em}
+\begin{center}
+\begin{tikzpicture}[%
+    inner sep=3ex, semithick, ->, > = Latex,every node/.style={draw, rectangle, font=\sffamily}, align=center]
+    \node(API) at (5,0) {API\\(interface de programmation)};
+    \node(1) at (-3,0) {Joueur};
+    \begin{scope}[transform canvas={yshift=.7em}]
+        \draw(API) -- node[inner sep=1ex, above, draw=none]{Carte, unitées,\\actions possibles} (1);
+    \end{scope}
+    \begin{scope}[transform canvas={yshift=-.7em}]
+        \draw(1) -- node[inner sep=1ex, below, draw=none]{Actions choisies} (API);
+    \end{scope}
+
+\end{tikzpicture}
+\end{center}
+
+\newpage
+On définit trois objets:
+\begin{description}
+    \item[unité] $u = (p, hp, t_a, t_m, type)$
+    \item[nourriture] $f = (p)$
+    \item[base] $b = (p, hp)$
+\end{description}
+
+Chaque joueur contrôle des unités qu'il peut bouger et qui peuvent effectuer 4
+actions :
+\begin{itemize}
+    \item Bouger l'unité $a$ à la position $p$
+    \item Attaquer l'unité $b$ avec l'unité $a$
+    \item Ramasser la nourriture $f$ avec l'unité $a$
+    \item Attendre $t$ secondes
+\end{itemize}
+
+\section*{Joueur aléatoire}
+\begin{tikzpicture}
+    \begin{axis} [
+        title={Joueurs aléatoires},
+        ybar,
+        bar width = 10mm,
+        ymin = 0,
+        ymax = 800,
+        enlarge x limits=0.5,
+        xtick = data,
+        symbolic x coords={joueur 1, égalité, joueur 2},
+    ]
+     
+    \addplot coordinates {({joueur 1},359) ({égalité},4) ({joueur 2},637)};
+     
+    \end{axis}
+\end{tikzpicture}
+
+\section*{Modèle simple de joueur avec stratégie groupée}
+\begin{center}
+\begin{tikzpicture}[%
+    ->, > = Latex,every node/.style={draw, rectangle, font=\sffamily}, align=center]
+    \node (Squad) at (-3,-3) {Squads};
+    \node (Squad2) at (-3.1,-3.1) [behind path, fill=white]{Squads};
+    \node (Squad3) at (-3.2,-3.2) [behind path, fill=white] {Squads};
+    \node (Army) at (-2,-1.5) {Manager des\\armées};
+    \node (Worker) at (3,-1.5) {Manager des\\travailleurs};
+
+    \draw [ <->] (Army) -- (Worker);
+    \draw [ -> ] (Army) -- (Squad);
+    \node[minimum width = 20em, minimum height = 2em, thick] (API) at (0, -5){API};
+    
+    \begin{scope}[transform canvas={xshift=-1.5em}]
+    \draw[semithick]    (API.north -| Army.south east) edge (Army.south east)
+                        (API.north -| Worker)  to  (Worker);
+    \end{scope}
+    \node[draw, thick, inner sep=3ex, yshift=-1ex, fit=(Squad3) (Worker) (Army) (Squad)] (stratBox) {};
+    \node[fill=white, inner xsep=1ex] at (stratBox.north) {Joueur};
+
+    \draw[semithick, ->]    (Squad3.south) -- (Squad3.south |- API.north);;
+\end{tikzpicture}
+\end{center}
+
+\section*{MaasCraft}
+\begin{center}
+\begin{tikzpicture}[%
+    ->, > = Latex,every node/.style={draw, rectangle, font=\sffamily}, align=center]
+    \node (Map) at (-5,0) {Analyseur de carte};
+    \node (Units) at (-5,-0.9) {Analyseur d'unitées};
+    \node (Strategy) at (1.5,0) {Manager des strategies};
+    \node (Squad) at (0,-3) {Squads};
+    \node (Squad2) at (0.1,-3.1) [behind path, fill=white]{Squads};
+    \node (Squad3) at (0.2,-3.2) [behind path, fill=white] {Squads};
+    \node (Army) at (0,-1.5) {Manager des\\armées};
+    \node (Worker) at (3,-1.5) {Manager des\\travailleurs};
+
+    \node[draw, thick, inner sep=3ex, yshift=-1ex, fit=(Strategy) (Worker) (Army) (Squad)] (stratBox) {};
+    \node[fill=white, inner xsep=1ex] at (stratBox.north) {Décisions};
+
+    \path let
+    \p1 = (stratBox.north west),
+    \p2 = (stratBox.south west),
+    \n1 = {\y1-\y2} %\yN is y-coordinate of \pN
+    in node[draw, thick, minimum height = \n1, inner sep=3ex, yshift=-\n1/2+3.9ex, fit=(Map)] (infoBox) {};
+    \node[fill=white, inner xsep=1ex] at (infoBox.north) {Informations};
+
+    \draw [ <-> , semithick] (infoBox.east) -- (stratBox.west);
+    \draw [ <->] (Army) -- (Worker);
+    \draw [ -> ] (Army) -- (Squad);
+    \draw   (Strategy.south -| Army) edge (Army)
+            (Strategy.south -| Worker)  to  (Worker);
+    \path let
+    \p1 = (infoBox.north west),
+    \p2 = (stratBox.south west),
+    \n1 = {-\x2-\x1}
+    in node[minimum width = \n1, minimum height = 2em, thick] (API) at (\y1-5em, -5){API};
+    \draw[semithick]    (API.north -| infoBox) edge (infoBox)
+                        (API.north -| stratBox)  to  (stratBox);
+
+    \draw[semithick, ->]    (Squad3.south) -- (Squad3.south |- API.north);;
+\end{tikzpicture}
+\end{center}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{screen4.png}
+    \caption{Analyse des positions}
+\end{figure}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{screen3.png}
+    \caption{Machine à états finis}
+\end{figure}
+
 
 \end{document}
