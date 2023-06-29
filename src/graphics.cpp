@@ -52,29 +52,29 @@ bool graphic::update(state& s)
      * 
      */
 
-    SDL_FRect map_tile_rect[size_q][size_r];
+    SDL_FRect map_tile_rect;
 
     SDL_SetRenderDrawColor(render_, RED);
     int x = 0, y = 0;
-    for (vector<hex_tile>& col : s.map_get()->tiles_map_get())
+    for (vector<hex_tile>& row : s.map_get()->tiles_map_get())
     {
-        for (hex_tile& hex : col)
+        for (hex_tile& hex : row)
         {
             if (hex.q() != mouse_get_q() || hex.r() != mouse_get_r())
             {
-                map_tile_rect[x][y].x = (hex.graphic_x() - 0.5) * zoom_ + x_shift_ * zoom_;
-                map_tile_rect[x][y].y = (hex.graphic_y() - 0.5) * HEX_HEIGHT_COEFF * zoom_ + y_shift_ * zoom_;
-                map_tile_rect[x][y].w = 1 * zoom_;
-                map_tile_rect[x][y].h = 1 * zoom_;
+                map_tile_rect.x = (hex.graphic_x() - 0.5) * zoom_ + x_shift_ * zoom_;
+                map_tile_rect.y = (hex.graphic_y() - 0.5) * HEX_HEIGHT_COEFF * zoom_ + y_shift_ * zoom_;
+                map_tile_rect.w = 1 * zoom_;
+                map_tile_rect.h = 1 * zoom_;
                 if (hex.passable())
-                    SDL_RenderTexture(render_, hex_passable_texture_, nullptr, &map_tile_rect[x][y]);
+                    SDL_RenderTexture(render_, hex_passable_texture_, nullptr, &map_tile_rect);
                 else
-                    SDL_RenderTexture(render_, hex_blocked_texture_, nullptr, &map_tile_rect[x][y]);
+                    SDL_RenderTexture(render_, hex_blocked_texture_, nullptr, &map_tile_rect);
             }
-            y++;
+            x++;
         }
-        x++;
-        y = 0;
+        y++;
+        x = 0;
     }
 
     SDL_FRect lifeRect;
@@ -87,8 +87,8 @@ bool graphic::update(state& s)
     SDL_FRect unitRect;
     unitRect.x = 0;
     unitRect.y = 0;
-    unitRect.w = 0.5 * zoom_;
-    unitRect.h = 0.5 * zoom_;
+    unitRect.w = zoom_ * 0.5;
+    unitRect.h = zoom_ * 0.5;
     vector<vector<unit>> list_of_U_list = s.unit_list_get();
     for (auto& U_list : list_of_U_list)
     {
@@ -105,9 +105,9 @@ bool graphic::update(state& s)
                 {
                     SDL_SetRenderDrawColor(render_, RED);
                 }
-                tile = s.map_get()->get_tile(u.q_get(), u.r_get());
+                tile = s.map_get()->tile_get(u.q_get(), u.r_get());
                 unitRect.x = (tile->graphic_x()) * zoom_ - unitRect.w / 2 + x_shift_ * zoom_;
-                unitRect.y = (tile->graphic_y() * HEX_HEIGHT_COEFF) * zoom_ - unitRect.h / 2 + y_shift_ * zoom_;
+                unitRect.y = (u.r_get() * HEX_HEIGHT_COEFF) * zoom_ - unitRect.h / 2 + y_shift_ * zoom_;
                 SDL_RenderFillRect(render_, &unitRect);
 
                 lifeRect.w = 0.1 * unit_hp * zoom_;
@@ -171,7 +171,7 @@ bool graphic::update(state& s)
     for (food_class& food : *food_list)
     {
         hex_tile* tile = nullptr;
-        tile = s.map_get()->get_tile(food.q_get(), food.r_get());
+        tile = s.map_get()->tile_get(food.q_get(), food.r_get());
         foodRect.x = (tile->graphic_x()) * zoom_ - foodRect.w / 2 + x_shift_ * zoom_;
         foodRect.y = (tile->graphic_y() * HEX_HEIGHT_COEFF) * zoom_ - foodRect.h / 2 + y_shift_ * zoom_;
         SDL_RenderFillRect(render_, &foodRect);
@@ -194,7 +194,7 @@ bool graphic::update(state& s)
     {
         constexpr int bar_width = 0.01 * BASE_HP;
         hex_tile* tile = nullptr;
-        tile = s.map_get()->get_tile(base.q_get(), base.r_get());
+        tile = s.map_get()->tile_get(base.q_get(), base.r_get());
         base_rect.x = static_cast<float>(tile->graphic_x() * zoom_ - base_rect.w / 2 + x_shift_ * zoom_);
         base_rect.y =
             static_cast<float>(tile->graphic_y() * HEX_HEIGHT_COEFF * zoom_ - base_rect.h / 2 + y_shift_ * zoom_);
@@ -243,7 +243,12 @@ bool graphic::update(state& s)
         cout << "error printing" << endl;
     }
     print(50, 2, arr_size, text_white);
-    int i = 0;
+    string pos_str;
+    pos_str += to_string(mouse_get_q());
+    pos_str += " ";
+    pos_str += to_string(mouse_get_r());
+    print_right(window_w, 0, pos_str.c_str(), text_white);
+    int i = 2;
     for (object_abstract_class* obj : pointed_objects)
     {
         char arr_info[20];

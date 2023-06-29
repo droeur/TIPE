@@ -19,7 +19,7 @@ int main(int argc, char* argv[])
     // settings_parse();
 
     // On lit et cree la carte
-    map_class map{"../../../../map.csv"};
+    map_class map{"map.txt"};
 
     // Initialisation des graphismes SDL
     graphic game_graphic;

@@ -4,14 +4,7 @@
 #include <vector>
 #include <rapidcsv.h>
 #include <float.h>
-
-enum
-{
-    size_q = 64,
-    size_r = 64
-};
-
-#define MAX_A_STAR_DEPTH size_q * size_r
+#include <fstream>
 
 /**
  * Hex directions:
@@ -47,40 +40,40 @@ public:
 
     }
 
-    bool operator==(const hex_tile a) const 
+    bool operator==(const hex_tile a) const
     {
         return q_ == a.q_ && r_ == a.r_ && s_ == a.s_;
     }
 
-    bool operator!=(const hex_tile a) const 
+    bool operator!=(const hex_tile a) const
     {
         return q_ != a.q_ || r_ != a.r_ || s_ != a.s_;
     }
 
-    hex_tile operator+(const hex_tile a) const 
+    hex_tile operator+(const hex_tile a) const
     {
         const hex_tile b(q_ + a.q_, r_ + a.r_);
         return b;
     }
 
-    hex_tile operator-(const hex_tile a) const 
+    hex_tile operator-(const hex_tile a) const
     {
         const hex_tile b(q_ - a.q_, r_ - a.r_);
         return b;
     }
 
-    [[nodiscard]] bool passable() const 
+    [[nodiscard]] bool passable() const
     {
         return passable_;
     }
 
-    [[nodiscard]] float distance(const hex_tile& a) const 
+    [[nodiscard]] float distance(const hex_tile& a) const
     {
         const hex_tile temp = *this - a;
         return static_cast<float>(abs(temp.q_) + abs(temp.r_) + abs(temp.s_)) / 2.0f;
     }
 
-    float distance(const hex_tile* a) const 
+    float distance(const hex_tile* a) const
     {
         const hex_tile temp = *this - *a;
         return static_cast<float>(abs(temp.q_) + abs(temp.r_) + abs(temp.s_)) / 2.0f;
@@ -95,44 +88,44 @@ public:
         return hex_tile_directions[dir];
     }
 
-    [[nodiscard]] hex_tile neighbor(const int dir) const 
+    [[nodiscard]] hex_tile neighbor(const int dir) const
     {
         return *this + direction(dir);
     }
 
     // coordinates cube
-    [[nodiscard]] int q() const 
+    [[nodiscard]] int q() const
     {
         return q_;
     }
 
-    [[nodiscard]] int r() const 
+    [[nodiscard]] int r() const
     {
         return r_;
     }
 
-    [[nodiscard]] int s() const 
+    [[nodiscard]] int s() const
     {
         return s_;
     }
 
     //coordinates "offset even-r"
-    [[nodiscard]] int index_x() const 
-    {
-        return r_;
-    }
-
-    [[nodiscard]] int index_y() const 
+    [[nodiscard]] int index_x() const
     {
         return q_ + (r_ + (r_ & 1)) / 2;
     }
 
-    [[nodiscard]] double graphic_x() const 
+    [[nodiscard]] int index_y() const
+    {
+        return r_;
+    }
+
+    [[nodiscard]] double graphic_x() const
     {
         return x_graphic_;
     }
 
-    [[nodiscard]] double graphic_y() const 
+    [[nodiscard]] double graphic_y() const
     {
         return r_;
     }
@@ -144,27 +137,27 @@ public:
     float cost_h = FLT_MAX; //heuristic
     float cost_f = FLT_MAX; //g+h
 
-    int parent_x() const 
-    {
-        return parent_r;
-    }
-
-    int parent_y() const 
+    [[nodiscard]] int parent_x() const
     {
         return parent_q + (parent_r + (parent_r & 1)) / 2;
     }
 
-    bool operator<(const hex_tile& a) const 
+    [[nodiscard]] int parent_y() const
+    {
+        return parent_r;
+    }
+
+    bool operator<(const hex_tile& a) const
     {
         return this->cost_f < a.cost_f;
     }
 
-    bool operator>(const hex_tile& a) const 
+    bool operator>(const hex_tile& a) const
     {
         return this->cost_f > a.cost_f;
     }
 
-    bool is_valid() const 
+    bool is_valid() const
     {
         return this->passable_;
     }
@@ -184,6 +177,7 @@ public:
         : q(q), r(r)
     {
     }
+
     int q;
     int r;
 
@@ -198,29 +192,50 @@ class map_class
 public:
     explicit map_class(const std::string& file_name)
     {
-        const rapidcsv::Document map_doc(file_name, rapidcsv::LabelParams(-1, -1));
-        for (int q = 0; static_cast<unsigned int>(q) < map_doc.GetColumnCount(); q++)
+        std::fstream file{file_name};
+        std::string line;
+        int r = 0;
+        int q = 0;
+        while (std::getline(file, line))
         {
-            std::vector<hex_tile> column;
-            for (int r = 0; static_cast<unsigned int>(r) < map_doc.GetColumn<int>(q).size(); r++)
+            std::vector<hex_tile> row;
+            for (const auto c :line)
             {
-                const bool passable = map_doc.GetColumn<int>(q).at(r) != 0;
+                const bool passable = c != '0';
                 hex_tile t{q - (r + (r & 1)) / 2, r, passable};
-                column.push_back(t);
+                row.push_back(t);
+                q++;
             }
-            this->add_column(column);
+            this->row_add(row);
+            size_x_ = q;
+            q = 0;
+            r++;
         }
+        size_y_ = r;
+        /*const rapidcsv::Document map_doc(file_name, rapidcsv::LabelParams(-1, -1));
+        for (int r = 0; static_cast<unsigned int>(r) < map_doc.GetRowCount(); r++)
+        {
+            std::vector<hex_tile> row;
+            for (int q = 0; static_cast<unsigned int>(q) < map_doc.GetRow<int>(r).size(); q++)
+            {
+                const bool passable = map_doc.GetRow<int>(r).at(q) != 0;
+                hex_tile t{q - (r + (r & 1)) / 2, r, passable};
+                row.push_back(t);
+            }
+            this->row_add(row);
+        }*/
     }
+
     std::vector<hex_tile*> path_a_star(hex_tile* start, hex_tile* end);
 
-    hex_tile* get_tile(const int q, const int r)
+    hex_tile* tile_get(const int q, const int r)
     {
-        return &tiles_map_[q + (r + (r & 1)) / 2][r];
+        return &tiles_map_[r][q + (r + (r & 1)) / 2];
     }
 
-    void add_column(const std::vector<hex_tile>& col)
+    void row_add(const std::vector<hex_tile>& row)
     {
-        tiles_map_.push_back(col);
+        tiles_map_.push_back(row);
     }
 
     std::vector<std::vector<hex_tile>> tiles_map_get()
@@ -228,18 +243,30 @@ public:
         return tiles_map_;
     }
 
-    static bool in_map(const int q, const int r)
+    static bool in_map(const int q, const int r, const map_class *map)
     {
-        return q + (r + (r & 1)) / 2 >= 0 && r >= 0 && q + (r + (r & 1)) / 2 < size_q && r < size_r;
+        return q + (r + (r & 1)) / 2 >= 0 && r >= 0 && q + (r + (r & 1)) / 2 < map->size_x_get() && r < map->size_y_get();
     }
 
-    [[nodiscard]] bool passable(const int q, const int r) const 
+    [[nodiscard]] bool passable(const int q, const int r) const
     {
-        if (!in_map(q, r))
+        if (!in_map(q, r, this))
             return false;
         return tiles_map_[q + (r + (r & 1)) / 2][r].passable();
     }
 
+    [[nodiscard]] int size_x_get() const
+    {
+        return size_x_;
+    }
+
+    [[nodiscard]] int size_y_get() const
+    {
+        return size_y_;
+    }
+
 private:
+    int size_x_;
+    int size_y_;
     std::vector<std::vector<hex_tile>> tiles_map_;
 };

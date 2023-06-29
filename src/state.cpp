@@ -92,14 +92,14 @@ void state::moves_generate()
 
 void state::move_to_place(unit* u, position& p) const
 {
-    hex_tile* start = map_->get_tile(u->q_get(), u->r_get());
-    hex_tile* end = map_->get_tile(p.getQ(), p.getR());
+    hex_tile* start = map_->tile_get(u->q_get(), u->r_get());
+    hex_tile* end = map_->tile_get(p.getQ(), p.getR());
     if (u->path_get()->empty())
     {
         const vector<hex_tile*> path = map_->path_a_star(start, end);
         u->path_set(path);
     }
-    else if (!u->path_get()->empty())
+    else
     {
         u->position_set((*u->path_get())[0]->q(), (*u->path_get())[0]->r());
         u->path_get()->erase(u->path_get()->begin());
@@ -199,10 +199,11 @@ void state::moves_make()
                 {
                     if (base.player_get() == player && base.position_get().distance(u.position_get(), map_) < 1)
                     {
+                        u.carry_food_set(false);
                         const int q = u.q_get();
                         const int r = u.r_get();
                         unit u_new{q, r, u.player_get(), 10};
-                        u_list_[player].push_back(u_new);
+                        //u_list_[player].push_back(u_new);
                     }
                 }
             }
