@@ -5,10 +5,10 @@
 
 using namespace std;
 
-void game::play(state &s, vector<player*> P) {
+void game::play(state &s, vector<player*>& P) {
     s.moves_generate();
     for(player* p:P){
-        s.chosen_actions_set(p->getMoves(s, s.possibles_actions_get()[(int)p->getPlayerID()]), (int)p->getPlayerID());
+        s.chosen_actions_set(p->getMoves(s, s.possibles_actions_get()[p->getPlayerID()]), p->getPlayerID());
     }
     s.moves_make();
 }

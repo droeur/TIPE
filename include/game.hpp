@@ -16,7 +16,7 @@ class game;
 
 class game{
 public:
-    void play(state &s, vector<player*> P);
+    static void play(state& s, vector<player*>& P);
     player_id getEnnemy(player_id p){
         return p == 0;
     };

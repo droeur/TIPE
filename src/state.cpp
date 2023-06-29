@@ -126,7 +126,7 @@ void state::moves_make()
                     if (const double distance = u->position_get().distance(enemy_u->position_get(), map_);
                         ATTACK_DISTANCE > distance)
                     {
-                        u->attack(enemy_u);
+                        u->attack(enemy_u, *this);
                         action = chosen_actions_[player].erase(action);
                         u->path_get()->clear();
                     }
@@ -153,7 +153,7 @@ void state::moves_make()
                             int i = 0;
                             for (food_class f : food_list_)
                             {
-                                if (f.position_get() == food->position_get())
+                                if (f.position_get() == food->position_get() && i < food_list_.size())
                                 {
                                     food_list_.erase(food_list_.begin() + i);
                                 }
@@ -190,8 +190,10 @@ void state::moves_make()
                 }
             }
         }
-        for (unit& u : u_list_[player])
+        vector<unit>::size_type size = u_list_[player].size();
+        for (vector<unit>::size_type index = 0; index < size; ++index)
         {
+            unit &u = u_list_[player][index];
             u.update_cooldown();
             if (u.carry_food_get())
             {
@@ -200,10 +202,11 @@ void state::moves_make()
                     if (base.player_get() == player && base.position_get().distance(u.position_get(), map_) < 1)
                     {
                         u.carry_food_set(false);
-                        const int q = u.q_get();
-                        const int r = u.r_get();
+                        const int q = base.q_get();
+                        const int r = base.r_get();
                         unit u_new{q, r, u.player_get(), 10};
-                        //u_list_[player].push_back(u_new);
+                        u_list_[player].push_back(u_new);
+                        ++size;
                     }
                 }
             }

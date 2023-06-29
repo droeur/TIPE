@@ -7,4 +7,12 @@ public:
         _playerID = id;
     }
     virtual vector<unitAction> getMoves(state &s, vector<vector<unitAction>> & possibleActionsVec);
+protected:
+
+};
+
+class squad
+{
+public:
+
 };

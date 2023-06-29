@@ -124,7 +124,7 @@ bool graphic::update(state& s)
             }
         }
     }
-
+    /*
     SDL_SetRenderDrawColor(render_, BLUE);
     for (int player = 0; player < NUMBER_OF_PLAYERS; player++)
     {
@@ -149,14 +149,13 @@ bool graphic::update(state& s)
                                    y_shift_ * zoom_);
                 }
                 break;
-                default: cout << "Error : invalid action to do in non-zero vec" << endl;
                 }
                 action_index++;
             }
         }
         SDL_SetRenderDrawColor(render_, RED);
     }
-
+    */
     /**
      * draw food
      * 
