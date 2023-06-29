@@ -32,7 +32,7 @@ set(DEFINES
 
 # Compiler options
 set(OPTIONS
-    -Wall
+    
 )
 
 # Project setup

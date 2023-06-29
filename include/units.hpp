@@ -2,9 +2,7 @@
 
 #include <vector>
 
-using namespace std;
-
-typedef int frame;
+using frame = int;
 
 #define ATTACK_COOLDOWN (frame)24
 #define ATTACK_DISTANCE 4
@@ -13,109 +11,132 @@ typedef int frame;
 
 #define SPEED_FACTOR 0.5
 
-#define UNIT_HP 10
+constexpr int unit_hp = 10;
 
-enum class uType {NORMAL};
-enum class uActionID {ERROR, MOVE, ATTACK, WAIT, PICK};
+enum class u_type { normal };
+
+enum class u_action_id { error, move, attack, wait, pick };
 
 class unit;
-class unitAction;
+class unit_action;
 #include "object.hpp"
-#include "game.hpp"
 #include "position.hpp"
-#include "player.hpp"
 
-class unitAction{
+class unit_action
+{
 public:
-    unitAction(unit* u, uActionID type, object_abstract_class* cible, frame frameRestantes) : 
-        _u(u), 
-        _actionType(type), 
-        _cible(cible),
-        _frameRestantes(frameRestantes){
-    };
-    unitAction(unit* u, uActionID type, position cible, frame frameRestantes) : 
-        _u(u), 
-        _actionType(type),
-        _frameRestantes(frameRestantes)
-        {
-            p = cible;
-    };
-    ~unitAction(){
-        
-    };
+    unit_action(unit* u, const u_action_id type, object_abstract_class* target, const frame remaining_frames)
+        : u_(u),
+          action_type_(type),
+          target_(target),
+          remaining_frames_(remaining_frames)
+    {
+    }
 
-    unit* unit_get(){
-        return _u;
+    unit_action(unit* u, const u_action_id type, const position target, const frame remaining_frames)
+        : u_(u),
+          action_type_(type),
+          remaining_frames_(remaining_frames)
+    {
+        p_ = target;
     }
-    uActionID actionType_get(){
-        return _actionType;
+
+    [[nodiscard]]
+    unit* unit_get() const
+    {
+        return u_;
     }
-    object_abstract_class* targetUnit_get(){
-        return _cible;
+
+    [[nodiscard]]
+    u_action_id action_type_get() const
+    {
+        return action_type_;
     }
-    position &position_get(){
-        return p;
+
+    [[nodiscard]]
+    object_abstract_class* target_unit_get() const
+    {
+        return target_;
     }
+
+    position& position_get()
+    {
+        return p_;
+    }
+
 protected:
-    unit* _u;
-    uActionID _actionType;
-    object_abstract_class* _cible;
-    frame _frameRestantes;
-    position p;
+    unit* u_;
+    u_action_id action_type_;
+    object_abstract_class* target_ = nullptr;
+    frame remaining_frames_;
+    position p_;
 };
 
 
-
-
-class unit : public object_abstract_class {
+class unit : public object_abstract_class
+{
 public:
-    unit(int q, int r, PlayerID id, int hp) : object_abstract_class(q,r, hp, id, object_type::UNIT){
+    unit(const int q, const int r, const player_id id, const int hp)
+        : object_abstract_class(q, r, hp, id, object_type::undefined)
+    {
         t_a = 0;
         t_m = 0;
-        actualAction = NULL;
+        actual_action_ = nullptr;
     }
-    void setActualAction(unitAction *action){
-        actualAction = action;
+
+    void actual_action_set(unit_action* action)
+    {
+        actual_action_ = action;
     }
-    unitAction *getActualAction(){
-        return actualAction;
+
+    [[nodiscard]] unit_action* actual_action_get() const
+    {
+        return actual_action_;
     }
-//actions
-    void move(double x ,double y);
+
+    //actions
+    void move(double x, double y);
     void attack(object_abstract_class* b);
     void wait(time_t t);
 
-    bool canMove() {return t_m == 0 && _HP > 0;};
-    bool canAttack() {return t_a == 0 && _HP > 0;};
+    [[nodiscard]] bool can_move() const { return t_m == 0 && hp_ > 0; }
+    [[nodiscard]] bool can_attack() const { return t_a == 0 && hp_ > 0; }
 
-    void update_coolDown(){
-        if(t_m > 0)
+    void update_cooldown()
+    {
+        if (t_m > 0)
             t_m--;
         else
             t_m = 0;
-        if(t_a > 0)
+        if (t_a > 0)
             t_a--;
         else
             t_a = 0;
     }
 
-    void setPath(vector<hex_tile*> &path){
-        _path = path;
-    }
-    vector<hex_tile*>* getPath(){
-        return &_path;
+    void path_set(const std::vector<hex_tile*>& path)
+    {
+        path_ = path;
     }
 
-    bool carry_food_get(){
-        return _carry_food;
+    std::vector<hex_tile*>* path_get()
+    {
+        return &path_;
     }
-    void carry_food_set(bool c){
-        _carry_food = c;
+
+    [[nodiscard]] bool carry_food_get() const
+    {
+        return carry_food_;
     }
+
+    void carry_food_set(const bool c)
+    {
+        carry_food_ = c;
+    }
+
 private:
     int t_a, t_m; // attack cooldown and move cooldown
-    uType type;
-    unitAction *actualAction;
-    vector<hex_tile*> _path;
-    bool _carry_food = false;
+    unit_action* actual_action_;
+    std::vector<hex_tile*> path_;
+    bool carry_food_ = false;
 };

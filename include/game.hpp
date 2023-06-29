@@ -17,10 +17,10 @@ class game;
 class game{
 public:
     void play(state &s, vector<player*> P);
-    PlayerID getEnnemy(PlayerID p){
+    player_id getEnnemy(player_id p){
         return p == 0;
     };
 private:
     player _players[NUMBER_OF_PLAYERS];
-    vector<unitAction> scriptMoves[NUMBER_OF_PLAYERS];
+    vector<unit_action> scriptMoves[NUMBER_OF_PLAYERS];
 };

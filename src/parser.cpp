@@ -2,6 +2,8 @@
 
 #include <yaml-cpp/yaml.h>
 
+using namespace std;
+
 void settings_parse(){
     YAML::Node config = YAML::LoadFile("config.yaml");
     if (config["player1"]) {

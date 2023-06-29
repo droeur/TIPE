@@ -1,87 +1,119 @@
 #pragma once
 
 #include <vector>
-#include <stdexcept>
 
-
-using namespace std;
 #include "position.hpp"
 
-typedef int PlayerID;
+using player_id = int;
 
-enum class object_type{
-    UNDEFINED,
-    BASE,
-    UNIT,
-    FOOD
+enum class object_type
+{
+    undefined,
+    base,
+    unit,
+    food
 };
 
-class object_abstract_class{
+class object_abstract_class
+{
 public:
-    object_abstract_class(int q, int r, object_type t){
-        this->p.setQ(q);
-        this->p.setR(r);
-        this->_type = t;
+    virtual ~object_abstract_class() = default;
+
+    object_abstract_class(const int q, const int r, const object_type t)
+    {
+        this->p_.setQ(q);
+        this->p_.setR(r);
+        this->type_ = t;
     }
-    object_abstract_class(int q, int r, int hp, object_type t){
-        this->p.setQ(q);
-        this->p.setR(r);
-        this->_HP = hp;
-        this->_type = t;
+
+    object_abstract_class(const int q, const int r, const int hp, const object_type t)
+    {
+        this->p_.setQ(q);
+        this->p_.setR(r);
+        this->hp_ = hp;
+        this->type_ = t;
     }
-    object_abstract_class(int q, int r, int hp, PlayerID id, object_type t){
-        this->p.setQ(q);
-        this->p.setR(r);
-        this->_HP = hp;
-        this->_joueur = id;
-        this->_type = t;
+
+    object_abstract_class(const int q, const int r, const int hp, const player_id id, const object_type t)
+    {
+        this->p_.setQ(q);
+        this->p_.setR(r);
+        this->hp_ = hp;
+        this->player_ = id;
+        this->type_ = t;
     }
-    virtual const object_type object_type_get(){
-        return this->_type;
+
+    virtual object_type object_type_get()
+    {
+        return this->type_;
     }
-    virtual void position_set(int q, int r) {
-        vector<int> a = {0};
-        if(q > 100 || r > 100){
-            cout << this;
+
+    virtual void position_set(const int q, const int r)
+    {
+        std::vector<int> a = {0};
+        if (q > 100 || r > 100)
+        {
+            std::cout << this;
             a[3] = 10;
         }
-        this->p.setQ(q);
-        this->p.setR(r);
+        this->p_.setQ(q);
+        this->p_.setR(r);
     }
-    virtual const double getQ(){
-        return this->p.getQ();
+
+    virtual int q_get()
+    {
+        return this->p_.getQ();
     }
-    virtual const double getR(){
-        return this->p.getR();
+
+    virtual int r_get()
+    {
+        return this->p_.getR();
     }
-    virtual position position_get(){
-        return this->p;
+
+    virtual position position_get()
+    {
+        return this->p_;
     }
-    virtual void setHP(int hp){
-        this->_HP = hp;
+
+    virtual void hp_set(const int hp)
+    {
+        this->hp_ = hp;
     }
-    virtual void removeHP(int hp){
-        this->_HP -= hp;
+
+    virtual void hp_remove(const int hp)
+    {
+        this->hp_ -= hp;
     }
-    virtual int getHP(){
-        return this->_HP;
+
+    virtual int hp_get()
+    {
+        return this->hp_;
     }
-    virtual PlayerID getPlayer(){
-        return this->_joueur;
+
+    virtual player_id player_get()
+    {
+        return this->player_;
     }
-    virtual void setPlayer(PlayerID joueur){
-        this->_joueur = joueur;
+
+    virtual void player_set(const player_id player)
+    {
+        this->player_ = player;
     }
-    virtual int ID_get(){
-        return this->_ID;
+
+    virtual int id_get()
+    {
+        return this->id_;
     }
-    virtual void ID_set(int ID){
-        this->_ID = ID;
+
+    virtual void id_set(const int id)
+    {
+        this->id_ = id;
     }
+
 protected:
-    position p;
-    int _HP = 0;
-    PlayerID _joueur = (PlayerID)-1;
-    int _ID = -1;
-    object_type _type = object_type::UNDEFINED;
+    position p_;
+    int hp_ = 0;
+    player_id player_ = -1;
+    int id_ = -1;
+    object_type type_ = object_type::undefined;
 };

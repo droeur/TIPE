@@ -5,8 +5,8 @@
 
 class randPlayer : public player {
 public:
-    randPlayer (const PlayerID id) {
+    randPlayer (const player_id id) {
         _playerID = id;
     }
-    virtual vector<unitAction> getMoves(state &s, vector<vector<unitAction>> & possibleActionsVec);
+    virtual vector<unit_action> getMoves(state &s, vector<vector<unit_action>> & possibleActionsVec);
 };

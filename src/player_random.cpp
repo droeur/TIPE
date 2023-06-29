@@ -1,13 +1,15 @@
 #include "player_random.hpp"
 
-vector<unitAction> randPlayer::getMoves(state &s, vector<vector<unitAction>> & possibleActionsVec){
-    vector<unitAction> choisi;
-    int taille = s.unitList_get()[(int)_playerID].size();
+using namespace std;
+
+vector<unit_action> randPlayer::getMoves(state &s, vector<vector<unit_action>> & possibleActionsVec){
+    vector<unit_action> choisi;
+    int taille = s.unit_list_get()[(int)_playerID].size();
     int unitIndex = 0;
     while(unitIndex < taille){
         if(possibleActionsVec[unitIndex].size() > 0){
             int r = (rand() % possibleActionsVec[unitIndex].size());
-            unitAction actionTempChoisie = possibleActionsVec[unitIndex][r];
+            unit_action actionTempChoisie = possibleActionsVec[unitIndex][r];
             choisi.push_back(actionTempChoisie);
         }
         unitIndex++;

@@ -1,7 +1,5 @@
 #pragma once
 #include "state.hpp"
-#include "game.hpp"
-#include "player.hpp"
 #include "test.hpp"
 #include "hex_map.hpp"
 #include "graphics.hpp"
