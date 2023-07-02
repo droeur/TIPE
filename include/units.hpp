@@ -22,7 +22,7 @@ class unit;
 class unit_action;
 #include "object.hpp"
 #include "position.hpp"
-#include "state.hpp"
+#include "state_class.hpp"
 
 class unit_action
 {
@@ -98,7 +98,7 @@ public:
 
     //actions
     void move(double x, double y);
-    void attack(object_abstract_class* b, state& s);
+    void attack(object_abstract_class* b, state_class& s);
     void wait(time_t t);
 
     [[nodiscard]] bool can_move() const { return t_m == 0 && hp_ > 0; }

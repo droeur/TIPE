@@ -1,14 +1,14 @@
 #include <iostream>
 #include <assert.h>
-#include "state.hpp"
-#include "game.hpp"
+#include "state_class.hpp"
+#include "game_class.hpp"
 #include "test.hpp"
 #include "hex_map.hpp"
 #include "graphics.hpp"
 
 using namespace std;
 
-void test_func(map_class &map, state &s, graphic &game_graphic){
+void test_func(map_class &map, state_class &s, graphic_class &game_graphic){
     hex_tile *start = map.tile_get(0,0), *end = map.tile_get(0,5);
     hex_tile *start2 = map.tile_get(0,0), *end2 = map.tile_get(64,64);
     vector<hex_tile*> chemin = map.path_a_star(start, end);

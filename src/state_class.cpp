@@ -1,40 +1,41 @@
 #include <vector>
-#include "game.hpp"
-#include "state.hpp"
+#include "game_class.hpp"
+#include "state_class.hpp"
 #include "units.hpp"
+#include <SDL3/SDL.h>
 
 using namespace std;
 
-void state::frame_increment()
+void state_class::frame_increment()
 {
     this->frame_++;
 }
 
-frame state::frame_get() const
+frame state_class::frame_get() const
 {
     return frame_;
 }
 
-void state::unit_list_add(const vector<unit>& u_list)
+void state_class::unit_list_add(const vector<unit>& u_list)
 {
     this->u_list_.push_back(u_list);
 }
 
-vector<vector<unit>> state::unit_list_get()
+vector<vector<unit>> state_class::unit_list_get()
 {
     return this->u_list_;
 }
 
-void state::unit_append(const unit& u, const player_id player)
+void state_class::unit_append(const unit& u, const player_id player)
 {
     return this->u_list_[player].push_back(u);
 }
 
-void state::moves_generate()
+void state_class::moves_generate()
 {
     vector v{u_action_id::error, u_action_id::move, u_action_id::attack, u_action_id::wait};
 
-    for (int player = 0; player < NUMBER_OF_PLAYERS; player++)
+    for (int player = 0; player < number_of_players; player++)
     {
         possibles_actions_[player].clear();
         for (unit& u : u_list_[player])
@@ -44,7 +45,7 @@ void state::moves_generate()
             // we switch between different possibles actions
             if (u.can_attack())
             {
-                const player_id enemy_player = game_->getEnnemy(player);
+                const player_id enemy_player = game_->enemy_player_get(player);
                 for (unit& enemy_u : u_list_[enemy_player])
                 {
                     if (enemy_u.hp_get() > 0)
@@ -90,7 +91,24 @@ void state::moves_generate()
     }
 }
 
-void state::move_to_place(unit* u, position& p) const
+void state_class::fps_check_before()
+{
+    begin_frame_ = SDL_GetPerformanceCounter();
+}
+
+void state_class::fps_check_after()
+{
+    end_frame_before_ = SDL_GetPerformanceCounter();
+    const double elapsed_ms_before =
+        static_cast<double>(end_frame_before_ - begin_frame_) / static_cast<double>(SDL_GetPerformanceFrequency());
+    SDL_Delay(static_cast<uint32_t>(floor(33.3333 - elapsed_ms_before)));
+    end_frame_after_ = SDL_GetPerformanceCounter();
+    const double elapsed_ms_after =
+        static_cast<double>(end_frame_after_ - begin_frame_) / static_cast<double>(SDL_GetPerformanceFrequency());
+    fps_ = 1.0 / elapsed_ms_after;
+}
+
+void state_class::move_to_place(unit* u, position& p) const
 {
     hex_tile* start = map_->tile_get(u->q_get(), u->r_get());
     hex_tile* end = map_->tile_get(p.getQ(), p.getR());
@@ -110,9 +128,9 @@ void state::move_to_place(unit* u, position& p) const
  * @brief Pour update tout -> fait les actions et réduits les cooldowns
  * 
  */
-void state::moves_make()
+void state_class::moves_make()
 {
-    for (int player = 0; player < NUMBER_OF_PLAYERS; player++)
+    for (int player = 0; player < number_of_players; player++)
     {
         if (!chosen_actions_[player].empty())
         {

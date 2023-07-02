@@ -192,18 +192,19 @@ class map_class
 public:
     explicit map_class(const std::string& file_name)
     {
+        tiles_map_ = new std::vector<std::vector<hex_tile*>*>;
         std::fstream file{file_name};
         std::string line;
         int r = 0;
         int q = 0;
         while (std::getline(file, line))
         {
-            std::vector<hex_tile> row;
+            const auto row = new std::vector<hex_tile*>;
             for (const auto c :line)
             {
                 const bool passable = c != '0';
-                hex_tile t{q - (r + (r & 1)) / 2, r, passable};
-                row.push_back(t);
+                auto t = new hex_tile{q - (r + (r & 1)) / 2, r, passable};
+                row->push_back(t);
                 q++;
             }
             this->row_add(row);
@@ -228,17 +229,17 @@ public:
 
     std::vector<hex_tile*> path_a_star(hex_tile* start, hex_tile* end);
 
-    hex_tile* tile_get(const int q, const int r)
+    [[nodiscard]] hex_tile* tile_get(const int q, const int r) const
     {
-        return &tiles_map_[r][q + (r + (r & 1)) / 2];
+        return (*(*tiles_map_)[r])[q + (r + (r & 1)) / 2];
     }
 
-    void row_add(const std::vector<hex_tile>& row)
+    void row_add(std::vector<hex_tile*>* row) const
     {
-        tiles_map_.push_back(row);
+        tiles_map_->push_back(row);
     }
 
-    std::vector<std::vector<hex_tile>> tiles_map_get()
+    [[nodiscard]] std::vector<std::vector<hex_tile*>*>* tiles_map_get() const
     {
         return tiles_map_;
     }
@@ -252,7 +253,7 @@ public:
     {
         if (!in_map(q, r, this))
             return false;
-        return tiles_map_[q + (r + (r & 1)) / 2][r].passable();
+        return (*(*tiles_map_)[r])[q + (r + (r & 1)) / 2]->passable();
     }
 
     [[nodiscard]] int size_x_get() const
@@ -268,5 +269,5 @@ public:
 private:
     int size_x_;
     int size_y_;
-    std::vector<std::vector<hex_tile>> tiles_map_;
+    std::vector<std::vector<hex_tile*>*>* tiles_map_;
 };

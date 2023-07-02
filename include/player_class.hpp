@@ -3,9 +3,9 @@
 #include "units.hpp"
 #include <vector>
 
-class player {
+class player_class {
 public:
-    virtual std::vector<unit_action> getMoves(state& s, std::vector<std::vector<unit_action>>& possibleActionsVec)
+    virtual std::vector<unit_action> getMoves(state_class* s, std::vector<std::vector<unit_action>>& possibleActionsVec)
     {
         std::vector<unit_action> v;
         std::cout << "ERROR : base player" << std::endl;

@@ -1,12 +1,14 @@
 #pragma once
-#include "player.hpp"
+#include "game_class.hpp"
+#include "player_class.hpp"
 
-class groupPlayer : public player {
+class groupPlayer : public player_class {
 public:
-    groupPlayer (const PlayerID id) {
+    groupPlayer(const player_id id) {
         _playerID = id;
     }
-    virtual vector<unitAction> getMoves(state &s, vector<vector<unitAction>> & possibleActionsVec);
+    virtual std::vector<unit_action> getMoves(state_class* s, std::vector<std::vector<unit_action>>& possibleActionsVec);
+
 protected:
 
 };

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "object.hpp"
-#include "player.hpp"
+#include "player_class.hpp"
 
 #define BASE_HP 100
 

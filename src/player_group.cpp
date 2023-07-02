@@ -1,5 +1,8 @@
-#include "players/player_group.hpp"
+#include "player_group.hpp"
 
-vector<unitAction> groupPlayer::getMoves(state &s, vector<vector<unitAction>> & possibleActionsVec){
-    
+std::vector<unit_action> groupPlayer::getMoves(state_class* s,
+                                               std::vector<std::vector<unit_action>>& possibleActionsVec)
+{
+    std::vector<unit_action> a;
+    return a;
 }

@@ -6,7 +6,7 @@ using namespace std;
 void unit::move(double x ,double y){
     
 }
-void unit::attack(object_abstract_class* b, state &s){
+void unit::attack(object_abstract_class* b, state_class &s){
     b->hp_remove(1);
     if(b->hp_get() < 0){
         b->hp_set(0);

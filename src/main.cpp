@@ -1,129 +1,38 @@
-#include <vector>
-#include <memory>
-#include <fstream>
-
-#include "game.hpp"
+#include "game_class.hpp"
 #include "hex_map.hpp"
-#include "player.hpp"
-#include "player_random.hpp"
-#include "base.hpp"
+#include "parser.hpp"
+#include "init.hpp"
 
 
 using namespace std;
 
 #include "graphics.hpp"
-#include "test.hpp"
 
-int main(int argc, char* argv[])
+int main(const int argc, char* argv[])
 {
-/*    ofstream result{"result.txt", ofstream::out};
-    for (int i = 0; i < 100; i++)
-    {*/
-        player_id gagnant = -1;
-        // cout << i << endl;
-        // On lit le fichier parametres
-        // settings_parse();
+    const auto settings = new options_class{argc, argv};
+    map_class map{settings->map_file_get()};
+    const auto game_graphic =   new graphic_class{settings->graphic_folder_get(), settings->font_file_get()};
+    const auto game         =   new game_class;
+    const auto state        =    new state_class{&map, game};
+    bool quit = false;
 
-        // On lit et cree la carte
-        map_class map{"map_empty.txt"};
+    game_players_init(state, game);
 
-        // Initialisation des graphismes SDL
-        graphic game_graphic;
+    while (!quit)
+    {
+        state->fps_check_before();
 
-        // Classes jeu et etat
-        game g;
-        state s{&map, &g};
+        game->play(state);
 
-        // TODO: partie temporaire pour creer les unitees et les joueurs
-        vector<player*> P;
-        player* tempPlayer;
+        quit = game->winner_check(state);
 
-        randPlayer player1(0);
-        tempPlayer = &player1;
-        P.push_back(tempPlayer);
+        quit = game_graphic->update(state) || quit;
 
-        randPlayer player2(1);
-        tempPlayer = &player2;
-        P.push_back(tempPlayer);
+        state->fps_check_after();
+    }
 
-        unit u1{72, 50, 0, unit_hp};
-        unit u2{-24, 50, 1, unit_hp};
-        vector<unit> unit_list_1{u1, u1, u1, u1, u1};
-        vector<unit> unit_list_2{u2, u2, u2, u2, u2};
-        s.unit_list_add(unit_list_1);
-        s.unit_list_add(unit_list_2);
-
-        base_class base1(72, 50, 0);
-        base_class base2(-24, 50, 1);
-        s.base_append(base1);
-        s.base_append(base2);
-
-        if (argc > 1)
-        {
-          test_func(map, s, game_graphic);
-        }
-        else
-        {
-
-            // boucle du jeu
-            bool quit = false;
-            while (!quit)
-            {
-                uint64_t begin_frame = SDL_GetPerformanceCounter();
-
-                g.play(s, P);
-                for (base_class &b:*s.base_list_get())
-                {
-                    if (b.hp_get() <= 0 )
-                    {
-                        if (gagnant != -1)
-                        {
-                            gagnant = 2;
-                        }
-                        else
-                        {
-                            gagnant = g.getEnnemy(b.playerId_get());
-                        }
-                        quit = true;
-                    }
-                }
-                int player = 0; 
-                for (vector<unit>& u_l : s.unit_list_get())
-                {
-                    int sum = 0;
-                    for (unit &u:u_l)
-                    {
-                        player = u.player_get();
-                        sum += u.hp_get();
-                    }
-                    if (sum <= 0)
-                    {
-                        if (gagnant != -1)
-                        {
-                            gagnant = 2;
-                        }
-                        else
-                        {
-                            gagnant = g.getEnnemy(player);
-                        }
-                        quit = true;
-                    }
-                }
-
-                quit = game_graphic.update(s);
-
-                uint64_t end_frame_before = SDL_GetPerformanceCounter();
-                double elapsed_ms_before =
-                    (end_frame_before - begin_frame) / static_cast<double>(SDL_GetPerformanceFrequency());
-                SDL_Delay(static_cast<uint32_t>(floor(33.3333 - elapsed_ms_before)));
-                uint64_t end_frame_after = SDL_GetPerformanceCounter();
-                double elapsed_ms_after =
-                    (end_frame_after - begin_frame) / static_cast<double>(SDL_GetPerformanceFrequency());
-                s.fps_set(1.0 / elapsed_ms_after);
-            }
-        }
-        game_graphic.quit();
-//        result << gagnant << ",";
-//    }
+    delete game_graphic;
+    delete settings;
     return EXIT_SUCCESS;
 }

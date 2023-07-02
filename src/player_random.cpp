@@ -2,9 +2,9 @@
 
 using namespace std;
 
-vector<unit_action> randPlayer::getMoves(state &s, vector<vector<unit_action>> & possibleActionsVec){
+vector<unit_action> randPlayer::getMoves(state_class *s, vector<vector<unit_action>> & possibleActionsVec){
     vector<unit_action> choisi;
-    int taille = s.unit_list_get()[(int)_playerID].size();
+    int taille = s->unit_list_get()[(int)_playerID].size();
     int unitIndex = 0;
     while(unitIndex < taille){
         if(possibleActionsVec[unitIndex].size() > 0){

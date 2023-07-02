@@ -98,3 +98,8 @@ add_subdirectory(external/yaml-cpp)
 
 target_include_directories(${LOCAL_PROJECT_NAME} PRIVATE external/yaml-cpp/include)
 target_link_libraries(${LOCAL_PROJECT_NAME} yaml-cpp)
+
+#boost
+find_package( Boost 1.81.0 COMPONENTS program_options REQUIRED )
+target_include_directories(${LOCAL_PROJECT_NAME} PRIVATE ${Boost_INCLUDE_DIR})
+target_link_libraries(${LOCAL_PROJECT_NAME} ${Boost_LIBRARIES})

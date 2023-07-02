@@ -1,18 +1,18 @@
 #pragma once
 
-#include <assert.h>
-#include <cmath>
-#include <vector>
 #include <iostream>
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_image.h>
 #include <SDL3/SDL_ttf.h>
-#include "state.hpp"
+#include "state_class.hpp"
 
-#define SCREEN_WIDTH 640
-#define SCREEN_HEIGHT 480
-#define ZOOM 1
-#define HEX_HEIGHT_COEFF 0.78
+enum
+{
+    screen_width = 640,
+    screen_height = 480
+};
+
+constexpr auto hex_height_coefficient = 0.78;
 
 #define RED 255, 0, 0, 255
 #define GREEN 0, 255, 0, 255
@@ -21,45 +21,47 @@
 #define DARK_RED 80, 0, 0, 255
 #define DARK_BLUE 0, 0, 80, 255
 
-class graphic
+class graphic_class
 {
 public:
-    graphic()
+    graphic_class(const std::string& graphic_folder, const std::string& font)
     {
-        //Initialize SDL
         if (SDL_Init(SDL_INIT_VIDEO) < 0)
         {
-            printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
-            exit(EXIT_FAILURE);
+            std::cerr << "SDL could not initialize! SDL_Error:" << SDL_GetError();
         }
         constexpr int flags = IMG_INIT_PNG;
-        const int initStatus = IMG_Init(flags);
-        if ((initStatus & flags) != flags)
+        if (const int init_status = IMG_Init(flags); (init_status & flags) != flags)
         {
-            cout << "SDL image not available" << endl;
-            exit(EXIT_FAILURE);
+            std::cerr << "SDL image not available" << std::endl;
         }
-        window_ = SDL_CreateWindow("TIPE", SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED);
+        window_ = SDL_CreateWindow("TIPE", screen_width, screen_height, SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED);
         screen_surface_ = SDL_GetWindowSurface(window_);
         render_ = SDL_CreateRenderer(window_, nullptr, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
+
         if (TTF_Init() < 0)
         {
-            cout << "SDL ttf not available" << endl;
-            exit(EXIT_FAILURE);
+            std::cerr << "SDL ttf not available" << std::endl;
         }
-        font_ = TTF_OpenFont("Anonymous_Pro.ttf", 20);
+        font_ = TTF_OpenFont(font.c_str(), 20);
         if (font_ == nullptr)
         {
-            cout << "no Anonymous_Pro.ttf file" << endl;
-            exit(EXIT_FAILURE);
+            std::cerr << "Error opening " << font << " file" << std::endl;
         }
-        
-        SDL_Surface* hex_passable_surface = IMG_Load("hexa_p.png");
-        SDL_Surface* hex_blocked_surface = IMG_Load("hexa_b.png");
-        if (!(hex_passable_surface && hex_blocked_surface))
+
+
+        const std::string hex_p = graphic_folder + "/hex_p.png";
+        const std::string hex_b = graphic_folder + "/hex_b.png";
+        SDL_Surface* hex_passable_surface = IMG_Load(hex_p.c_str());
+        SDL_Surface* hex_blocked_surface = IMG_Load(hex_b.c_str());
+        if (!hex_passable_surface)
         {
-            cout << "hex.png not found" << endl;
+            std::cerr << "Error opening " << hex_p << " file " << std::endl;
+        }
+        if (!hex_blocked_surface)
+        {
+            std::cerr << "Error opening " << hex_b << " file " << std::endl;
         }
         hex_passable_texture_ = SDL_CreateTextureFromSurface(render_, hex_passable_surface);
         hex_blocked_texture_ = SDL_CreateTextureFromSurface(render_, hex_blocked_surface);
@@ -67,8 +69,13 @@ public:
         SDL_DestroySurface(hex_blocked_surface);
     }
 
-    void quit() const
+    ~graphic_class()
     {
+        SDL_DestroyTexture(hex_passable_texture_);
+        SDL_DestroyTexture(hex_blocked_texture_);
+
+        SDL_DestroyRenderer(render_);
+
         TTF_CloseFont(font_);
 
         //Destroy window
@@ -78,19 +85,19 @@ public:
         SDL_QuitSubSystem(SDL_INIT_VIDEO);
     }
 
-    bool update(state& s);
+    bool update(state_class *s);
 
     [[nodiscard]]
     int mouse_get_q() const
     {
-        return x_mouse_ / zoom_ - y_mouse_ / (zoom_ * HEX_HEIGHT_COEFF * 2) - y_shift_ / (HEX_HEIGHT_COEFF * 2) +
+        return x_mouse_ / zoom_ - y_mouse_ / (zoom_ * hex_height_coefficient * 2) - y_shift_ / (hex_height_coefficient * 2) +
                x_shift_ / zoom_ + 1;
     }
 
     [[nodiscard]]
     int mouse_get_r() const
     {
-        return y_mouse_ / (zoom_ * HEX_HEIGHT_COEFF) - 0.5 - y_shift_ / HEX_HEIGHT_COEFF;
+        return y_mouse_ / (zoom_ * hex_height_coefficient) - 0.5 - y_shift_ / hex_height_coefficient;
     }
 
 private:
