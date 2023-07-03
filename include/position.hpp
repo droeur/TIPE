@@ -1,62 +1,65 @@
 #pragma once
-
-#include <math.h>
 #include "hex_map.hpp"
 
 class position
 {
 public:
-    int distance(const position p, map_class* map) const
+    position(const int q, const int r)
+        : q_(q)
+        , r_(r){}
+
+    position() = default;
+    int distance(const position p, const map_class* map) const
     {
-        return map->tile_get(q_, r_)->distance(map->tile_get(p.q_, p.r_));
+        return static_cast<int>(map->tile_get(q_, r_)->distance(map->tile_get(p.q_, p.r_)));
     }
 
-    int getXGraphic(map_class* map)
+    int graphic_x_get(const map_class* map) const 
     {
-        return map->tile_get(q_, r_)->graphic_x();
+        return static_cast<int>(map->tile_get(q_, r_)->graphic_x());
     }
 
-    int getYGraphic(map_class* map)
+    int graphic_y_get(const map_class* map) const 
     {
-        return map->tile_get(q_, r_)->graphic_y();
+        return static_cast<int> (map->tile_get(q_, r_)->graphic_y());
     }
 
-    int getQ()
+    [[nodiscard]] int q_get() const
     {
         return q_;
     }
 
-    int getR()
+    [[nodiscard]] int r_get() const
     {
         return r_;
     }
 
-    void setQ(int q)
+    void q_set(const int q)
     {
         q_ = q;
     }
 
-    void setR(int r)
+    void r_set(const int r)
     {
         r_ = r;
     }
 
-    void addQ(int q)
+    void q_add(const int q)
     {
         q_ += q;
     }
 
-    void addR(int r)
+    void r_add(const int r)
     {
         r_ += r;
     }
 
-    static int x_get(int q_, int r_)
+    static int x_get(const int q, const int r)
     {
-        return q_ + (r_ + (r_ & 1)) / 2;
+        return q + (r + (r & 1)) / 2;
     }
 
-    static int y_get(int q, int r)
+    static int y_get(const int r)
     {
         return r;
     }

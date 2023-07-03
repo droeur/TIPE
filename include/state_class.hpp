@@ -2,39 +2,47 @@
 
 #include <vector>
 
-class state_class;
 
-#include "game_class.hpp"
-#include "hex_map.hpp"
+class state_class;
 #include "food.hpp"
 #include "base.hpp"
+#include "game_class.hpp"
+#include "units.hpp"
 
 using frame = int;
 
 class state_class
 {
 public:
-    state_class(map_class* map, game_class* g)
+    state_class()
     {
         frame_ = 0;
-        this->map_ = map;
-        this->game_ = g;
-        const std::vector<std::vector<unit_action>> possible_action_list1;
-        possibles_actions_[0] = possible_action_list1;
-        const std::vector<std::vector<unit_action>> possible_action_list2;
-        possibles_actions_[1] = possible_action_list2;
+    }
+
+    ~state_class()
+    {
+        for (const auto f:food_list_)
+        {
+            delete f;
+        }
+        for (const auto b:base_list_)
+        {
+            delete b;
+        }
+        for (const auto &u_l:u_list_)
+        {
+            for (const auto u : u_l)
+            {
+                delete u;
+            }
+        }
     }
 
     void frame_increment();
     [[nodiscard]] frame frame_get() const;
 
-    void moves_generate();
-    void moves_make();
-
-    std::vector<std::vector<unit_action>>* possibles_actions_get()
-    {
-        return possibles_actions_;
-    }
+    [[nodiscard]] std::vector<std::vector<unit_action>> moves_generate(player_id id) const;
+    void moves_make(map_class* map);
 
     void chosen_actions_set(const std::vector<unit_action>& chosen_list, const player_id id)
     {
@@ -47,32 +55,32 @@ public:
         return chosen_actions_[id];
     }
 
-    void unit_list_add(const std::vector<unit>& u_list);
-    std::vector<std::vector<unit>> unit_list_get();
-    void unit_append(const unit& u, player_id player);
+    void unit_list_add(const std::vector<unit_class*>& u_list);
+    std::vector<std::vector<unit_class*>> unit_list_get();
+    void unit_append(unit_class* u, player_id player);
 
-    void food_append(const food_class& f)
+    void food_append(food_class* f)
     {
         food_list_.push_back(f);
     }
 
-    std::vector<food_class>* food_list_get()
+    std::vector<food_class*>* food_list_get()
     {
         return &food_list_;
     }
 
-    void base_append(const base_class& f)
+    void base_append(base_class* b)
     {
-        base_list_.push_back(f);
+        base_list_.push_back(b);
     }
 
-    std::vector<base_class>* base_list_get()
+    std::vector<base_class*>* base_list_get()
     {
         return &base_list_;
     }
 
     void fps_check_before();
-    void fps_check_after();
+    void fps_check_after(bool fast);
 
     void fps_set(const double f)
     {
@@ -84,23 +92,15 @@ public:
         return fps_;
     }
 
-    [[nodiscard]] map_class* map_get() const
-    {
-        return map_;
-    }
-
 private:
-    void move_to_place(unit* u, position& p) const;
-    frame frame_;
-    std::vector<std::vector<unit>> u_list_;
-    std::vector<std::vector<unit_action>> possibles_actions_[number_of_players]; // vector of possible actions
+    static void move_to_place(unit_class* u, const position& p, map_class *map);
+    frame frame_ = 0;
+    std::vector<std::vector<unit_class*>> u_list_;
     std::vector<unit_action> chosen_actions_[number_of_players];                 // vector of possible actions
-    map_class* map_;
-    game_class* game_;
     double fps_ = 0;
-    std::vector<food_class> food_list_;
-    std::vector<base_class> base_list_;
-    uint64_t begin_frame_;
-    uint64_t end_frame_before_;
-    uint64_t end_frame_after_;
+    std::vector<food_class*> food_list_;
+    std::vector<base_class*> base_list_;
+    uint64_t begin_frame_ = 1;
+    uint64_t end_frame_before_ = 1;
+    uint64_t end_frame_after_ = 1;
 };

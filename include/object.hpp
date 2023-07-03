@@ -14,6 +14,12 @@ enum class object_type
     food
 };
 
+enum
+{
+    base_hp = 100,
+    unit_hp = 10
+};
+
 class object_abstract_class
 {
 public:
@@ -21,23 +27,23 @@ public:
 
     object_abstract_class(const int q, const int r, const object_type t)
     {
-        this->p_.setQ(q);
-        this->p_.setR(r);
+        this->p_.q_set(q);
+        this->p_.r_set(r);
         this->type_ = t;
     }
 
     object_abstract_class(const int q, const int r, const int hp, const object_type t)
     {
-        this->p_.setQ(q);
-        this->p_.setR(r);
+        this->p_.q_set(q);
+        this->p_.r_set(r);
         this->hp_ = hp;
         this->type_ = t;
     }
 
     object_abstract_class(const int q, const int r, const int hp, const player_id id, const object_type t)
     {
-        this->p_.setQ(q);
-        this->p_.setR(r);
+        this->p_.q_set(q);
+        this->p_.r_set(r);
         this->hp_ = hp;
         this->player_ = id;
         this->type_ = t;
@@ -50,24 +56,18 @@ public:
 
     virtual void position_set(const int q, const int r)
     {
-        std::vector<int> a = {0};
-        if (q > 100 || r > 100)
-        {
-            std::cout << this;
-            a[3] = 10;
-        }
-        this->p_.setQ(q);
-        this->p_.setR(r);
+        this->p_.q_set(q);
+        this->p_.r_set(r);
     }
 
     virtual int q_get()
     {
-        return this->p_.getQ();
+        return this->p_.q_get();
     }
 
     virtual int r_get()
     {
-        return this->p_.getR();
+        return this->p_.r_get();
     }
 
     virtual position position_get()

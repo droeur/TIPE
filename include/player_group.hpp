@@ -2,12 +2,15 @@
 #include "game_class.hpp"
 #include "player_class.hpp"
 
-class groupPlayer : public player_class {
+class player_group final : public virtual_player_class {
 public:
-    groupPlayer(const player_id id) {
-        _playerID = id;
+    explicit player_group(const player_id id)
+        : virtual_player_class(id)
+    {
+        
     }
-    virtual std::vector<unit_action> getMoves(state_class* s, std::vector<std::vector<unit_action>>& possibleActionsVec);
+
+    std::vector<unit_action> moves_get(state_class* s) override;
 
 protected:
 

@@ -4,7 +4,7 @@
 
 using namespace std;
 
-void game_class::player_set(player_class* p, const player_id id)
+void game_class::player_set(virtual_player_class* p, const player_id id)
 {
     if (static_cast<unsigned long long>(id) == players_.size())
         players_.push_back(p);
@@ -13,41 +13,77 @@ void game_class::player_set(player_class* p, const player_id id)
             << players_.size();
 }
 
-void game_class::play(state_class *s) const
+void game_class::play() const
 {
-    s->moves_generate();
     for (const auto p : players_)
     {
-        s->chosen_actions_set(p->getMoves(s, s->possibles_actions_get()[p->getPlayerID()]), p->getPlayerID());
+        state_->chosen_actions_set(p->moves_get(state_), p->player_id_get());
     }
-    s->moves_make();
+    state_->moves_make(map_);
 }
 
-int game_class::winner_check(state_class *s)
+bool game_class::winner_check()
 {
-    vector sums{static_cast<int>(player_number_get()), 0};
-    for (base_class& b : *s->base_list_get())
+    vector<unsigned long long> sums(player_number_get(), 0);
+    for (const auto& u_l : state_->unit_list_get())
     {
-        sums[b.playerId_get()] += b.hp_get();
-    }
-    for (vector<unit>& u_l : s->unit_list_get())
-    {
-        for (unit& u : u_l)
+        for (const auto u : u_l)
         {
-            sums[u.player_get()] += u.hp_get();
+            sums[u->player_get()] += u->hp_get();
         }
     }
-    if (count(sums.begin(), sums.end(), 0) == sums.size() - 1)
+    if (sums[0] == 0 && sums[1] == 0)
+        winner_ = 2;
+    else if (sums[0] == 0)
+        winner_ = 1;
+    else if (sums[1] == 0)
+        winner_ = 0;
+    /*
     {
-        int index = 0;
-        for (const auto i:sums)
+        vector<unsigned long long> sums(player_number_get(), 0);
+        for (const auto b : *state_->base_list_get())
         {
-            if (i != 0)
-                winner_ = index;
-            index += 1;
+            sums[b->player_id_get()] += b->hp_get();
         }
-        return true;
+        if (count(sums.begin(), sums.end(), 0) == sums.size() - 1)
+        {
+            int index = 0;
+            for (const auto i : sums)
+            {
+                if (i != 0)
+                {
+                    winner_ = index;
+                }
+                index += 1;
+            }
+        }
     }
-    return false;
+    {
+        vector<unsigned long long> sums(player_number_get(), 0);
+        for (const auto &u_l : state_->unit_list_get())
+        {
+            for (const auto u : u_l)
+            {
+                sums[u->player_get()] += u->hp_get();
+            }
+        }
+        if (count(sums.begin(), sums.end(), 0) == sums.size() - 1)
+        {
+            int index = 0;
+            for (const auto i:sums)
+            {
+                if (i != 0 && winner_ == -1)
+                {
+                    winner_ = index;
+                }
+                else if (i != 0)
+                {
+                    winner_ = 2;
+                }
+                index += 1;
+            }
+        }
+    }*/
+    return winner_ != -1;
 }
 

@@ -3,17 +3,28 @@
 #include "units.hpp"
 #include <vector>
 
-class player_class {
+class virtual_player_class {
 public:
-    virtual std::vector<unit_action> getMoves(state_class* s, std::vector<std::vector<unit_action>>& possibleActionsVec)
+    explicit virtual_player_class(const player_id id)
+        : player_id_(id)
+    {
+        
+    }
+
+    virtual ~virtual_player_class() = default;
+
+    virtual std::vector<unit_action> moves_get(state_class* s)
     {
         std::vector<unit_action> v;
         std::cout << "ERROR : base player" << std::endl;
         return v;
-    };
-    player_id getPlayerID(){
-        return _playerID;
-    };
+    }
+
+    [[nodiscard]] player_id player_id_get() const
+    {
+        return player_id_;
+    }
+    
 protected:
-    player_id _playerID;
+    player_id player_id_;
 };

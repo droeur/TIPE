@@ -1,6 +1,5 @@
 #pragma once
 #include <iostream>
-#include <vector>
 #include <string>
 #include <boost/program_options.hpp>
 
@@ -90,6 +89,8 @@ public:
         return log_level_;
     }
 
+    [[nodiscard]] int n_test_get() const { return n_test_; }
+
 private:
     boost::program_options::options_description* desc_;
     boost::program_options::variables_map* vm_;
@@ -101,4 +102,5 @@ private:
     bool graphics_ = true;
     bool fast_ = false;
     int log_level_ = 0;
+    int n_test_ = 100;
 };

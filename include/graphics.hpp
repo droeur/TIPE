@@ -12,7 +12,7 @@ enum
     screen_height = 480
 };
 
-constexpr auto hex_height_coefficient = 0.78;
+constexpr auto hex_height_coefficient = 0.78f;
 
 #define RED 255, 0, 0, 255
 #define GREEN 0, 255, 0, 255
@@ -39,7 +39,6 @@ public:
         screen_surface_ = SDL_GetWindowSurface(window_);
         render_ = SDL_CreateRenderer(window_, nullptr, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
-
         if (TTF_Init() < 0)
         {
             std::cerr << "SDL ttf not available" << std::endl;
@@ -49,7 +48,6 @@ public:
         {
             std::cerr << "Error opening " << font << " file" << std::endl;
         }
-
 
         const std::string hex_p = graphic_folder + "/hex_p.png";
         const std::string hex_b = graphic_folder + "/hex_b.png";
@@ -85,19 +83,23 @@ public:
         SDL_QuitSubSystem(SDL_INIT_VIDEO);
     }
 
-    bool update(state_class *s);
+    bool update(game_class* game);
 
     [[nodiscard]]
     int mouse_get_q() const
     {
-        return x_mouse_ / zoom_ - y_mouse_ / (zoom_ * hex_height_coefficient * 2) - y_shift_ / (hex_height_coefficient * 2) +
-               x_shift_ / zoom_ + 1;
+        return static_cast<int>(x_mouse_ / static_cast<float>(zoom_) -
+                                y_mouse_ / (static_cast<float>(zoom_) * hex_height_coefficient * 2) +
+                                static_cast<float>(y_shift_) * 0.65f -
+                                static_cast<float>(x_shift_) + 1);
     }
 
     [[nodiscard]]
     int mouse_get_r() const
     {
-        return y_mouse_ / (zoom_ * hex_height_coefficient) - 0.5 - y_shift_ / hex_height_coefficient;
+        return static_cast<int>(static_cast<float>(y_mouse_) / (static_cast<float>(zoom_) * hex_height_coefficient) -
+                                0.5f -
+                                static_cast<float>(y_shift_) / hex_height_coefficient);
     }
 
 private:
