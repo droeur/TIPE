@@ -10,12 +10,16 @@ using namespace std;
 
 int main(const int argc, char* argv[])
 {
-    ofstream result{"result.txt", ofstream::out};
     const auto settings = new options_class{argc, argv};
+    if (!settings->check())
+    {
+        return EXIT_FAILURE;
+    }
     map_class map{settings->map_file_get()};
     graphic_class* game_graphic = nullptr;
     if (settings->graphics_get())
         game_graphic = new graphic_class{settings->graphic_folder_get(), settings->font_file_get()};
+    ofstream result{settings->output_file_get().c_str(), ofstream::out};
     for (int i = 0; i < settings->n_test_get(); i++)
     {
         cout << i << endl;

@@ -49,6 +49,8 @@ public:
         delete vm_;
     }
 
+    bool check() const;
+
     std::string map_file_get()
     {
         return map_file_;
@@ -94,11 +96,11 @@ public:
 private:
     boost::program_options::options_description* desc_;
     boost::program_options::variables_map* vm_;
-    std::string map_file_;
+    std::string map_file_ = "map.txt";
     std::string parameter_file_;
-    std::string output_file_;
-    std::string graphic_folder_;
-    std::string font_file_;
+    std::string output_file_ = "result.txt";
+    std::string graphic_folder_ = ".";
+    std::string font_file_ = "cour.ttf";
     bool graphics_ = true;
     bool fast_ = false;
     int log_level_ = 0;

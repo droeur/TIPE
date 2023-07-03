@@ -12,3 +12,33 @@ void settings_parse(){
         }
     }
 }
+
+#include <fstream>
+#include<iostream>
+
+bool file_check(const string &name)
+{
+    ifstream file;
+    file.open(name.c_str());
+    return file.good();
+}
+bool options_class::check() const
+{
+    if (!file_check(map_file_))
+    {
+        cerr << "Error: no map file " << map_file_ << endl;
+        return false;
+    }
+    if (!file_check(parameter_file_))
+    {
+        cerr << "Error: no parameter file " << parameter_file_ << endl;
+        return false;
+    }
+    if (!file_check(font_file_))
+    {
+        cerr << "Error: no font file " << font_file_ << endl;
+        return false;
+    }
+
+    return true;
+}
