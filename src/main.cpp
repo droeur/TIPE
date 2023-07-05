@@ -35,10 +35,10 @@ int main(const int argc, char* argv[])
 
             game->play();
 
-            quit = game->winner_check();
-
-            if (settings->graphics_get())
-                quit = game_graphic->update(game) || quit;
+            if (!settings->graphics_get())
+                quit = game->winner_check();
+            else
+                quit = game_graphic->update(game);
             state->frame_increment();
             state->fps_check_after(settings->fast_get());
         }

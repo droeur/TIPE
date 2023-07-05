@@ -170,23 +170,6 @@ protected:
     double x_graphic_;
 };
 
-class coordinates
-{
-public:
-    coordinates(const int q, const int r)
-        : q(q), r(r)
-    {
-    }
-
-    int q;
-    int r;
-
-    bool operator==(const coordinates* a) const
-    {
-        return a->q == this->q && a->r == this->r;
-    }
-};
-
 class map_class
 {
 public:

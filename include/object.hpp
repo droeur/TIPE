@@ -49,7 +49,7 @@ public:
         this->type_ = t;
     }
 
-    virtual object_type object_type_get()
+    [[nodiscard]] virtual object_type object_type_get() const
     {
         return this->type_;
     }
@@ -60,12 +60,12 @@ public:
         this->p_.r_set(r);
     }
 
-    virtual int q_get()
+    [[nodiscard]] virtual int q_get() const
     {
         return this->p_.q_get();
     }
 
-    virtual int r_get()
+    [[nodiscard]] virtual int r_get() const
     {
         return this->p_.r_get();
     }
@@ -85,12 +85,12 @@ public:
         this->hp_ -= hp;
     }
 
-    virtual int hp_get()
+    [[nodiscard]] virtual int hp_get() const
     {
         return this->hp_;
     }
 
-    virtual player_id player_get()
+    [[nodiscard]] virtual player_id player_get() const
     {
         return this->player_;
     }
@@ -100,7 +100,7 @@ public:
         this->player_ = player;
     }
 
-    virtual int id_get()
+    [[nodiscard]] virtual int id_get() const
     {
         return this->id_;
     }

@@ -83,8 +83,8 @@ public:
     unit_class(const int q, const int r, const player_id id, const int hp)
         : object_abstract_class(q, r, hp, id, object_type::undefined)
     {
-        t_a_ = 0;
-        t_m_ = 0;
+        t_a_ = 5;
+        t_m_ = 5;
         actual_action_ = nullptr;
     }
 
