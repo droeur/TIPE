@@ -100,7 +100,7 @@ void state_class::fps_check_after(const bool fast)
     const double elapsed_ms_before =
         static_cast<double>(end_frame_before_ - begin_frame_) / static_cast<double>(SDL_GetPerformanceFrequency());
     if (!fast)
-        SDL_Delay(static_cast<uint32_t>(floor(33.3333 - elapsed_ms_before)));
+        SDL_Delay(static_cast<uint32_t>(floor(33.333 - elapsed_ms_before)));
     end_frame_after_ = SDL_GetPerformanceCounter();
     const double elapsed_ms_after =
         static_cast<double>(end_frame_after_ - begin_frame_) / static_cast<double>(SDL_GetPerformanceFrequency());

@@ -93,7 +93,7 @@ public:
     }
 
 private:
-    static void move_to_place(unit_class* u, const position& p, map_class *map);
+    static void move_to_place(unit_class* u, const position& p, map_class* map);
     frame frame_ = 0;
     std::vector<std::vector<unit_class*>> u_list_;
     std::vector<unit_action> chosen_actions_[number_of_players];                 // vector of possible actions

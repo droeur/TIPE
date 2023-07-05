@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\User\source\repos\Audic212\TIPE\Builds\CMakeFiles\aa6ad1c4d12d2983c9e4bc536fc27b88\update_mappings.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\User\source\repos\Audic212\TIPE\external\glfw\src\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="C:\Users\User\source\repos\Audic212\TIPE\external\glfw\src\mappings.h.in">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="C:\Users\User\source\repos\Audic212\TIPE\external\glfw\CMake\GenerateMappings.cmake" />
+    <None Include="C:\Users\User\source\repos\Audic212\TIPE\Builds\external\glfw\src\CMakeFiles\update_mappings" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{B7D16689-028D-39EB-9834-B598348A671D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{B8AE680B-3E82-3E88-93C8-36D9599C94B1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

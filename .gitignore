@@ -7,6 +7,17 @@
 *.vscode-workspace
 out/
 .vs/
+*.suo
+*.user
+*.ncb
+Debug/
+Release/
+CodeAnalyst/
+ipch/
+*.sdf
+*.opensdf
+/Builds/Intel® VTune™ Profiler Results
+/Builds/GPUCache
 
 # CMake
 build/
@@ -29,3 +40,4 @@ docs/tipe.fls
 docs/tipe.log
 docs/tipe.synctex.gz
 *.out
+/Builds/result.txt
