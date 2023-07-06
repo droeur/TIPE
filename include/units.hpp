@@ -88,6 +88,8 @@ public:
         actual_action_ = nullptr;
     }
 
+    ~unit_class() override = default;
+
     void actual_action_set(unit_action* action)
     {
         actual_action_ = action;

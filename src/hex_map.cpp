@@ -9,14 +9,14 @@ using namespace std;
 class compare
 {
 public:
-    bool operator()(hex_tile* a, hex_tile* b)
+    bool operator()(const hex_tile* a, const hex_tile* b) const
     {
         return a->cost_f > b->cost_f;
     }
 };
 
 
-std::vector<hex_tile*> map_class::path_a_star(hex_tile* start, hex_tile* end)
+std::vector<hex_tile*> map_class::path_a_star(hex_tile* start, hex_tile* end) const
 {
     std::vector<hex_tile*> path;
     priority_queue<hex_tile*, vector<hex_tile*>, compare> list_open;
@@ -47,7 +47,6 @@ std::vector<hex_tile*> map_class::path_a_star(hex_tile* start, hex_tile* end)
     start->cost_h = 0.0;
     start->parent_q = start->q();
     start->parent_r = start->r();
-    start->parent_s = start->s();
 
     list_open.push(start);
     int i = 0;
@@ -61,8 +60,8 @@ std::vector<hex_tile*> map_class::path_a_star(hex_tile* start, hex_tile* end)
         for (int dir = 0; dir < 6; dir++)
         {
             if (in_map(current_node->neighbor(dir).q(), current_node->neighbor(dir).r(), this) &&
-                tile_get(current_node->neighbor(dir).q(), current_node->neighbor(dir).r())->passable() && !list_closed[
-                    current_node->neighbor(dir).index_x()][current_node->neighbor(dir).index_y()])
+                tile_get(current_node->neighbor(dir).q(), current_node->neighbor(dir).r())->passable() &&
+                !list_closed[current_node->neighbor(dir).index_x()][current_node->neighbor(dir).index_y()])
             {
                 if (current_node->neighbor(dir).q() == end->q() && current_node->neighbor(dir).r() == end->r())
                 {
@@ -92,7 +91,6 @@ std::vector<hex_tile*> map_class::path_a_star(hex_tile* start, hex_tile* end)
                 children->cost_f = children->cost_h + children->cost_g;
                 children->parent_q = current_node->q();
                 children->parent_r = current_node->r();
-                children->parent_s = current_node->s();
                 list_open.push(children);
             }
         }

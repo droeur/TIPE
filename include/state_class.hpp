@@ -4,10 +4,10 @@
 
 
 class state_class;
+#include "units.hpp"
 #include "food.hpp"
 #include "base.hpp"
 #include "game_class.hpp"
-#include "units.hpp"
 
 using frame = int;
 
@@ -50,7 +50,7 @@ public:
         chosen_actions_[id] = chosen_list;
     }
 
-    std::vector<unit_action> chosen_actions_get(const player_id id)
+    std::vector<unit_action>& chosen_actions_get(const player_id id)
     {
         return chosen_actions_[id];
     }

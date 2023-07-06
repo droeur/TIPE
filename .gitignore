@@ -18,6 +18,7 @@ ipch/
 *.opensdf
 /Builds/Intel® VTune™ Profiler Results
 /Builds/GPUCache
+*.log
 
 # CMake
 build/

@@ -17,25 +17,43 @@ class hex_tile
 {
 public:
     hex_tile(const int q, const int r)
-        : q_(q), r_(r), s_(-q - r), x_graphic_(q + static_cast<double>(r) / 2)
+        : q_(q)
+        , r_(r)
+        , s_(-q - r)
+        , x_graphic_(q + static_cast<double>(r) / 2)
+        , x_index_(q + (r + (r & 1)) / 2)
     {
 
     }
 
     hex_tile(const int q, const int r, const int s)
-        : q_(q), r_(r), s_(s), x_graphic_(q + static_cast<double>(r) / 2)
+        : q_(q)
+        , r_(r)
+        , s_(s)
+        , x_graphic_(q + static_cast<double>(r) / 2)
+        , x_index_(q + (r + (r & 1)) / 2)
     {
 
     }
 
     hex_tile(const int q, const int r, const int s, const bool passable)
-        : q_(q), r_(r), s_(s), passable_(passable), x_graphic_(q + static_cast<double>(r) / 2)
+        : q_(q)
+        , r_(r)
+        , s_(s)
+        , passable_(passable)
+        , x_graphic_(q + static_cast<double>(r) / 2)
+        , x_index_(q + (r + (r & 1)) / 2)
     {
 
     }
 
     hex_tile(const int q, const int r, const bool passable)
-        : q_(q), r_(r), s_(-q - r), passable_(passable), x_graphic_(q + static_cast<double>(r) / 2)
+        : q_(q)
+        , r_(r)
+        , s_(-q - r)
+        , passable_(passable)
+        , x_graphic_(q + static_cast<double>(r) / 2)
+        , x_index_(q + (r + (r & 1)) / 2)
     {
 
     }
@@ -112,7 +130,7 @@ public:
     //coordinates "offset even-r"
     [[nodiscard]] int index_x() const
     {
-        return q_ + (r_ + (r_ & 1)) / 2;
+        return x_index_;
     }
 
     [[nodiscard]] int index_y() const
@@ -132,7 +150,6 @@ public:
 
     int parent_q = -1;
     int parent_r = -1;
-    int parent_s = -1;
     float cost_g = FLT_MAX; //distance from start
     float cost_h = FLT_MAX; //heuristic
     float cost_f = FLT_MAX; //g+h
@@ -157,7 +174,7 @@ public:
         return this->cost_f > a.cost_f;
     }
 
-    bool is_valid() const
+    [[nodiscard]] bool is_valid() const
     {
         return this->passable_;
     }
@@ -168,6 +185,7 @@ protected:
     int s_ = -1;
     bool passable_ = false;
     double x_graphic_;
+    int x_index_;
 };
 
 class map_class
@@ -196,21 +214,9 @@ public:
             r++;
         }
         size_y_ = r;
-        /*const rapidcsv::Document map_doc(file_name, rapidcsv::LabelParams(-1, -1));
-        for (int r = 0; static_cast<unsigned int>(r) < map_doc.GetRowCount(); r++)
-        {
-            std::vector<hex_tile> row;
-            for (int q = 0; static_cast<unsigned int>(q) < map_doc.GetRow<int>(r).size(); q++)
-            {
-                const bool passable = map_doc.GetRow<int>(r).at(q) != 0;
-                hex_tile t{q - (r + (r & 1)) / 2, r, passable};
-                row.push_back(t);
-            }
-            this->row_add(row);
-        }*/
     }
 
-    std::vector<hex_tile*> path_a_star(hex_tile* start, hex_tile* end);
+    std::vector<hex_tile*> path_a_star(hex_tile* start, hex_tile* end) const;
 
     [[nodiscard]] hex_tile* tile_get(const int q, const int r) const
     {
@@ -247,6 +253,43 @@ public:
     [[nodiscard]] int size_y_get() const
     {
         return size_y_;
+    }
+
+    hex_tile* neighbor(const hex_tile* tile, const int dir) const
+    {
+        int x_shift = 0;
+        int y_shift = 0;
+        if (dir == 0)
+        {
+            x_shift = 1;
+        }
+        else if (dir == 1)
+        {
+            x_shift = 1;
+            y_shift = -1;
+        }
+        else if (dir == 2)
+        {
+            y_shift = -1;
+        }
+        else if (dir == 3)
+        {
+            x_shift = -1;
+        }
+        else if (dir == 4)
+        {
+            x_shift = -1;
+            y_shift = 1;
+        }
+        else
+        {
+            x_shift = 1;
+            y_shift = 1;
+        }
+        if (!(tile->index_x() + x_shift >= 0 && tile->index_y() + y_shift >= 0 && tile->index_x() + x_shift < size_x_ &&
+              tile->index_y() + y_shift < size_y_))
+            return nullptr;
+        return (*(*tiles_map_)[tile->index_y() + y_shift])[tile->index_x() + x_shift];
     }
 
 private:
