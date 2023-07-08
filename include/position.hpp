@@ -3,6 +3,9 @@
 
 class position
 {
+protected:
+    int q_ = 0, r_ = 0;
+
 public:
     position(const int q, const int r)
         : q_(q)
@@ -69,6 +72,4 @@ public:
         return this->q_ == p.q_ && this->r_ == p.r_;
     }
 
-protected:
-    int q_ = 0, r_ = 0;
 };

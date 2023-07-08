@@ -23,18 +23,6 @@ constexpr auto hex_height_coefficient = 0.78f;
 
 class graphic_class
 {
-public:
-    graphic_class(const std::string& graphic_folder, const std::string& font);
-
-    ~graphic_class();
-
-    bool update(const game_class* game);
-
-    [[nodiscard]] int mouse_get_q() const;
-
-    [[nodiscard]] int mouse_get_r() const;
-
-private:
     void print(float x, float y, const char* text, const SDL_Color& text_color) const;
     void print_right(int width, float y, const char* text, const SDL_Color& text_color) const;
     void draw_tile(const hex_tile* hex) const;
@@ -54,4 +42,13 @@ private:
     float x_mouse_ = 0;
     float y_mouse_ = 0;
     TTF_Font* font_ = nullptr;
+
+public:
+    graphic_class(const std::string& graphic_folder, const std::string& font);
+    ~graphic_class();
+
+    bool update(const game_class* game);
+
+    [[nodiscard]] int mouse_get_q() const;
+    [[nodiscard]] int mouse_get_r() const;
 };

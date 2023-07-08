@@ -49,6 +49,9 @@
     <ClCompile Include="C:\Users\User\source\repos\Audic212\TIPE\src\units.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\dbscan.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="C:\Users\User\source\repos\Audic212\TIPE\include\base.hpp">
@@ -102,6 +105,9 @@
     <ClInclude Include="C:\Users\User\source\repos\Audic212\TIPE\include\units.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\dbscan.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="C:\Users\User\source\repos\Audic212\TIPE\CMakeLists.txt" />
@@ -113,5 +119,32 @@
     <Filter Include="Source Files">
       <UniqueIdentifier>{AD04FDA0-B1D0-3EFD-8A1E-D5739F0245D0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Datas">
+      <UniqueIdentifier>{de93f5d4-a0df-4f42-928e-8da63825bd1a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="..\cour.ttf">
+      <Filter>Datas</Filter>
+    </Font>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\expe.txt">
+      <Filter>Datas</Filter>
+    </Text>
+    <Text Include="..\map.txt">
+      <Filter>Datas</Filter>
+    </Text>
+    <Text Include="..\map_empty.txt">
+      <Filter>Datas</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\hex_b.png">
+      <Filter>Datas</Filter>
+    </Image>
+    <Image Include="..\hex_p.png">
+      <Filter>Datas</Filter>
+    </Image>
   </ItemGroup>
 </Project>

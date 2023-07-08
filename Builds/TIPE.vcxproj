@@ -116,7 +116,8 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <PostBuildEvent>
-      <Message></Message>
+      <Message>
+      </Message>
       <Command>setlocal
 C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -noprofile -executionpolicy Bypass -file C:/Users/User/vcpkg/scripts/buildsystems/msbuild/applocal.ps1 -targetBinary C:/Users/User/source/repos/Audic212/TIPE/Builds/bin/Debug/TIPE.exe -installedDir C:/Users/User/vcpkg/installed/x64-windows/debug/bin -OutVariable out
 if %errorlevel% neq 0 goto :cmEnd
@@ -172,7 +173,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <PostBuildEvent>
-      <Message></Message>
+      <Message>
+      </Message>
       <Command>setlocal
 C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -noprofile -executionpolicy Bypass -file C:/Users/User/vcpkg/scripts/buildsystems/msbuild/applocal.ps1 -targetBinary C:/Users/User/source/repos/Audic212/TIPE/Builds/bin/Release/TIPE.exe -installedDir C:/Users/User/vcpkg/installed/x64-windows/bin -OutVariable out
 if %errorlevel% neq 0 goto :cmEnd
@@ -228,7 +230,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <PostBuildEvent>
-      <Message></Message>
+      <Message>
+      </Message>
       <Command>setlocal
 C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -noprofile -executionpolicy Bypass -file C:/Users/User/vcpkg/scripts/buildsystems/msbuild/applocal.ps1 -targetBinary C:/Users/User/source/repos/Audic212/TIPE/Builds/bin/MinSizeRel/TIPE.exe -installedDir C:/Users/User/vcpkg/installed/x64-windows/bin -OutVariable out
 if %errorlevel% neq 0 goto :cmEnd
@@ -283,7 +286,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <PostBuildEvent>
-      <Message></Message>
+      <Message>
+      </Message>
       <Command>setlocal
 C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -noprofile -executionpolicy Bypass -file C:/Users/User/vcpkg/scripts/buildsystems/msbuild/applocal.ps1 -targetBinary C:/Users/User/source/repos/Audic212/TIPE/Builds/bin/RelWithDebInfo/TIPE.exe -installedDir C:/Users/User/vcpkg/installed/x64-windows/bin -OutVariable out
 if %errorlevel% neq 0 goto :cmEnd
@@ -366,6 +370,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\dbscan.cpp" />
     <ClCompile Include="C:\Users\User\source\repos\Audic212\TIPE\src\base.cpp" />
     <ClCompile Include="C:\Users\User\source\repos\Audic212\TIPE\src\food.cpp" />
     <ClCompile Include="C:\Users\User\source\repos\Audic212\TIPE\src\game_class.cpp" />
@@ -382,6 +387,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="C:\Users\User\source\repos\Audic212\TIPE\src\state_class.cpp" />
     <ClCompile Include="C:\Users\User\source\repos\Audic212\TIPE\src\test.cpp" />
     <ClCompile Include="C:\Users\User\source\repos\Audic212\TIPE\src\units.cpp" />
+    <ClInclude Include="..\include\dbscan.hpp" />
     <ClInclude Include="C:\Users\User\source\repos\Audic212\TIPE\include\base.hpp" />
     <ClInclude Include="C:\Users\User\source\repos\Audic212\TIPE\include\food.hpp" />
     <ClInclude Include="C:\Users\User\source\repos\Audic212\TIPE\include\game_class.hpp" />
@@ -431,6 +437,18 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <Project>{FF471A43-FA31-35C9-AA73-32586BD701D4}</Project>
       <Name>yaml-cpp</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="..\cour.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\expe.txt" />
+    <Text Include="..\map.txt" />
+    <Text Include="..\map_empty.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\hex_b.png" />
+    <Image Include="..\hex_p.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

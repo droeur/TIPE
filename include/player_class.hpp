@@ -3,7 +3,11 @@
 #include "units.hpp"
 #include <vector>
 
-class virtual_player_class {
+class virtual_player_class
+{
+protected:
+    player_id player_id_;
+
 public:
     explicit virtual_player_class(const player_id id)
         : player_id_(id)
@@ -25,6 +29,4 @@ public:
         return player_id_;
     }
     
-protected:
-    player_id player_id_;
 };

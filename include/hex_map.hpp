@@ -4,7 +4,6 @@
 #include <vector>
 #include <rapidcsv.h>
 #include <float.h>
-#include <fstream>
 
 /**
  * Hex directions:
@@ -15,6 +14,13 @@
 
 class hex_tile
 {
+    int q_ = -1;
+    int r_ = -1;
+    int s_ = -1;
+    bool passable_ = false;
+    double x_graphic_;
+    int x_index_;
+
 public:
     hex_tile(const int q, const int r)
         : q_(q)
@@ -32,9 +38,7 @@ public:
         , s_(s)
         , x_graphic_(q + static_cast<double>(r) / 2)
         , x_index_(q + (r + (r & 1)) / 2)
-    {
-
-    }
+    {}
 
     hex_tile(const int q, const int r, const int s, const bool passable)
         : q_(q)
@@ -43,9 +47,7 @@ public:
         , passable_(passable)
         , x_graphic_(q + static_cast<double>(r) / 2)
         , x_index_(q + (r + (r & 1)) / 2)
-    {
-
-    }
+    {}
 
     hex_tile(const int q, const int r, const bool passable)
         : q_(q)
@@ -54,246 +56,71 @@ public:
         , passable_(passable)
         , x_graphic_(q + static_cast<double>(r) / 2)
         , x_index_(q + (r + (r & 1)) / 2)
-    {
+    {}
 
-    }
+    bool operator==(const hex_tile &a) const;
+    bool operator!=(const hex_tile &a) const;
+    hex_tile operator+(const hex_tile &a) const;
+    hex_tile operator-(const hex_tile &a) const;
 
-    bool operator==(const hex_tile a) const
-    {
-        return q_ == a.q_ && r_ == a.r_ && s_ == a.s_;
-    }
+    [[nodiscard]] bool passable() const;
 
-    bool operator!=(const hex_tile a) const
-    {
-        return q_ != a.q_ || r_ != a.r_ || s_ != a.s_;
-    }
+    [[nodiscard]] float distance(const hex_tile& a) const;
+    float distance(const hex_tile* a) const;
 
-    hex_tile operator+(const hex_tile a) const
-    {
-        const hex_tile b(q_ + a.q_, r_ + a.r_);
-        return b;
-    }
-
-    hex_tile operator-(const hex_tile a) const
-    {
-        const hex_tile b(q_ - a.q_, r_ - a.r_);
-        return b;
-    }
-
-    [[nodiscard]] bool passable() const
-    {
-        return passable_;
-    }
-
-    [[nodiscard]] float distance(const hex_tile& a) const
-    {
-        const hex_tile temp = *this - a;
-        return static_cast<float>(abs(temp.q_) + abs(temp.r_) + abs(temp.s_)) / 2.0f;
-    }
-
-    float distance(const hex_tile* a) const
-    {
-        const hex_tile temp = *this - *a;
-        return static_cast<float>(abs(temp.q_) + abs(temp.r_) + abs(temp.s_)) / 2.0f;
-    }
-
-    static hex_tile direction(const int dir)
-    {
-        const hex_tile hex_tile_directions[6] = {
-            hex_tile(1, 0), hex_tile(1, -1), hex_tile(0, -1),
-            hex_tile(-1, 0), hex_tile(-1, 1), hex_tile(0, 1)
-        };
-        return hex_tile_directions[dir];
-    }
-
-    [[nodiscard]] hex_tile neighbor(const int dir) const
-    {
-        return *this + direction(dir);
-    }
+    static hex_tile direction(int dir);
+    [[nodiscard]] hex_tile neighbor(int dir) const;
 
     // coordinates cube
-    [[nodiscard]] int q() const
-    {
-        return q_;
-    }
-
-    [[nodiscard]] int r() const
-    {
-        return r_;
-    }
-
-    [[nodiscard]] int s() const
-    {
-        return s_;
-    }
+    [[nodiscard]] int q() const;
+    [[nodiscard]] int r() const;
+    [[nodiscard]] int s() const;
 
     //coordinates "offset even-r"
-    [[nodiscard]] int index_x() const
-    {
-        return x_index_;
-    }
+    [[nodiscard]] int index_x() const;
+    [[nodiscard]] int index_y() const;
 
-    [[nodiscard]] int index_y() const
-    {
-        return r_;
-    }
+    [[nodiscard]] double graphic_x() const;
+    [[nodiscard]] double graphic_y() const;
 
-    [[nodiscard]] double graphic_x() const
-    {
-        return x_graphic_;
-    }
-
-    [[nodiscard]] double graphic_y() const
-    {
-        return r_;
-    }
-
+    // path finding
     int parent_q = -1;
     int parent_r = -1;
     float cost_g = FLT_MAX; //distance from start
     float cost_h = FLT_MAX; //heuristic
     float cost_f = FLT_MAX; //g+h
 
-    [[nodiscard]] int parent_x() const
-    {
-        return parent_q + (parent_r + (parent_r & 1)) / 2;
-    }
+    [[nodiscard]] int parent_x() const;
+    [[nodiscard]] int parent_y() const;
 
-    [[nodiscard]] int parent_y() const
-    {
-        return parent_r;
-    }
+    bool operator<(const hex_tile& a) const;
+    bool operator>(const hex_tile& a) const;
 
-    bool operator<(const hex_tile& a) const
-    {
-        return this->cost_f < a.cost_f;
-    }
-
-    bool operator>(const hex_tile& a) const
-    {
-        return this->cost_f > a.cost_f;
-    }
-
-    [[nodiscard]] bool is_valid() const
-    {
-        return this->passable_;
-    }
-
-protected:
-    int q_ = -1;
-    int r_ = -1;
-    int s_ = -1;
-    bool passable_ = false;
-    double x_graphic_;
-    int x_index_;
+    [[nodiscard]] bool is_valid() const;
 };
 
 class map_class
 {
-public:
-    explicit map_class(const std::string& file_name)
-    {
-        tiles_map_ = new std::vector<std::vector<hex_tile*>*>;
-        std::fstream file{file_name};
-        std::string line;
-        int r = 0;
-        int q = 0;
-        while (std::getline(file, line))
-        {
-            const auto row = new std::vector<hex_tile*>;
-            for (const auto c :line)
-            {
-                const bool passable = c != '0';
-                auto t = new hex_tile{q - (r + (r & 1)) / 2, r, passable};
-                row->push_back(t);
-                q++;
-            }
-            this->row_add(row);
-            size_x_ = q;
-            q = 0;
-            r++;
-        }
-        size_y_ = r;
-    }
-
-    std::vector<hex_tile*> path_a_star(hex_tile* start, hex_tile* end) const;
-
-    [[nodiscard]] hex_tile* tile_get(const int q, const int r) const
-    {
-        return (*(*tiles_map_)[r])[q + (r + (r & 1)) / 2];
-    }
-
-    void row_add(std::vector<hex_tile*>* row) const
-    {
-        tiles_map_->push_back(row);
-    }
-
-    [[nodiscard]] std::vector<std::vector<hex_tile*>*>* tiles_map_get() const
-    {
-        return tiles_map_;
-    }
-
-    static bool in_map(const int q, const int r, const map_class *map)
-    {
-        return q + (r + (r & 1)) / 2 >= 0 && r >= 0 && q + (r + (r & 1)) / 2 < map->size_x_get() && r < map->size_y_get();
-    }
-
-    [[nodiscard]] bool passable(const int q, const int r) const
-    {
-        if (!in_map(q, r, this))
-            return false;
-        return (*(*tiles_map_)[r])[q + (r + (r & 1)) / 2]->passable();
-    }
-
-    [[nodiscard]] int size_x_get() const
-    {
-        return size_x_;
-    }
-
-    [[nodiscard]] int size_y_get() const
-    {
-        return size_y_;
-    }
-
-    hex_tile* neighbor(const hex_tile* tile, const int dir) const
-    {
-        int x_shift = 0;
-        int y_shift = 0;
-        if (dir == 0)
-        {
-            x_shift = 1;
-        }
-        else if (dir == 1)
-        {
-            x_shift = 1;
-            y_shift = -1;
-        }
-        else if (dir == 2)
-        {
-            y_shift = -1;
-        }
-        else if (dir == 3)
-        {
-            x_shift = -1;
-        }
-        else if (dir == 4)
-        {
-            x_shift = -1;
-            y_shift = 1;
-        }
-        else
-        {
-            x_shift = 1;
-            y_shift = 1;
-        }
-        if (!(tile->index_x() + x_shift >= 0 && tile->index_y() + y_shift >= 0 && tile->index_x() + x_shift < size_x_ &&
-              tile->index_y() + y_shift < size_y_))
-            return nullptr;
-        return (*(*tiles_map_)[tile->index_y() + y_shift])[tile->index_x() + x_shift];
-    }
-
-private:
     int size_x_;
     int size_y_;
     std::vector<std::vector<hex_tile*>*>* tiles_map_;
+
+public:
+    explicit map_class(const std::string& file_name);
+
+    std::vector<hex_tile*> path_a_star(hex_tile* start, hex_tile* end) const;
+
+    static bool in_map(int q, int r, const map_class* map);
+    [[nodiscard]] hex_tile* tile_get(int q, int r) const;
+
+    void row_add(std::vector<hex_tile*>* row) const;
+
+    [[nodiscard]] std::vector<std::vector<hex_tile*>*>* tiles_map_get() const;
+
+    [[nodiscard]] bool passable(int q, int r) const;
+
+    [[nodiscard]] int size_x_get() const;
+    [[nodiscard]] int size_y_get() const;
+
+    hex_tile* neighbor(const hex_tile* tile, int dir) const;
 };

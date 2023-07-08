@@ -63,16 +63,13 @@ void graphic_class::draw_unit(const unit_class* unit, const game_class *game) co
     unit_rect.h = static_cast<float>(zoom_ * 0.5);
 
     if (unit->player_get() == 0)
-    {
         SDL_SetRenderDrawColor(render_, BLUE);
-    }
     else
-    {
         SDL_SetRenderDrawColor(render_, RED);
-    }
     const hex_tile* tile = game->map_get()->tile_get(unit->q_get(), unit->r_get());
-    unit_rect.x = (tile->graphic_x()) * zoom_ - unit_rect.w / 2 + x_shift_ * zoom_;
-    unit_rect.y = (unit->r_get() * hex_height_coefficient) * zoom_ - unit_rect.h / 2 + y_shift_ * zoom_;
+    unit_rect.x = (tile->graphic_x()) * zoom_ - unit_rect.w / 2 + x_shift_ * zoom_ + unit->player_get()*zoom_/5;
+    unit_rect.y =
+        (unit->r_get() * hex_height_coefficient) * zoom_ - unit_rect.h / 2 + y_shift_ * zoom_;
     SDL_RenderFillRect(render_, &unit_rect);
 
     life_rect.w = 0.1 * unit_hp * zoom_;

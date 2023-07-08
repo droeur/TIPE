@@ -34,7 +34,7 @@ void state_class::unit_append(unit_class* u, const player_id player)
 vector<vector<unit_action>> state_class::moves_generate(const player_id id) const
 {
     vector<vector<unit_action>> possibles_actions;
-    vector v{u_action_id::error, u_action_id::move, u_action_id::attack, u_action_id::wait};
+    vector v{unit_action_id::error, unit_action_id::move, unit_action_id::attack, unit_action_id::wait};
     
     possibles_actions.clear();
     for (const auto u : u_list_[id])
@@ -49,7 +49,7 @@ vector<vector<unit_action>> state_class::moves_generate(const player_id id) cons
             {
                 if (enemy_u->hp_get() > 0)
                 {
-                    unit_action action{u, u_action_id::attack, enemy_u, ATTACK_COOLDOWN};
+                    unit_action action{u, unit_action_id::attack, enemy_u, ATTACK_COOLDOWN};
                     this_unit_action.push_back(action);
                 }
             }
@@ -57,7 +57,7 @@ vector<vector<unit_action>> state_class::moves_generate(const player_id id) cons
             {
                 if (base->hp_get() > 0 && base->player_get() == enemy_player)
                 {
-                    unit_action action{u, u_action_id::attack, base, ATTACK_COOLDOWN};
+                    unit_action action{u, unit_action_id::attack, base, ATTACK_COOLDOWN};
                     this_unit_action.push_back(action);
                 }
             }
@@ -68,7 +68,7 @@ vector<vector<unit_action>> state_class::moves_generate(const player_id id) cons
             {
                 for (const auto food : food_list_)
                 {
-                    unit_action action{u, u_action_id::pick, food, MOVE_COOLDOWN};
+                    unit_action action{u, unit_action_id::pick, food, MOVE_COOLDOWN};
                     this_unit_action.push_back(action);
                 }
             }
@@ -78,7 +78,7 @@ vector<vector<unit_action>> state_class::moves_generate(const player_id id) cons
                 {
                     if (base->hp_get() > 0 && base->player_get() == id)
                     {
-                        unit_action action{u, u_action_id::move, base->position_get(), MOVE_COOLDOWN};
+                        unit_action action{u, unit_action_id::move, base->position_get(), MOVE_COOLDOWN};
                         this_unit_action.push_back(action);
                     }
                 }
@@ -134,7 +134,7 @@ void state_class::moves_make(map_class *map)
                 unit_class* u = action->unit_get();
                 switch (action->action_type_get())
                 {
-                case u_action_id::attack: {
+                case unit_action_id::attack: {
                     object_abstract_class* enemy_u = action->target_unit_get();
                     if (const int distance = u->position_get().distance(enemy_u->position_get(), map);
                         attack_distance > distance)
@@ -151,7 +151,7 @@ void state_class::moves_make(map_class *map)
                     }
                 }
                 break;
-                case u_action_id::pick: {
+                case unit_action_id::pick: {
                     object_abstract_class* food = action->target_unit_get();
                     if (const double distance = u->position_get().distance(food->position_get(), map); distance < 1)
                     {
@@ -183,7 +183,7 @@ void state_class::moves_make(map_class *map)
 
                 }
                 break;
-                case u_action_id::move: {
+                case unit_action_id::move: {
                     position& p = action->position_get();
                     if (const double distance = u->position_get().distance(p, map); distance < 1)
                     {
@@ -197,8 +197,8 @@ void state_class::moves_make(map_class *map)
                     }
                 }
                 break;
-                case u_action_id::error:
-                case u_action_id::wait:
+                case unit_action_id::error:
+                case unit_action_id::wait:
                     ++action;
                     break;
                 }

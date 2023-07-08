@@ -4,6 +4,11 @@
 
 using namespace std;
 
+player_id game_class::enemy_player_get(const player_id p)
+{
+    return p == 0;
+}
+
 void game_class::player_set(virtual_player_class* p, const player_id id)
 {
     if (static_cast<unsigned long long>(id) == players_.size())
@@ -11,6 +16,11 @@ void game_class::player_set(virtual_player_class* p, const player_id id)
     else
         std::cerr << "Error: mismatched player id: player:" << id << " vs "
             << players_.size();
+}
+
+std::vector<virtual_player_class*>::size_type game_class::player_number_get() const
+{
+    return players_.size();
 }
 
 void game_class::play() const

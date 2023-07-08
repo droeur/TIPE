@@ -16,6 +16,144 @@ public:
 };
 
 
+bool hex_tile::operator==(const hex_tile &a) const
+{
+    return q_ == a.q_ && r_ == a.r_ && s_ == a.s_;
+}
+
+bool hex_tile::operator!=(const hex_tile &a) const
+{
+    return q_ != a.q_ || r_ != a.r_ || s_ != a.s_;
+}
+
+hex_tile hex_tile::operator+(const hex_tile &a) const
+{
+    const hex_tile b(q_ + a.q_, r_ + a.r_);
+    return b;
+}
+
+hex_tile hex_tile::operator-(const hex_tile &a) const
+{
+    const hex_tile b(q_ - a.q_, r_ - a.r_);
+    return b;
+}
+
+bool hex_tile::passable() const
+{
+    return passable_;
+}
+
+float hex_tile::distance(const hex_tile& a) const
+{
+    const hex_tile temp = *this - a;
+    return static_cast<float>(abs(temp.q_) + abs(temp.r_) + abs(temp.s_)) / 2.0f;
+}
+
+float hex_tile::distance(const hex_tile* a) const
+{
+    const hex_tile temp = *this - *a;
+    return static_cast<float>(abs(temp.q_) + abs(temp.r_) + abs(temp.s_)) / 2.0f;
+}
+
+hex_tile hex_tile::direction(const int dir)
+{
+    const hex_tile hex_tile_directions[6] = {
+        hex_tile(1, 0), hex_tile(1, -1), hex_tile(0, -1),
+        hex_tile(-1, 0), hex_tile(-1, 1), hex_tile(0, 1)
+    };
+    return hex_tile_directions[dir];
+}
+
+hex_tile hex_tile::neighbor(const int dir) const
+{
+    return *this + direction(dir);
+}
+
+int hex_tile::q() const
+{
+    return q_;
+}
+
+int hex_tile::r() const
+{
+    return r_;
+}
+
+int hex_tile::s() const
+{
+    return s_;
+}
+
+int hex_tile::index_x() const
+{
+    return x_index_;
+}
+
+int hex_tile::index_y() const
+{
+    return r_;
+}
+
+double hex_tile::graphic_x() const
+{
+    return x_graphic_;
+}
+
+double hex_tile::graphic_y() const
+{
+    return r_;
+}
+
+int hex_tile::parent_x() const
+{
+    return parent_q + (parent_r + (parent_r & 1)) / 2;
+}
+
+int hex_tile::parent_y() const
+{
+    return parent_r;
+}
+
+bool hex_tile::operator<(const hex_tile& a) const
+{
+    return this->cost_f < a.cost_f;
+}
+
+bool hex_tile::operator>(const hex_tile& a) const
+{
+    return this->cost_f > a.cost_f;
+}
+
+bool hex_tile::is_valid() const
+{
+    return this->passable_;
+}
+
+map_class::map_class(const std::string& file_name)
+{
+    tiles_map_ = new std::vector<std::vector<hex_tile*>*>;
+    std::fstream file{file_name};
+    std::string line;
+    int r = 0;
+    int q = 0;
+    while (std::getline(file, line))
+    {
+        const auto row = new std::vector<hex_tile*>;
+        for (const auto c :line)
+        {
+            const bool passable = c != '0';
+            auto t = new hex_tile{q - (r + (r & 1)) / 2, r, passable};
+            row->push_back(t);
+            q++;
+        }
+        this->row_add(row);
+        size_x_ = q;
+        q = 0;
+        r++;
+    }
+    size_y_ = r;
+}
+
 std::vector<hex_tile*> map_class::path_a_star(hex_tile* start, hex_tile* end) const
 {
     std::vector<hex_tile*> path;
@@ -32,8 +170,7 @@ std::vector<hex_tile*> map_class::path_a_star(hex_tile* start, hex_tile* end) co
             list_parents[i][j] = nullptr;
         }
     }
-
-    hex_tile* current_node = nullptr;
+    
     hex_tile* children = nullptr;
 
     if (start == end)
@@ -53,7 +190,7 @@ std::vector<hex_tile*> map_class::path_a_star(hex_tile* start, hex_tile* end) co
 
     while (!list_open.empty() && i < size_x_ * size_y_)
     {
-        current_node = list_open.top();
+        hex_tile* current_node = list_open.top();
         list_closed[current_node->index_x()][current_node->index_y()] = true;
         list_parents[current_node->index_x()][current_node->index_y()] = current_node;
         list_open.pop();
@@ -98,4 +235,80 @@ std::vector<hex_tile*> map_class::path_a_star(hex_tile* start, hex_tile* end) co
         i++;
     }
     return path;
+}
+
+hex_tile* map_class::tile_get(const int q, const int r) const
+{
+    if (!in_map(q,r,this))
+        return nullptr;
+    return (*(*tiles_map_)[r])[q + (r + (r & 1)) / 2];
+}
+
+void map_class::row_add(std::vector<hex_tile*>* row) const
+{
+    tiles_map_->push_back(row);
+}
+
+std::vector<std::vector<hex_tile*>*>* map_class::tiles_map_get() const
+{
+    return tiles_map_;
+}
+
+bool map_class::in_map(const int q, const int r, const map_class* map)
+{
+    return q + (r + (r & 1)) / 2 >= 0 && r >= 0 && q + (r + (r & 1)) / 2 < map->size_x_get() && r < map->size_y_get();
+}
+
+bool map_class::passable(const int q, const int r) const
+{
+    if (!in_map(q, r, this))
+        return false;
+    return (*(*tiles_map_)[r])[q + (r + (r & 1)) / 2]->passable();
+}
+
+int map_class::size_x_get() const
+{
+    return size_x_;
+}
+
+int map_class::size_y_get() const
+{
+    return size_y_;
+}
+
+hex_tile* map_class::neighbor(const hex_tile* tile, const int dir) const
+{
+    int x_shift = 0;
+    int y_shift = 0;
+    if (dir == 0)
+    {
+        x_shift = 1;
+    }
+    else if (dir == 1)
+    {
+        x_shift = 1;
+        y_shift = -1;
+    }
+    else if (dir == 2)
+    {
+        y_shift = -1;
+    }
+    else if (dir == 3)
+    {
+        x_shift = -1;
+    }
+    else if (dir == 4)
+    {
+        x_shift = -1;
+        y_shift = 1;
+    }
+    else
+    {
+        x_shift = 1;
+        y_shift = 1;
+    }
+    if (!(tile->index_x() + x_shift >= 0 && tile->index_y() + y_shift >= 0 && tile->index_x() + x_shift < size_x_ &&
+          tile->index_y() + y_shift < size_y_))
+        return nullptr;
+    return (*(*tiles_map_)[tile->index_y() + y_shift])[tile->index_x() + x_shift];
 }
