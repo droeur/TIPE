@@ -60,25 +60,25 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\User\source\repos\Audic212\TIPE\Builds\bin\Debug\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\Builds\bin\Debug\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">TIPE.dir\Debug\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">TIPE</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.exe</TargetExt>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</GenerateManifest>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\User\source\repos\Audic212\TIPE\Builds\bin\Release\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\Builds\bin\Release\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">TIPE.dir\Release\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">TIPE</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.exe</TargetExt>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</GenerateManifest>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\User\source\repos\Audic212\TIPE\Builds\bin\MinSizeRel\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">..\Builds\bin\MinSizeRel\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">TIPE.dir\MinSizeRel\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">TIPE</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.exe</TargetExt>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkIncremental>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</GenerateManifest>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\User\source\repos\Audic212\TIPE\Builds\bin\RelWithDebInfo\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">..\Builds\bin\RelWithDebInfo\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">TIPE.dir\RelWithDebInfo\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">TIPE</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.exe</TargetExt>
@@ -87,7 +87,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\User\source\repos\Audic212\TIPE\include;C:\Users\User\source\repos\Audic212\TIPE\external\rapidcsv\src;C:\Users\User\source\repos\Audic212\TIPE\external\glfw\include;C:\Users\User\source\repos\Audic212\TIPE\external\yaml-cpp\include;C:\Users\User\vcpkg\installed\x64-windows\include;C:\Users\User\source\repos\Audic212\TIPE\Builds\external\SDL\include;C:\Users\User\source\repos\Audic212\TIPE\external\SDL\include;C:\Users\User\source\repos\Audic212\TIPE\external\SDL\include\SDL3;C:\Users\User\source\repos\Audic212\TIPE\external\SDL-image\include;C:\Users\User\source\repos\Audic212\TIPE\external\SDL-image\include\SDL3;C:\Users\User\source\repos\Audic212\TIPE\external\SDL-ttf\include;C:\Users\User\source\repos\Audic212\TIPE\external\SDL-ttf\include\SDL3;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include;..\external\rapidcsv\src;..\external\glfw\include;..\external\yaml-cpp\include;C:\Users\User\vcpkg\installed\x64-windows\include;..\Builds\external\SDL\include;..\external\SDL\include;..\external\SDL\include\SDL3;..\external\SDL-image\include;..\external\SDL-image\include\SDL3;..\external\SDL-ttf\include;..\external\SDL-ttf\include\SDL3;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -105,10 +105,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;YAML_CPP_STATIC_DEFINE;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\User\source\repos\Audic212\TIPE\include;C:\Users\User\source\repos\Audic212\TIPE\external\rapidcsv\src;C:\Users\User\source\repos\Audic212\TIPE\external\glfw\include;C:\Users\User\source\repos\Audic212\TIPE\external\yaml-cpp\include;C:\Users\User\vcpkg\installed\x64-windows\include;C:\Users\User\source\repos\Audic212\TIPE\Builds\external\SDL\include;C:\Users\User\source\repos\Audic212\TIPE\external\SDL\include;C:\Users\User\source\repos\Audic212\TIPE\external\SDL\include\SDL3;C:\Users\User\source\repos\Audic212\TIPE\external\SDL-image\include;C:\Users\User\source\repos\Audic212\TIPE\external\SDL-image\include\SDL3;C:\Users\User\source\repos\Audic212\TIPE\external\SDL-ttf\include;C:\Users\User\source\repos\Audic212\TIPE\external\SDL-ttf\include\SDL3;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include;..\external\rapidcsv\src;..\external\glfw\include;..\external\yaml-cpp\include;C:\Users\User\vcpkg\installed\x64-windows\include;..\Builds\external\SDL\include;..\external\SDL\include;..\external\SDL\include\SDL3;..\external\SDL-image\include;..\external\SDL-image\include\SDL3;..\external\SDL-ttf\include;..\external\SDL-ttf\include\SDL3;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\User\source\repos\Audic212\TIPE\include;C:\Users\User\source\repos\Audic212\TIPE\external\rapidcsv\src;C:\Users\User\source\repos\Audic212\TIPE\external\glfw\include;C:\Users\User\source\repos\Audic212\TIPE\external\yaml-cpp\include;C:\Users\User\vcpkg\installed\x64-windows\include;C:\Users\User\source\repos\Audic212\TIPE\Builds\external\SDL\include;C:\Users\User\source\repos\Audic212\TIPE\external\SDL\include;C:\Users\User\source\repos\Audic212\TIPE\external\SDL\include\SDL3;C:\Users\User\source\repos\Audic212\TIPE\external\SDL-image\include;C:\Users\User\source\repos\Audic212\TIPE\external\SDL-image\include\SDL3;C:\Users\User\source\repos\Audic212\TIPE\external\SDL-ttf\include;C:\Users\User\source\repos\Audic212\TIPE\external\SDL-ttf\include\SDL3;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include;..\external\rapidcsv\src;..\external\glfw\include;..\external\yaml-cpp\include;C:\Users\User\vcpkg\installed\x64-windows\include;..\Builds\external\SDL\include;..\external\SDL\include;..\external\SDL\include\SDL3;..\external\SDL-image\include;..\external\SDL-image\include\SDL3;..\external\SDL-ttf\include;..\external\SDL-ttf\include\SDL3;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -144,7 +144,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\User\source\repos\Audic212\TIPE\include;C:\Users\User\source\repos\Audic212\TIPE\external\rapidcsv\src;C:\Users\User\source\repos\Audic212\TIPE\external\glfw\include;C:\Users\User\source\repos\Audic212\TIPE\external\yaml-cpp\include;C:\Users\User\vcpkg\installed\x64-windows\include;C:\Users\User\source\repos\Audic212\TIPE\Builds\external\SDL\include;C:\Users\User\source\repos\Audic212\TIPE\external\SDL\include;C:\Users\User\source\repos\Audic212\TIPE\external\SDL\include\SDL3;C:\Users\User\source\repos\Audic212\TIPE\external\SDL-image\include;C:\Users\User\source\repos\Audic212\TIPE\external\SDL-image\include\SDL3;C:\Users\User\source\repos\Audic212\TIPE\external\SDL-ttf\include;C:\Users\User\source\repos\Audic212\TIPE\external\SDL-ttf\include\SDL3;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include;..\external\rapidcsv\src;..\external\glfw\include;..\external\yaml-cpp\include;C:\Users\User\vcpkg\installed\x64-windows\include;..\Builds\external\SDL\include;..\external\SDL\include;..\external\SDL\include\SDL3;..\external\SDL-image\include;..\external\SDL-image\include\SDL3;..\external\SDL-ttf\include;..\external\SDL-ttf\include\SDL3;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ExceptionHandling>Sync</ExceptionHandling>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -162,10 +162,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;YAML_CPP_STATIC_DEFINE;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\User\source\repos\Audic212\TIPE\include;C:\Users\User\source\repos\Audic212\TIPE\external\rapidcsv\src;C:\Users\User\source\repos\Audic212\TIPE\external\glfw\include;C:\Users\User\source\repos\Audic212\TIPE\external\yaml-cpp\include;C:\Users\User\vcpkg\installed\x64-windows\include;C:\Users\User\source\repos\Audic212\TIPE\Builds\external\SDL\include;C:\Users\User\source\repos\Audic212\TIPE\external\SDL\include;C:\Users\User\source\repos\Audic212\TIPE\external\SDL\include\SDL3;C:\Users\User\source\repos\Audic212\TIPE\external\SDL-image\include;C:\Users\User\source\repos\Audic212\TIPE\external\SDL-image\include\SDL3;C:\Users\User\source\repos\Audic212\TIPE\external\SDL-ttf\include;C:\Users\User\source\repos\Audic212\TIPE\external\SDL-ttf\include\SDL3;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include;..\external\rapidcsv\src;..\external\glfw\include;..\external\yaml-cpp\include;C:\Users\User\vcpkg\installed\x64-windows\include;..\Builds\external\SDL\include;..\external\SDL\include;..\external\SDL\include\SDL3;..\external\SDL-image\include;..\external\SDL-image\include\SDL3;..\external\SDL-ttf\include;..\external\SDL-ttf\include\SDL3;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\User\source\repos\Audic212\TIPE\include;C:\Users\User\source\repos\Audic212\TIPE\external\rapidcsv\src;C:\Users\User\source\repos\Audic212\TIPE\external\glfw\include;C:\Users\User\source\repos\Audic212\TIPE\external\yaml-cpp\include;C:\Users\User\vcpkg\installed\x64-windows\include;C:\Users\User\source\repos\Audic212\TIPE\Builds\external\SDL\include;C:\Users\User\source\repos\Audic212\TIPE\external\SDL\include;C:\Users\User\source\repos\Audic212\TIPE\external\SDL\include\SDL3;C:\Users\User\source\repos\Audic212\TIPE\external\SDL-image\include;C:\Users\User\source\repos\Audic212\TIPE\external\SDL-image\include\SDL3;C:\Users\User\source\repos\Audic212\TIPE\external\SDL-ttf\include;C:\Users\User\source\repos\Audic212\TIPE\external\SDL-ttf\include\SDL3;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include;..\external\rapidcsv\src;..\external\glfw\include;..\external\yaml-cpp\include;C:\Users\User\vcpkg\installed\x64-windows\include;..\Builds\external\SDL\include;..\external\SDL\include;..\external\SDL\include\SDL3;..\external\SDL-image\include;..\external\SDL-image\include\SDL3;..\external\SDL-ttf\include;..\external\SDL-ttf\include\SDL3;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -201,7 +201,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\User\source\repos\Audic212\TIPE\include;C:\Users\User\source\repos\Audic212\TIPE\external\rapidcsv\src;C:\Users\User\source\repos\Audic212\TIPE\external\glfw\include;C:\Users\User\source\repos\Audic212\TIPE\external\yaml-cpp\include;C:\Users\User\vcpkg\installed\x64-windows\include;C:\Users\User\source\repos\Audic212\TIPE\Builds\external\SDL\include;C:\Users\User\source\repos\Audic212\TIPE\external\SDL\include;C:\Users\User\source\repos\Audic212\TIPE\external\SDL\include\SDL3;C:\Users\User\source\repos\Audic212\TIPE\external\SDL-image\include;C:\Users\User\source\repos\Audic212\TIPE\external\SDL-image\include\SDL3;C:\Users\User\source\repos\Audic212\TIPE\external\SDL-ttf\include;C:\Users\User\source\repos\Audic212\TIPE\external\SDL-ttf\include\SDL3;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include;..\external\rapidcsv\src;..\external\glfw\include;..\external\yaml-cpp\include;C:\Users\User\vcpkg\installed\x64-windows\include;..\Builds\external\SDL\include;..\external\SDL\include;..\external\SDL\include\SDL3;..\external\SDL-image\include;..\external\SDL-image\include\SDL3;..\external\SDL-ttf\include;..\external\SDL-ttf\include\SDL3;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ExceptionHandling>Sync</ExceptionHandling>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
@@ -219,10 +219,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;YAML_CPP_STATIC_DEFINE;CMAKE_INTDIR=\"MinSizeRel\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\User\source\repos\Audic212\TIPE\include;C:\Users\User\source\repos\Audic212\TIPE\external\rapidcsv\src;C:\Users\User\source\repos\Audic212\TIPE\external\glfw\include;C:\Users\User\source\repos\Audic212\TIPE\external\yaml-cpp\include;C:\Users\User\vcpkg\installed\x64-windows\include;C:\Users\User\source\repos\Audic212\TIPE\Builds\external\SDL\include;C:\Users\User\source\repos\Audic212\TIPE\external\SDL\include;C:\Users\User\source\repos\Audic212\TIPE\external\SDL\include\SDL3;C:\Users\User\source\repos\Audic212\TIPE\external\SDL-image\include;C:\Users\User\source\repos\Audic212\TIPE\external\SDL-image\include\SDL3;C:\Users\User\source\repos\Audic212\TIPE\external\SDL-ttf\include;C:\Users\User\source\repos\Audic212\TIPE\external\SDL-ttf\include\SDL3;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include;..\external\rapidcsv\src;..\external\glfw\include;..\external\yaml-cpp\include;C:\Users\User\vcpkg\installed\x64-windows\include;..\Builds\external\SDL\include;..\external\SDL\include;..\external\SDL\include\SDL3;..\external\SDL-image\include;..\external\SDL-image\include\SDL3;..\external\SDL-ttf\include;..\external\SDL-ttf\include\SDL3;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\User\source\repos\Audic212\TIPE\include;C:\Users\User\source\repos\Audic212\TIPE\external\rapidcsv\src;C:\Users\User\source\repos\Audic212\TIPE\external\glfw\include;C:\Users\User\source\repos\Audic212\TIPE\external\yaml-cpp\include;C:\Users\User\vcpkg\installed\x64-windows\include;C:\Users\User\source\repos\Audic212\TIPE\Builds\external\SDL\include;C:\Users\User\source\repos\Audic212\TIPE\external\SDL\include;C:\Users\User\source\repos\Audic212\TIPE\external\SDL\include\SDL3;C:\Users\User\source\repos\Audic212\TIPE\external\SDL-image\include;C:\Users\User\source\repos\Audic212\TIPE\external\SDL-image\include\SDL3;C:\Users\User\source\repos\Audic212\TIPE\external\SDL-ttf\include;C:\Users\User\source\repos\Audic212\TIPE\external\SDL-ttf\include\SDL3;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include;..\external\rapidcsv\src;..\external\glfw\include;..\external\yaml-cpp\include;C:\Users\User\vcpkg\installed\x64-windows\include;..\Builds\external\SDL\include;..\external\SDL\include;..\external\SDL\include\SDL3;..\external\SDL-image\include;..\external\SDL-image\include\SDL3;..\external\SDL-ttf\include;..\external\SDL-ttf\include\SDL3;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -258,7 +258,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\User\source\repos\Audic212\TIPE\include;C:\Users\User\source\repos\Audic212\TIPE\external\rapidcsv\src;C:\Users\User\source\repos\Audic212\TIPE\external\glfw\include;C:\Users\User\source\repos\Audic212\TIPE\external\yaml-cpp\include;C:\Users\User\vcpkg\installed\x64-windows\include;C:\Users\User\source\repos\Audic212\TIPE\Builds\external\SDL\include;C:\Users\User\source\repos\Audic212\TIPE\external\SDL\include;C:\Users\User\source\repos\Audic212\TIPE\external\SDL\include\SDL3;C:\Users\User\source\repos\Audic212\TIPE\external\SDL-image\include;C:\Users\User\source\repos\Audic212\TIPE\external\SDL-image\include\SDL3;C:\Users\User\source\repos\Audic212\TIPE\external\SDL-ttf\include;C:\Users\User\source\repos\Audic212\TIPE\external\SDL-ttf\include\SDL3;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include;..\external\rapidcsv\src;..\external\glfw\include;..\external\yaml-cpp\include;C:\Users\User\vcpkg\installed\x64-windows\include;..\Builds\external\SDL\include;..\external\SDL\include;..\external\SDL\include\SDL3;..\external\SDL-image\include;..\external\SDL-image\include\SDL3;..\external\SDL-ttf\include;..\external\SDL-ttf\include\SDL3;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -275,10 +275,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;YAML_CPP_STATIC_DEFINE;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\User\source\repos\Audic212\TIPE\include;C:\Users\User\source\repos\Audic212\TIPE\external\rapidcsv\src;C:\Users\User\source\repos\Audic212\TIPE\external\glfw\include;C:\Users\User\source\repos\Audic212\TIPE\external\yaml-cpp\include;C:\Users\User\vcpkg\installed\x64-windows\include;C:\Users\User\source\repos\Audic212\TIPE\Builds\external\SDL\include;C:\Users\User\source\repos\Audic212\TIPE\external\SDL\include;C:\Users\User\source\repos\Audic212\TIPE\external\SDL\include\SDL3;C:\Users\User\source\repos\Audic212\TIPE\external\SDL-image\include;C:\Users\User\source\repos\Audic212\TIPE\external\SDL-image\include\SDL3;C:\Users\User\source\repos\Audic212\TIPE\external\SDL-ttf\include;C:\Users\User\source\repos\Audic212\TIPE\external\SDL-ttf\include\SDL3;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include;..\external\rapidcsv\src;..\external\glfw\include;..\external\yaml-cpp\include;C:\Users\User\vcpkg\installed\x64-windows\include;..\Builds\external\SDL\include;..\external\SDL\include;..\external\SDL\include\SDL3;..\external\SDL-image\include;..\external\SDL-image\include\SDL3;..\external\SDL-ttf\include;..\external\SDL-ttf\include\SDL3;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\User\source\repos\Audic212\TIPE\include;C:\Users\User\source\repos\Audic212\TIPE\external\rapidcsv\src;C:\Users\User\source\repos\Audic212\TIPE\external\glfw\include;C:\Users\User\source\repos\Audic212\TIPE\external\yaml-cpp\include;C:\Users\User\vcpkg\installed\x64-windows\include;C:\Users\User\source\repos\Audic212\TIPE\Builds\external\SDL\include;C:\Users\User\source\repos\Audic212\TIPE\external\SDL\include;C:\Users\User\source\repos\Audic212\TIPE\external\SDL\include\SDL3;C:\Users\User\source\repos\Audic212\TIPE\external\SDL-image\include;C:\Users\User\source\repos\Audic212\TIPE\external\SDL-image\include\SDL3;C:\Users\User\source\repos\Audic212\TIPE\external\SDL-ttf\include;C:\Users\User\source\repos\Audic212\TIPE\external\SDL-ttf\include\SDL3;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include;..\external\rapidcsv\src;..\external\glfw\include;..\external\yaml-cpp\include;C:\Users\User\vcpkg\installed\x64-windows\include;..\Builds\external\SDL\include;..\external\SDL\include;..\external\SDL\include\SDL3;..\external\SDL-image\include;..\external\SDL-image\include\SDL3;..\external\SDL-ttf\include;..\external\SDL-ttf\include\SDL3;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -313,7 +313,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Users\User\source\repos\Audic212\TIPE\CMakeLists.txt">
+    <CustomBuild Include="..\CMakeLists.txt">
       <UseUtf8Encoding>Always</UseUtf8Encoding>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule C:/Users/User/source/repos/Audic212/TIPE/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
@@ -325,8 +325,8 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeDependentOption.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Compiler\MSVC.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\FindBoost.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\FindOpenGL.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\FindPackageMessage.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows-Initialize.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\WindowsPaths.cmake;C:\Users\User\source\repos\Audic212\TIPE\Builds\CMakeFiles\3.27.0-rc4\CMakeCXXCompiler.cmake;C:\Users\User\source\repos\Audic212\TIPE\Builds\CMakeFiles\3.27.0-rc4\CMakeRCCompiler.cmake;C:\Users\User\source\repos\Audic212\TIPE\Builds\CMakeFiles\3.27.0-rc4\CMakeSystem.cmake;C:\Users\User\source\repos\Audic212\TIPE\Builds\CMakeFiles\cmake.verify_globs;C:\Users\User\vcpkg\installed\x64-windows\share\boost\vcpkg-cmake-wrapper.cmake;C:\Users\User\vcpkg\scripts\buildsystems\vcpkg.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\User\source\repos\Audic212\TIPE\Builds\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeDependentOption.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Compiler\MSVC.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\FindBoost.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\FindOpenGL.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\FindPackageMessage.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows-Initialize.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\WindowsPaths.cmake;..\Builds\CMakeFiles\3.27.0-rc4\CMakeCXXCompiler.cmake;..\Builds\CMakeFiles\3.27.0-rc4\CMakeRCCompiler.cmake;..\Builds\CMakeFiles\3.27.0-rc4\CMakeSystem.cmake;..\Builds\CMakeFiles\cmake.verify_globs;C:\Users\User\vcpkg\installed\x64-windows\share\boost\vcpkg-cmake-wrapper.cmake;C:\Users\User\vcpkg\scripts\buildsystems\vcpkg.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\Builds\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule C:/Users/User/source/repos/Audic212/TIPE/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
@@ -338,8 +338,8 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeDependentOption.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Compiler\MSVC.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\FindBoost.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\FindOpenGL.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\FindPackageMessage.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows-Initialize.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\WindowsPaths.cmake;C:\Users\User\source\repos\Audic212\TIPE\Builds\CMakeFiles\3.27.0-rc4\CMakeCXXCompiler.cmake;C:\Users\User\source\repos\Audic212\TIPE\Builds\CMakeFiles\3.27.0-rc4\CMakeRCCompiler.cmake;C:\Users\User\source\repos\Audic212\TIPE\Builds\CMakeFiles\3.27.0-rc4\CMakeSystem.cmake;C:\Users\User\source\repos\Audic212\TIPE\Builds\CMakeFiles\cmake.verify_globs;C:\Users\User\vcpkg\installed\x64-windows\share\boost\vcpkg-cmake-wrapper.cmake;C:\Users\User\vcpkg\scripts\buildsystems\vcpkg.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\User\source\repos\Audic212\TIPE\Builds\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeDependentOption.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Compiler\MSVC.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\FindBoost.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\FindOpenGL.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\FindPackageMessage.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows-Initialize.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\WindowsPaths.cmake;..\Builds\CMakeFiles\3.27.0-rc4\CMakeCXXCompiler.cmake;..\Builds\CMakeFiles\3.27.0-rc4\CMakeRCCompiler.cmake;..\Builds\CMakeFiles\3.27.0-rc4\CMakeSystem.cmake;..\Builds\CMakeFiles\cmake.verify_globs;C:\Users\User\vcpkg\installed\x64-windows\share\boost\vcpkg-cmake-wrapper.cmake;C:\Users\User\vcpkg\scripts\buildsystems\vcpkg.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\Builds\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule C:/Users/User/source/repos/Audic212/TIPE/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
@@ -351,8 +351,8 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeDependentOption.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Compiler\MSVC.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\FindBoost.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\FindOpenGL.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\FindPackageMessage.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows-Initialize.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\WindowsPaths.cmake;C:\Users\User\source\repos\Audic212\TIPE\Builds\CMakeFiles\3.27.0-rc4\CMakeCXXCompiler.cmake;C:\Users\User\source\repos\Audic212\TIPE\Builds\CMakeFiles\3.27.0-rc4\CMakeRCCompiler.cmake;C:\Users\User\source\repos\Audic212\TIPE\Builds\CMakeFiles\3.27.0-rc4\CMakeSystem.cmake;C:\Users\User\source\repos\Audic212\TIPE\Builds\CMakeFiles\cmake.verify_globs;C:\Users\User\vcpkg\installed\x64-windows\share\boost\vcpkg-cmake-wrapper.cmake;C:\Users\User\vcpkg\scripts\buildsystems\vcpkg.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\User\source\repos\Audic212\TIPE\Builds\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeDependentOption.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Compiler\MSVC.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\FindBoost.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\FindOpenGL.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\FindPackageMessage.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows-Initialize.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\WindowsPaths.cmake;..\Builds\CMakeFiles\3.27.0-rc4\CMakeCXXCompiler.cmake;..\Builds\CMakeFiles\3.27.0-rc4\CMakeRCCompiler.cmake;..\Builds\CMakeFiles\3.27.0-rc4\CMakeSystem.cmake;..\Builds\CMakeFiles\cmake.verify_globs;C:\Users\User\vcpkg\installed\x64-windows\share\boost\vcpkg-cmake-wrapper.cmake;C:\Users\User\vcpkg\scripts\buildsystems\vcpkg.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">..\Builds\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule C:/Users/User/source/repos/Audic212/TIPE/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
@@ -364,76 +364,76 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeDependentOption.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Compiler\MSVC.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\FindBoost.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\FindOpenGL.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\FindPackageMessage.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows-Initialize.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\WindowsPaths.cmake;C:\Users\User\source\repos\Audic212\TIPE\Builds\CMakeFiles\3.27.0-rc4\CMakeCXXCompiler.cmake;C:\Users\User\source\repos\Audic212\TIPE\Builds\CMakeFiles\3.27.0-rc4\CMakeRCCompiler.cmake;C:\Users\User\source\repos\Audic212\TIPE\Builds\CMakeFiles\3.27.0-rc4\CMakeSystem.cmake;C:\Users\User\source\repos\Audic212\TIPE\Builds\CMakeFiles\cmake.verify_globs;C:\Users\User\vcpkg\installed\x64-windows\share\boost\vcpkg-cmake-wrapper.cmake;C:\Users\User\vcpkg\scripts\buildsystems\vcpkg.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\User\source\repos\Audic212\TIPE\Builds\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeDependentOption.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Compiler\MSVC.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\FindBoost.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\FindOpenGL.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\FindPackageMessage.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows-Initialize.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.27\Modules\Platform\WindowsPaths.cmake;..\Builds\CMakeFiles\3.27.0-rc4\CMakeCXXCompiler.cmake;..\Builds\CMakeFiles\3.27.0-rc4\CMakeRCCompiler.cmake;..\Builds\CMakeFiles\3.27.0-rc4\CMakeSystem.cmake;..\Builds\CMakeFiles\cmake.verify_globs;C:\Users\User\vcpkg\installed\x64-windows\share\boost\vcpkg-cmake-wrapper.cmake;C:\Users\User\vcpkg\scripts\buildsystems\vcpkg.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">..\Builds\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\dbscan.cpp" />
-    <ClCompile Include="C:\Users\User\source\repos\Audic212\TIPE\src\base.cpp" />
-    <ClCompile Include="C:\Users\User\source\repos\Audic212\TIPE\src\food.cpp" />
-    <ClCompile Include="C:\Users\User\source\repos\Audic212\TIPE\src\game_class.cpp" />
-    <ClCompile Include="C:\Users\User\source\repos\Audic212\TIPE\src\graphics.cpp" />
-    <ClCompile Include="C:\Users\User\source\repos\Audic212\TIPE\src\hex_map.cpp" />
-    <ClCompile Include="C:\Users\User\source\repos\Audic212\TIPE\src\hps.cpp" />
-    <ClCompile Include="C:\Users\User\source\repos\Audic212\TIPE\src\init.cpp" />
-    <ClCompile Include="C:\Users\User\source\repos\Audic212\TIPE\src\main.cpp" />
-    <ClCompile Include="C:\Users\User\source\repos\Audic212\TIPE\src\object.cpp" />
-    <ClCompile Include="C:\Users\User\source\repos\Audic212\TIPE\src\parser.cpp" />
-    <ClCompile Include="C:\Users\User\source\repos\Audic212\TIPE\src\player.cpp" />
-    <ClCompile Include="C:\Users\User\source\repos\Audic212\TIPE\src\player_group.cpp" />
-    <ClCompile Include="C:\Users\User\source\repos\Audic212\TIPE\src\player_random.cpp" />
-    <ClCompile Include="C:\Users\User\source\repos\Audic212\TIPE\src\state_class.cpp" />
-    <ClCompile Include="C:\Users\User\source\repos\Audic212\TIPE\src\test.cpp" />
-    <ClCompile Include="C:\Users\User\source\repos\Audic212\TIPE\src\units.cpp" />
+    <ClCompile Include="..\src\base.cpp" />
+    <ClCompile Include="..\src\food.cpp" />
+    <ClCompile Include="..\src\game_class.cpp" />
+    <ClCompile Include="..\src\graphics.cpp" />
+    <ClCompile Include="..\src\hex_map.cpp" />
+    <ClCompile Include="..\src\hps.cpp" />
+    <ClCompile Include="..\src\init.cpp" />
+    <ClCompile Include="..\src\main.cpp" />
+    <ClCompile Include="..\src\object.cpp" />
+    <ClCompile Include="..\src\parser.cpp" />
+    <ClCompile Include="..\src\player.cpp" />
+    <ClCompile Include="..\src\player_group.cpp" />
+    <ClCompile Include="..\src\player_random.cpp" />
+    <ClCompile Include="..\src\state_class.cpp" />
+    <ClCompile Include="..\src\test.cpp" />
+    <ClCompile Include="..\src\units.cpp" />
     <ClInclude Include="..\include\dbscan.hpp" />
-    <ClInclude Include="C:\Users\User\source\repos\Audic212\TIPE\include\base.hpp" />
-    <ClInclude Include="C:\Users\User\source\repos\Audic212\TIPE\include\food.hpp" />
-    <ClInclude Include="C:\Users\User\source\repos\Audic212\TIPE\include\game_class.hpp" />
-    <ClInclude Include="C:\Users\User\source\repos\Audic212\TIPE\include\graphics.hpp" />
-    <ClInclude Include="C:\Users\User\source\repos\Audic212\TIPE\include\hex_map.hpp" />
-    <ClInclude Include="C:\Users\User\source\repos\Audic212\TIPE\include\hps.hpp" />
-    <ClInclude Include="C:\Users\User\source\repos\Audic212\TIPE\include\init.hpp" />
-    <ClInclude Include="C:\Users\User\source\repos\Audic212\TIPE\include\object.hpp" />
-    <ClInclude Include="C:\Users\User\source\repos\Audic212\TIPE\include\parser.hpp" />
-    <ClInclude Include="C:\Users\User\source\repos\Audic212\TIPE\include\player_class.hpp" />
-    <ClInclude Include="C:\Users\User\source\repos\Audic212\TIPE\include\player_group.hpp" />
-    <ClInclude Include="C:\Users\User\source\repos\Audic212\TIPE\include\player_random.hpp" />
-    <ClInclude Include="C:\Users\User\source\repos\Audic212\TIPE\include\position.hpp" />
-    <ClInclude Include="C:\Users\User\source\repos\Audic212\TIPE\include\state_class.hpp" />
-    <ClInclude Include="C:\Users\User\source\repos\Audic212\TIPE\include\test.hpp" />
-    <ClInclude Include="C:\Users\User\source\repos\Audic212\TIPE\include\types.hpp" />
-    <ClInclude Include="C:\Users\User\source\repos\Audic212\TIPE\include\units.hpp" />
+    <ClInclude Include="..\include\base.hpp" />
+    <ClInclude Include="..\include\food.hpp" />
+    <ClInclude Include="..\include\game_class.hpp" />
+    <ClInclude Include="..\include\graphics.hpp" />
+    <ClInclude Include="..\include\hex_map.hpp" />
+    <ClInclude Include="..\include\hps.hpp" />
+    <ClInclude Include="..\include\init.hpp" />
+    <ClInclude Include="..\include\object.hpp" />
+    <ClInclude Include="..\include\parser.hpp" />
+    <ClInclude Include="..\include\player_class.hpp" />
+    <ClInclude Include="..\include\player_group.hpp" />
+    <ClInclude Include="..\include\player_random.hpp" />
+    <ClInclude Include="..\include\position.hpp" />
+    <ClInclude Include="..\include\state_class.hpp" />
+    <ClInclude Include="..\include\test.hpp" />
+    <ClInclude Include="..\include\types.hpp" />
+    <ClInclude Include="..\include\units.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="C:\Users\User\source\repos\Audic212\TIPE\Builds\ZERO_CHECK.vcxproj">
+    <ProjectReference Include="..\Builds\ZERO_CHECK.vcxproj">
       <Project>{376BBEAD-055E-31DB-81CE-E5F64A10E0D0}</Project>
       <Name>ZERO_CHECK</Name>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </ProjectReference>
-    <ProjectReference Include="C:\Users\User\source\repos\Audic212\TIPE\Builds\external\SDL\SDL3-static.vcxproj">
+    <ProjectReference Include="..\Builds\external\SDL\SDL3-static.vcxproj">
       <Project>{7CFCBCAF-B3BC-30E3-9187-E06880DED476}</Project>
       <Name>SDL3-static</Name>
     </ProjectReference>
-    <ProjectReference Include="C:\Users\User\source\repos\Audic212\TIPE\Builds\external\SDL-image\SDL3_image.vcxproj">
+    <ProjectReference Include="..\Builds\external\SDL-image\SDL3_image.vcxproj">
       <Project>{977531EA-F7A2-35AA-9C75-FCBE277690C9}</Project>
       <Name>SDL3_image</Name>
     </ProjectReference>
-    <ProjectReference Include="C:\Users\User\source\repos\Audic212\TIPE\Builds\external\SDL-ttf\SDL3_ttf.vcxproj">
+    <ProjectReference Include="..\Builds\external\SDL-ttf\SDL3_ttf.vcxproj">
       <Project>{70F38A92-673A-32D3-9AD9-DF40CF55E095}</Project>
       <Name>SDL3_ttf</Name>
     </ProjectReference>
-    <ProjectReference Include="C:\Users\User\source\repos\Audic212\TIPE\Builds\external\SDL-ttf\external\freetype\freetype.vcxproj">
+    <ProjectReference Include="..\Builds\external\SDL-ttf\external\freetype\freetype.vcxproj">
       <Project>{C30032AE-A617-3EA6-9438-FE48C2681D9B}</Project>
       <Name>freetype</Name>
     </ProjectReference>
-    <ProjectReference Include="C:\Users\User\source\repos\Audic212\TIPE\Builds\external\glfw\src\glfw.vcxproj">
+    <ProjectReference Include="..\Builds\external\glfw\src\glfw.vcxproj">
       <Project>{F583A7CC-5F80-3A3E-B16E-06D34466CEA3}</Project>
       <Name>glfw</Name>
     </ProjectReference>
-    <ProjectReference Include="C:\Users\User\source\repos\Audic212\TIPE\Builds\external\yaml-cpp\yaml-cpp.vcxproj">
+    <ProjectReference Include="..\Builds\external\yaml-cpp\yaml-cpp.vcxproj">
       <Project>{FF471A43-FA31-35C9-AA73-32586BD701D4}</Project>
       <Name>yaml-cpp</Name>
     </ProjectReference>

@@ -1,52 +1,52 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="C:\Users\User\source\repos\Audic212\TIPE\src\base.cpp">
+    <ClCompile Include="..\src\base.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\User\source\repos\Audic212\TIPE\src\food.cpp">
+    <ClCompile Include="..\src\food.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\User\source\repos\Audic212\TIPE\src\game_class.cpp">
+    <ClCompile Include="..\src\game_class.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\User\source\repos\Audic212\TIPE\src\graphics.cpp">
+    <ClCompile Include="..\src\graphics.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\User\source\repos\Audic212\TIPE\src\hex_map.cpp">
+    <ClCompile Include="..\src\hex_map.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\User\source\repos\Audic212\TIPE\src\hps.cpp">
+    <ClCompile Include="..\src\hps.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\User\source\repos\Audic212\TIPE\src\init.cpp">
+    <ClCompile Include="..\src\init.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\User\source\repos\Audic212\TIPE\src\main.cpp">
+    <ClCompile Include="..\src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\User\source\repos\Audic212\TIPE\src\object.cpp">
+    <ClCompile Include="..\src\object.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\User\source\repos\Audic212\TIPE\src\parser.cpp">
+    <ClCompile Include="..\src\parser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\User\source\repos\Audic212\TIPE\src\player.cpp">
+    <ClCompile Include="..\src\player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\User\source\repos\Audic212\TIPE\src\player_group.cpp">
+    <ClCompile Include="..\src\player_group.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\User\source\repos\Audic212\TIPE\src\player_random.cpp">
+    <ClCompile Include="..\src\player_random.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\User\source\repos\Audic212\TIPE\src\state_class.cpp">
+    <ClCompile Include="..\src\state_class.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\User\source\repos\Audic212\TIPE\src\test.cpp">
+    <ClCompile Include="..\src\test.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\User\source\repos\Audic212\TIPE\src\units.cpp">
+    <ClCompile Include="..\src\units.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\dbscan.cpp">
@@ -54,55 +54,55 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="C:\Users\User\source\repos\Audic212\TIPE\include\base.hpp">
+    <ClInclude Include="..\include\base.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\User\source\repos\Audic212\TIPE\include\food.hpp">
+    <ClInclude Include="..\include\food.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\User\source\repos\Audic212\TIPE\include\game_class.hpp">
+    <ClInclude Include="..\include\game_class.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\User\source\repos\Audic212\TIPE\include\graphics.hpp">
+    <ClInclude Include="..\include\graphics.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\User\source\repos\Audic212\TIPE\include\hex_map.hpp">
+    <ClInclude Include="..\include\hex_map.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\User\source\repos\Audic212\TIPE\include\hps.hpp">
+    <ClInclude Include="..\include\hps.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\User\source\repos\Audic212\TIPE\include\init.hpp">
+    <ClInclude Include="..\include\init.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\User\source\repos\Audic212\TIPE\include\object.hpp">
+    <ClInclude Include="..\include\object.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\User\source\repos\Audic212\TIPE\include\parser.hpp">
+    <ClInclude Include="..\include\parser.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\User\source\repos\Audic212\TIPE\include\player_class.hpp">
+    <ClInclude Include="..\include\player_class.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\User\source\repos\Audic212\TIPE\include\player_group.hpp">
+    <ClInclude Include="..\include\player_group.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\User\source\repos\Audic212\TIPE\include\player_random.hpp">
+    <ClInclude Include="..\include\player_random.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\User\source\repos\Audic212\TIPE\include\position.hpp">
+    <ClInclude Include="..\include\position.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\User\source\repos\Audic212\TIPE\include\state_class.hpp">
+    <ClInclude Include="..\include\state_class.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\User\source\repos\Audic212\TIPE\include\test.hpp">
+    <ClInclude Include="..\include\test.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\User\source\repos\Audic212\TIPE\include\types.hpp">
+    <ClInclude Include="..\include\types.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\User\source\repos\Audic212\TIPE\include\units.hpp">
+    <ClInclude Include="..\include\units.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\include\dbscan.hpp">
@@ -110,7 +110,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Users\User\source\repos\Audic212\TIPE\CMakeLists.txt" />
+    <CustomBuild Include="..\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
