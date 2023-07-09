@@ -20,20 +20,17 @@ class unit_class;
 class unit_action;
 #include "object.hpp"
 #include "position.hpp"
-#include "state_class.hpp"
 
 class unit_action
 {
-protected:
     unit_class* u_;
     unit_action_id action_type_;
     object_abstract_class* target_ = nullptr;
-    frame remaining_frames_;
     position location_;
 
 public:
-    unit_action(unit_class* u, unit_action_id type, object_abstract_class* target, frame remaining_frames);
-    unit_action(unit_class* u, unit_action_id type, position target, frame remaining_frames);
+    unit_action(unit_class* u, unit_action_id type, object_abstract_class* target);
+    unit_action(unit_class* u, unit_action_id type, position target);
 
     [[nodiscard]] unit_class* unit_get() const;
     [[nodiscard]] unit_action_id action_type_get() const;
@@ -44,9 +41,8 @@ public:
 
 class unit_class final : public object_abstract_class
 {
-protected:
     int t_a_ = 5, t_m_ = 5; // attack cooldown and move cooldown
-    unit_action* actual_action_ = nullptr;
+    unit_action *actual_action_ = nullptr;
     std::vector<hex_tile*> path_;
     bool carry_food_ = false;
     position temporary_p_{-1, -1};
@@ -62,16 +58,18 @@ public:
 
     //actions
     void actual_action_set(unit_action* action);
+    void actual_action_remove();
     [[nodiscard]] unit_action* actual_action_get() const;
 
     void move(double x, double y);
-    void attack(object_abstract_class* b, state_class* s);
+    void attack(object_abstract_class* b);
     void wait(time_t t);
 
     [[nodiscard]] bool can_move() const { return t_m_ == 0 && hit_point_ > 0; }
     [[nodiscard]] bool can_attack() const { return t_a_ == 0 && hit_point_ > 0; }
 
     void update_cooldown();
+    void reinitialize_attack_cooldown(){t_a_ = ATTACK_COOLDOWN;}
 
     void path_set(const std::vector<hex_tile*>& path);
     std::vector<hex_tile*>* path_get();

@@ -53,22 +53,22 @@ int dbscan::expand_cluster(const point p, const int cluster_id)
 
      for (vector<int>::size_type i = 0, n = cluster_seeds.size(); i < n; ++i)
      {
-         vector<int> cluster_neighors = calculate_cluster(m_points.at(cluster_seeds[i]));
+         vector<int> cluster_neighbors = calculate_cluster(m_points.at(cluster_seeds[i]));
 
-         if (cluster_neighors.size() >= m_min_points_)
+         if (cluster_neighbors.size() >= m_min_points_)
          {
-             vector<int>::iterator iter_neighors;
-             for (iter_neighors = cluster_neighors.begin(); iter_neighors != cluster_neighors.end(); ++iter_neighors)
+             vector<int>::iterator iter_neighbors;
+             for (iter_neighbors = cluster_neighbors.begin(); iter_neighbors != cluster_neighbors.end(); ++iter_neighbors)
              {
-                 if (m_points.at(*iter_neighors).cluster_id == unclassified ||
-                     m_points.at(*iter_neighors).cluster_id == noise)
+                 if (m_points.at(*iter_neighbors).cluster_id == unclassified ||
+                     m_points.at(*iter_neighbors).cluster_id == noise)
                  {
-                     if (m_points.at(*iter_neighors).cluster_id == unclassified)
+                     if (m_points.at(*iter_neighbors).cluster_id == unclassified)
                      {
-                         cluster_seeds.push_back(*iter_neighors);
+                         cluster_seeds.push_back(*iter_neighbors);
                          n = cluster_seeds.size();
                      }
-                     m_points.at(*iter_neighors).cluster_id = cluster_id;
+                     m_points.at(*iter_neighbors).cluster_id = cluster_id;
                  }
              }
          }

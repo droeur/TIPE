@@ -102,7 +102,7 @@ void graphic_class::draw_base(const base_class* base, const game_class* game) co
     base_rect.w = static_cast<float>(zoom_);
     base_rect.h = static_cast<float>(zoom_);
     SDL_SetRenderDrawColor(render_, BLACK);
-    constexpr int bar_width = 0.01 * base_hp;
+    constexpr int bar_width = static_cast<int>(0.01 * base_hp);
     const hex_tile* tile = game->map_get()->tile_get(base->q_get(), base->r_get());
     base_rect.x = static_cast<float>(tile->graphic_x() * zoom_ - base_rect.w / 2 + x_shift_ * zoom_);
     base_rect.y =
@@ -248,7 +248,7 @@ void graphic_class::print_screen(const game_class* game, const vector<object_abs
                 path += to_string(t->r());
                 path += " / ";
             }
-            if (sprintf_s(arr_info, "HP: %d carry: %g", u->hp_get(), u->carry_food_get() ? "true" : "false") == -1)
+            if (sprintf_s(arr_info, "HP: %d carry: %s", u->hp_get(), u->carry_food_get() ? "true" : "false") == -1)
             {
                 cerr << "Error printing" << endl;
             }

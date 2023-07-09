@@ -3,19 +3,16 @@
 
 using namespace std;
 
-unit_action::unit_action(unit_class* u, const unit_action_id type, object_abstract_class* target,
-                         const frame remaining_frames)
+unit_action::unit_action(unit_class* u, const unit_action_id type, object_abstract_class* target)
     : u_(u),
       action_type_(type),
-      target_(target),
-      remaining_frames_(remaining_frames)
+      target_(target)
 {
 }
 
-unit_action::unit_action(unit_class* u, const unit_action_id type, const position target, const frame remaining_frames)
+unit_action::unit_action(unit_class* u, const unit_action_id type, const position target)
     : u_(u),
-      action_type_(type),
-      remaining_frames_(remaining_frames)
+      action_type_(type)
 {
     location_ = target;
 }
@@ -40,9 +37,15 @@ position& unit_action::position_get()
     return location_;
 }
 
-void unit_class::actual_action_set(unit_action* action)
+void unit_class::actual_action_set(unit_action *action)
 {
     actual_action_ = action;
+}
+
+void unit_class::actual_action_remove()
+{
+    delete actual_action_;
+    actual_action_ = nullptr;
 }
 
 unit_action* unit_class::actual_action_get() const
@@ -55,24 +58,9 @@ void unit_class::move(double x, double y)
 
 }
 
-void unit_class::attack(object_abstract_class* b, state_class* s)
+void unit_class::attack(object_abstract_class* b)
 {
-    b->hp_remove(1);
-    if (b->hp_get() < 0)
-    {
-        b->hp_set(0);
-        if (b->object_type_get() == object_type::unit)
-        {
-            if (auto* u = dynamic_cast<unit_class*>(b); u->carry_food_get())
-            {
-                const auto f = new food_class{u->q_get(), u->r_get()};
-                s->food_append(f);
-            }
-        }
-    }
-    std::cout << "unit " << this << " ,player " << player_ << " attacked unit " << b << " ,player "
-        << b->player_get() << " hp = " << b->hp_get() << std::endl;
-    t_a_ = ATTACK_COOLDOWN;
+
 }
 
 void unit_class::wait(time_t t)

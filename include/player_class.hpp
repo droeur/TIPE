@@ -1,6 +1,7 @@
 #pragma once
 
 #include "units.hpp"
+#include "state_class.hpp"
 #include <vector>
 
 class virtual_player_class
@@ -17,11 +18,9 @@ public:
 
     virtual ~virtual_player_class() = default;
 
-    virtual std::vector<unit_action> moves_get(state_class* s)
+    virtual void moves_get(state_class* s)
     {
-        std::vector<unit_action> v;
-        std::cout << "ERROR : base player" << std::endl;
-        return v;
+        std::cout << "Error: base player" << std::endl;
     }
 
     [[nodiscard]] player_id player_id_get() const

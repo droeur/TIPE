@@ -6,6 +6,25 @@
 
 using namespace std;
 
+state_class::~state_class()
+{
+    for (const auto f:food_list_)
+    {
+        delete f;
+    }
+    for (const auto b:base_list_)
+    {
+        delete b;
+    }
+    for (const auto &u_l:u_list_)
+    {
+        for (const auto u : u_l)
+        {
+            delete u;
+        }
+    }
+}
+
 void state_class::frame_increment()
 {
     this->frame_++;
@@ -31,6 +50,26 @@ void state_class::unit_append(unit_class* u, const player_id player)
     return this->u_list_[player].push_back(u);
 }
 
+void state_class::food_append(food_class* f)
+{
+    food_list_.push_back(f);
+}
+
+std::vector<food_class*>* state_class::food_list_get()
+{
+    return &food_list_;
+}
+
+void state_class::base_append(base_class* b)
+{
+    base_list_.push_back(b);
+}
+
+std::vector<base_class*>* state_class::base_list_get()
+{
+    return &base_list_;
+}
+
 vector<vector<unit_action>> state_class::moves_generate(const player_id id) const
 {
     vector<vector<unit_action>> possibles_actions;
@@ -49,7 +88,7 @@ vector<vector<unit_action>> state_class::moves_generate(const player_id id) cons
             {
                 if (enemy_u->hp_get() > 0)
                 {
-                    unit_action action{u, unit_action_id::attack, enemy_u, ATTACK_COOLDOWN};
+                    unit_action action{u, unit_action_id::attack, enemy_u};
                     this_unit_action.push_back(action);
                 }
             }
@@ -57,7 +96,7 @@ vector<vector<unit_action>> state_class::moves_generate(const player_id id) cons
             {
                 if (base->hp_get() > 0 && base->player_get() == enemy_player)
                 {
-                    unit_action action{u, unit_action_id::attack, base, ATTACK_COOLDOWN};
+                    unit_action action{u, unit_action_id::attack, base};
                     this_unit_action.push_back(action);
                 }
             }
@@ -68,7 +107,7 @@ vector<vector<unit_action>> state_class::moves_generate(const player_id id) cons
             {
                 for (const auto food : food_list_)
                 {
-                    unit_action action{u, unit_action_id::pick, food, MOVE_COOLDOWN};
+                    unit_action action{u, unit_action_id::pick, food};
                     this_unit_action.push_back(action);
                 }
             }
@@ -78,7 +117,7 @@ vector<vector<unit_action>> state_class::moves_generate(const player_id id) cons
                 {
                     if (base->hp_get() > 0 && base->player_get() == id)
                     {
-                        unit_action action{u, unit_action_id::move, base->position_get(), MOVE_COOLDOWN};
+                        unit_action action{u, unit_action_id::move, base->position_get()};
                         this_unit_action.push_back(action);
                     }
                 }
@@ -107,7 +146,17 @@ void state_class::fps_check_after(const bool fast)
     fps_ = 1.0 / elapsed_ms_after;
 }
 
-void state_class::move_to_place(unit_class* u, const position& p, map_class* map)
+void state_class::fps_set(const double f)
+{
+    fps_ = f;
+}
+
+double state_class::fps_get() const
+{
+    return fps_;
+}
+
+void state_class::move_execute(unit_class* u, const position& p, const map_class* map)
 {
     hex_tile* start = map->tile_get(u->q_get(), u->r_get());
     hex_tile* end = map->tile_get(p.q_get(), p.r_get());
@@ -123,85 +172,82 @@ void state_class::move_to_place(unit_class* u, const position& p, map_class* map
     }
 }
 
-void state_class::moves_make(map_class *map)
+void state_class::action_execute(unit_action* action, unit_class* unit, const map_class *map)
+{
+    switch (action->action_type_get())
+    {
+    case unit_action_id::attack: {
+        object_abstract_class* enemy_obj = action->target_unit_get();
+        if (const int distance = unit->position_get().distance(enemy_obj->position_get(), map);
+            attack_distance > distance)
+        {
+            attack_execute(unit, enemy_obj);
+            unit->actual_action_remove();
+            unit->path_get()->clear();
+        }
+        else
+        {
+            const position& p = enemy_obj->position_get();
+            move_execute(unit, p, map);
+        }
+    }
+    break;
+    case unit_action_id::pick: {
+        object_abstract_class* food = action->target_unit_get();
+        if (const double distance = unit->position_get().distance(food->position_get(), map); distance < 1)
+        {
+            unit->actual_action_remove();
+            unit->path_get()->clear();
+            cout << food->id_get() << unit->carry_food_get() << endl;
+            if (food->id_get() == -1 && !unit->carry_food_get())
+            {
+                // to avoid duplication
+                unit->carry_food_set(true);
+                food->id_set(0);
+                vector<food_class*>::size_type i = 0;
+                for (const auto f : food_list_)
+                {
+                    if (f->position_get() == food->position_get() && i < food_list_.size())
+                    {
+                        food_list_.erase(food_list_.begin() + static_cast<int>(i));
+                    }
+                    i++;
+                }
+            }
+        }
+        else
+        {
+            const position& p = food->position_get();
+            move_execute(unit, p, map);
+        }
+    }
+    break;
+    case unit_action_id::move: {
+        const position& p = action->position_get();
+        if (const double distance = unit->position_get().distance(p, map); distance < 1)
+        {
+            unit->actual_action_remove();
+            unit->path_get()->clear();
+        }
+        else
+        {
+            move_execute(unit, p, map);
+        }
+    }
+    break;
+    case unit_action_id::error:
+    case unit_action_id::wait: break;
+    }
+}
+
+void state_class::moves_make(const map_class *map)
 {
     for (int player = 0; player < number_of_players; player++)
     {
-        if (!chosen_actions_[player].empty())
+        for (const auto unit : u_list_[player])
         {
-            for (auto action = chosen_actions_[player].begin(); action != chosen_actions_[player].end();)
-            {
-                unit_class* u = action->unit_get();
-                switch (action->action_type_get())
-                {
-                case unit_action_id::attack: {
-                    object_abstract_class* enemy_u = action->target_unit_get();
-                    if (const int distance = u->position_get().distance(enemy_u->position_get(), map);
-                        attack_distance > distance)
-                    {
-                        u->attack(enemy_u, this);
-                        action = chosen_actions_[player].erase(action);
-                        u->path_get()->clear();
-                    }
-                    else
-                    {
-                        position p = enemy_u->position_get();
-                        move_to_place(u, p, map);
-                        ++action;
-                    }
-                }
-                break;
-                case unit_action_id::pick: {
-                    object_abstract_class* food = action->target_unit_get();
-                    if (const double distance = u->position_get().distance(food->position_get(), map); distance < 1)
-                    {
-                        action = chosen_actions_[player].erase(action);
-                        u->path_get()->clear();
-                        cout << food->id_get() << u->carry_food_get() << endl;
-                        if (food->id_get() == -1 && !u->carry_food_get())
-                        {
-                            // to avoid duplication
-                            u->carry_food_set(true);
-                            food->id_set(0);
-                            vector<food_class*>::size_type i = 0;
-                            for (const auto f : food_list_)
-                            {
-                                if (f->position_get() == food->position_get() && i < food_list_.size())
-                                {
-                                    food_list_.erase(food_list_.begin() + static_cast<int>(i));
-                                }
-                                i++;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        position p = food->position_get();
-                        move_to_place(u, p, map);
-                        ++action;
-                    }
-
-                }
-                break;
-                case unit_action_id::move: {
-                    position& p = action->position_get();
-                    if (const double distance = u->position_get().distance(p, map); distance < 1)
-                    {
-                        action = chosen_actions_[player].erase(action);
-                        u->path_get()->clear();
-                    }
-                    else
-                    {
-                        move_to_place(u, p, map);
-                        ++action;
-                    }
-                }
-                break;
-                case unit_action_id::error:
-                case unit_action_id::wait:
-                    ++action;
-                    break;
-                }
+            if (unit_action *action = unit->actual_action_get(); action != nullptr){
+                action_execute(action,unit, map);
             }
         }
     }
@@ -231,3 +277,24 @@ void state_class::moves_make(map_class *map)
         }
     }
 }
+
+void state_class::attack_execute(unit_class* u, object_abstract_class* enemy_obj)
+{
+    enemy_obj->hp_remove(1);
+    if (enemy_obj->hp_get() < 0)
+    {
+        enemy_obj->hp_set(0);
+        if (enemy_obj->object_type_get() == object_type::unit)
+        {
+            if (const auto* enemy_u = dynamic_cast<unit_class*>(enemy_obj); enemy_u->carry_food_get())
+            {
+                const auto f = new food_class{enemy_u->q_get(), enemy_u->r_get()};
+                food_append(f);
+            }
+        }
+    }
+    std::cout << "unit " << this << " ,player " << u->player_get() << " attacked unit " << enemy_obj << " ,player " << enemy_obj->player_get()
+              << " hp = " << enemy_obj->hp_get() << std::endl;
+    u->reinitialize_attack_cooldown();
+}
+

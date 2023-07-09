@@ -15,5 +15,5 @@ public:
         rand_gen_ = new std::mt19937{static_cast<unsigned> (time(nullptr))*5};
     }
 
-    std::vector<unit_action> moves_get(state_class* s) override;
+    void moves_get(state_class* s) override;
 };

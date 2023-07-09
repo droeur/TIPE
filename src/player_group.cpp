@@ -3,16 +3,14 @@
 
 using namespace std;
 
-vector<unit_action> player_group::moves_get(state_class* s)
+void player_group::moves_get(state_class* s)
 {
-    std::vector<unit_action> a;
     if (last_squad_check_ >= 0)
     {
         squads_update(s->unit_list_get()[player_id_]);
         last_squad_check_ = last_squad_check_delta_;
     }
     last_squad_check_--;
-    return a;
 }
 
 void squad_class::unit_append(unit_class* unit)

@@ -6,7 +6,6 @@
 
 class squad_class
 {
-protected:
     unit_class* leader_;
     std::vector<unit_class*> unit_list_;
     int hit_points_;
@@ -43,5 +42,5 @@ public:
     {
     }
 
-    std::vector<unit_action> moves_get(state_class* s) override;
+    void moves_get(state_class* s) override;
 };
