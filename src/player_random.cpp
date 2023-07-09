@@ -10,8 +10,27 @@ void player_rand::moves_get(state_class *s){
     while(unit_index < unit_list_size){
         if(!possible_actions_vec[unit_index].empty()){
             const vector<unit_action>::size_type r = (*rand_gen_)() % possible_actions_vec[unit_index].size();
-            const auto action_temp_chosen = new unit_action(possible_actions_vec[unit_index][r]);
-            s->unit_list_get()[player_id_][unit_index]->actual_action_set(action_temp_chosen);
+            switch (const auto action_temp_chosen = new unit_action(possible_actions_vec[unit_index][r]); action_temp_chosen->action_type_get())
+            {
+            case unit_action_id::attack: 
+                s->unit_list_get()[player_id_][unit_index]->attack(action_temp_chosen->target_unit_get());
+                break;
+            case unit_action_id::move:
+                s->unit_list_get()[player_id_][unit_index]->move(action_temp_chosen->position_get().q_get(),
+                                                                 action_temp_chosen->position_get().r_get());
+                break;
+            case unit_action_id::wait:
+                s->unit_list_get()[player_id_][unit_index]->wait(action_temp_chosen->time_get());
+                break;
+            case unit_action_id::pick:
+                s->unit_list_get()[player_id_][unit_index]->pick(dynamic_cast<food_class*>(action_temp_chosen->target_unit_get()));
+                break;
+            case unit_action_id::follow:
+                s->unit_list_get()[player_id_][unit_index]->follow(action_temp_chosen->target_unit_get());
+                break;
+            case unit_action_id::error:
+                cerr << "Error: Unknown action" << endl;
+            }
         }
         unit_index++;
     }

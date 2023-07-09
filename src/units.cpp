@@ -4,17 +4,24 @@
 using namespace std;
 
 unit_action::unit_action(unit_class* u, const unit_action_id type, object_abstract_class* target)
-    : u_(u),
-      action_type_(type),
-      target_(target)
+    : u_(u)
+      , action_type_(type)
+      , target_(target)
 {
 }
 
 unit_action::unit_action(unit_class* u, const unit_action_id type, const position target)
-    : u_(u),
-      action_type_(type)
+    : u_(u)
+      , action_type_(type)
+      , location_(target)
 {
-    location_ = target;
+}
+
+unit_action::unit_action(unit_class* u, const unit_action_id type, const time_t time)
+    : u_(u)
+      , action_type_(type)
+      , time_(time)
+{
 }
 
 unit_class* unit_action::unit_get() const
@@ -32,40 +39,122 @@ object_abstract_class* unit_action::target_unit_get() const
     return target_;
 }
 
+time_t unit_action::time_get() const
+{
+    return time_;
+}
+
 position& unit_action::position_get()
 {
     return location_;
 }
 
-void unit_class::actual_action_set(unit_action *action)
-{
-    actual_action_ = action;
-}
-
 void unit_class::actual_action_remove()
 {
-    delete actual_action_;
-    actual_action_ = nullptr;
+    action_queue_.pop();
 }
 
 unit_action* unit_class::actual_action_get() const
 {
-    return actual_action_;
+    if (action_queue_.empty())
+        return nullptr;
+    return action_queue_.front();
 }
 
-void unit_class::move(double x, double y)
+void unit_class::move(const int q, const int r, const bool queuing)
 {
-
+    const position p(q, r);
+    const auto action = new unit_action(this, unit_action_id::move, p);
+    if (queuing)
+    {
+        action_queue_.push(action);
+    }
+    else
+    {
+        while (!action_queue_.empty())
+        {
+            const unit_action* temp_action = action_queue_.front();
+            delete temp_action;
+            action_queue_.pop();
+        }
+        action_queue_.push(action);
+    }
 }
 
-void unit_class::attack(object_abstract_class* b)
+void unit_class::attack(object_abstract_class* b, const bool queuing)
 {
-
+    const auto action = new unit_action(this, unit_action_id::attack, b);
+    if (queuing)
+    {
+        action_queue_.push(action);
+    }
+    else
+    {
+        while (!action_queue_.empty())
+        {
+            const unit_action* temp_action = action_queue_.front();
+            delete temp_action;
+            action_queue_.pop();
+        }
+        action_queue_.push(action);
+    }
 }
 
-void unit_class::wait(time_t t)
+void unit_class::wait(const time_t t, const bool queuing)
 {
+    const auto action = new unit_action(this, unit_action_id::wait, t);
+    if (queuing)
+    {
+        action_queue_.push(action);
+    }
+    else
+    {
+        while (!action_queue_.empty())
+        {
+            const unit_action* temp_action = action_queue_.front();
+            delete temp_action;
+            action_queue_.pop();
+        }
+        action_queue_.push(action);
+    }
+}
 
+void unit_class::follow(object_abstract_class* b, const bool queuing)
+{
+    const auto action = new unit_action(this, unit_action_id::follow, b);
+    if (queuing)
+    {
+        action_queue_.push(action);
+    }
+    else
+    {
+        while (!action_queue_.empty())
+        {
+            const unit_action* temp_action = action_queue_.front();
+            delete temp_action;
+            action_queue_.pop();
+        }
+        action_queue_.push(action);
+    }
+}
+
+void unit_class::pick(food_class* food, const bool queuing)
+{
+    const auto action = new unit_action(this, unit_action_id::pick, food);
+    if (queuing)
+    {
+        action_queue_.push(action);
+    }
+    else
+    {
+        while (!action_queue_.empty())
+        {
+            const unit_action* temp_action = action_queue_.front();
+            delete temp_action;
+            action_queue_.pop();
+        }
+        action_queue_.push(action);
+    }
 }
 
 void unit_class::update_cooldown()
