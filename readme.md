@@ -18,5 +18,9 @@ Options:
 ```
 standard launch:
 ```
-TIPE.exe -h -m ${projectDir}/map_empty.txt -g ${projectDir} -t ${projectDir}/cour.ttf -p ${projectDir}/expe.txt
+TIPE.exe -m ${projectDir}/map_empty.txt -g ${projectDir} -t ${projectDir}/cour.ttf -p ${projectDir}/expe.txt
+```
+Generate vs files:
+```
+cmake -B Builds -G "Visual Studio 17 2022" 
 ```

@@ -16,8 +16,7 @@ CodeAnalyst/
 ipch/
 *.sdf
 *.opensdf
-/Builds/Intel® VTune™ Profiler Results
-/Builds/GPUCache
+Builds/
 *.log
 
 # CMake
@@ -41,4 +40,3 @@ docs/tipe.fls
 docs/tipe.log
 docs/tipe.synctex.gz
 *.out
-/Builds/result.txt
