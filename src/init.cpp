@@ -1,5 +1,6 @@
 #include <vector>
 #include <cmath>
+#include <fstream>
 
 #include "game_class.hpp"
 #include "state_class.hpp"

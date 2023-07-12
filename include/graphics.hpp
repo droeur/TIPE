@@ -1,9 +1,9 @@
 #pragma once
 
 #include <iostream>
-#include <SDL3/SDL.h>
-#include <SDL3/SDL_image.h>
-#include <SDL3/SDL_ttf.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 #include "state_class.hpp"
 
 enum
@@ -39,8 +39,8 @@ class graphic_class
     int y_shift_ = 0;
     SDL_Texture* hex_passable_texture_ = nullptr;
     SDL_Texture* hex_blocked_texture_ = nullptr;
-    float x_mouse_ = 0;
-    float y_mouse_ = 0;
+    int x_mouse_ = 0;
+    int y_mouse_ = 0;
     TTF_Font* font_ = nullptr;
 
 public:

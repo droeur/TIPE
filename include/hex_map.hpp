@@ -2,8 +2,8 @@
 
 #include <assert.h>
 #include <vector>
-#include <rapidcsv.h>
 #include <float.h>
+#include <string>
 
 /**
  * Hex directions:

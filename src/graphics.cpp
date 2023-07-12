@@ -2,9 +2,9 @@
 #include <cmath>
 #include <vector>
 #include <GLFW/glfw3.h>
-#include <SDL3/SDL.h>
-#include <SDL3/SDL_image.h>
-#include <SDL3/SDL_ttf.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 #include "hex_map.hpp"
 #include "graphics.hpp"
 #include "state_class.hpp"
@@ -13,21 +13,21 @@ using namespace std;
 
 void graphic_class::print(const float x, const float y, const char* text, const SDL_Color& text_color) const
 {
-    SDL_FRect mess_rect = {x, y, 0, 0};
+    SDL_Rect mess_rect = {x, y, 0, 0};
     int w, h;
     SDL_Surface* mess_fps = TTF_RenderText_Solid(font_, text, text_color);
     SDL_Texture* texture = SDL_CreateTextureFromSurface(render_, mess_fps);
     TTF_SizeText(font_, text, &w, &h);
     mess_rect.w = static_cast<float>(w);
     mess_rect.h = static_cast<float>(h);
-    SDL_RenderTexture(render_, texture, nullptr, &mess_rect);
-    SDL_DestroySurface(mess_fps);
+    SDL_RenderCopy(render_, texture, nullptr, &mess_rect);
+    SDL_FreeSurface(mess_fps);
     SDL_DestroyTexture(texture);
 }
 
 void graphic_class::print_right(const int width, const float y, const char* text, const SDL_Color& text_color) const
 {
-    SDL_FRect mess_rect = {0, y, 0, 0};
+    SDL_Rect mess_rect = {0, y, 0, 0};
     int w, h;
     SDL_Surface* mess_fps = TTF_RenderText_Solid(font_, text, text_color);
     SDL_Texture* texture = SDL_CreateTextureFromSurface(render_, mess_fps);
@@ -35,30 +35,30 @@ void graphic_class::print_right(const int width, const float y, const char* text
     mess_rect.x = static_cast<float>(width - w);
     mess_rect.w = static_cast<float>(w);
     mess_rect.h = static_cast<float>(h);
-    SDL_RenderTexture(render_, texture, nullptr, &mess_rect);
-    SDL_DestroySurface(mess_fps);
+    SDL_RenderCopy(render_, texture, nullptr, &mess_rect);
+    SDL_FreeSurface(mess_fps);
     SDL_DestroyTexture(texture);
 }
 
 void graphic_class::draw_tile(const hex_tile *hex) const
 {
-    SDL_FRect map_tile_rect;
+    SDL_Rect map_tile_rect;
     map_tile_rect.x = static_cast<float>((hex->graphic_x() - 0.5) * zoom_ + x_shift_ * zoom_);
     map_tile_rect.y = static_cast<float>((hex->graphic_y() - 0.5) * hex_height_coefficient * zoom_ +
                                          y_shift_ * zoom_);
     map_tile_rect.w = static_cast<float>(zoom_);
     map_tile_rect.h = static_cast<float>(zoom_);
     if (hex->passable())
-        SDL_RenderTexture(render_, hex_passable_texture_, nullptr, &map_tile_rect);
+        SDL_RenderCopy(render_, hex_passable_texture_, nullptr, &map_tile_rect);
     else
-        SDL_RenderTexture(render_, hex_blocked_texture_, nullptr, &map_tile_rect);
+        SDL_RenderCopy(render_, hex_blocked_texture_, nullptr, &map_tile_rect);
 }
 
 void graphic_class::draw_unit(const unit_class* unit, const game_class *game) const
 {
-    SDL_FRect life_rect;
+    SDL_Rect life_rect;
     life_rect.h = static_cast<float>(0.1 * zoom_);
-    SDL_FRect unit_rect;
+    SDL_Rect unit_rect;
     unit_rect.w = static_cast<float>(zoom_ * 0.5);
     unit_rect.h = static_cast<float>(zoom_ * 0.5);
 
@@ -75,7 +75,7 @@ void graphic_class::draw_unit(const unit_class* unit, const game_class *game) co
     life_rect.w = 0.1 * unit_hp * zoom_;
     life_rect.x = unit_rect.x + unit_rect.w / 2 - life_rect.w / 2;
     life_rect.y = unit_rect.y + 0.7 * zoom_;
-    SDL_RenderRect(render_, &life_rect);
+    SDL_RenderDrawRect(render_, &life_rect);
 
     life_rect.w = 0.1 * unit->hp_get() * zoom_;
     SDL_RenderFillRect(render_, &life_rect);
@@ -83,7 +83,7 @@ void graphic_class::draw_unit(const unit_class* unit, const game_class *game) co
 
 void graphic_class::draw_food(const food_class* food, const game_class* game) const
 {
-    SDL_FRect food_rect;
+    SDL_Rect food_rect;
     food_rect.w = static_cast<float>(0.2 * zoom_);
     food_rect.h = static_cast<float>(0.2 * zoom_);
     SDL_SetRenderDrawColor(render_, GREEN);
@@ -96,9 +96,9 @@ void graphic_class::draw_food(const food_class* food, const game_class* game) co
 
 void graphic_class::draw_base(const base_class* base, const game_class* game) const
 {
-    SDL_FRect life_rect;
+    SDL_Rect life_rect;
     life_rect.h = static_cast<float>(0.1 * zoom_);
-    SDL_FRect base_rect;
+    SDL_Rect base_rect;
     base_rect.w = static_cast<float>(zoom_);
     base_rect.h = static_cast<float>(zoom_);
     SDL_SetRenderDrawColor(render_, BLACK);
@@ -117,7 +117,7 @@ void graphic_class::draw_base(const base_class* base, const game_class* game) co
     life_rect.x = base_rect.x;
     life_rect.y = base_rect.y + 1.5f * static_cast<float>(zoom_);
     life_rect.w = static_cast<float>(bar_width * zoom_);
-    SDL_RenderRect(render_, &life_rect);
+    SDL_RenderDrawRect(render_, &life_rect);
 
     life_rect.w = static_cast<float>(0.01 * base->hp_get() * zoom_);
     SDL_RenderFillRect(render_, &life_rect);
@@ -129,9 +129,9 @@ bool graphic_class::event_handle(const game_class *game)
     bool quit = false;
     while (SDL_PollEvent(&e))
     {
-        if (e.type == SDL_EVENT_QUIT)
+        if (e.type == SDL_QUIT)
             quit = true;
-        if (e.type == SDL_EVENT_MOUSE_WHEEL)
+        if (e.type == SDL_MOUSEWHEEL)
         {
             if (e.wheel.y > 0)
             {
@@ -143,7 +143,7 @@ bool graphic_class::event_handle(const game_class *game)
                     zoom_--;
             }
         }
-        if (e.type == SDL_EVENT_KEY_DOWN)
+        if (e.type == SDL_KEYDOWN)
         {
             if (e.key.keysym.sym == SDLK_RIGHT)
             {
@@ -162,11 +162,11 @@ bool graphic_class::event_handle(const game_class *game)
                 y_shift_ -= 100 / zoom_;
             }
         }
-        if (e.type == SDL_EVENT_MOUSE_MOTION)
+        if (e.type == SDL_MOUSEMOTION)
         {
             SDL_GetGlobalMouseState(&x_mouse_, &y_mouse_);
         }
-        if (e.type == SDL_EVENT_MOUSE_BUTTON_DOWN)
+        if (e.type == SDL_MOUSEBUTTONDOWN)
         {
             if (e.button.button == SDL_BUTTON_LEFT && game->map_get()->passable(mouse_get_q(), mouse_get_r()))
             {
@@ -284,9 +284,10 @@ graphic_class::graphic_class(const std::string& graphic_folder, const std::strin
     {
         std::cerr << "SDL image not available" << std::endl;
     }
-    window_ = SDL_CreateWindow("TIPE", screen_width, screen_height, SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED);
+    window_ = SDL_CreateWindow("TIPE", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screen_width, screen_height,
+                               SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED);
     screen_surface_ = SDL_GetWindowSurface(window_);
-    render_ = SDL_CreateRenderer(window_, nullptr, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    render_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
     if (TTF_Init() < 0)
     {
@@ -312,8 +313,8 @@ graphic_class::graphic_class(const std::string& graphic_folder, const std::strin
     }
     hex_passable_texture_ = SDL_CreateTextureFromSurface(render_, hex_passable_surface);
     hex_blocked_texture_ = SDL_CreateTextureFromSurface(render_, hex_blocked_surface);
-    SDL_DestroySurface(hex_passable_surface);
-    SDL_DestroySurface(hex_blocked_surface);
+    SDL_FreeSurface(hex_passable_surface);
+    SDL_FreeSurface(hex_blocked_surface);
 }
 
 graphic_class::~graphic_class()
@@ -447,7 +448,6 @@ bool graphic_class::update(const game_class* game)
     print_screen(game, pointed_objects);
     SDL_SetRenderDrawColor(render_, BLACK); // background
     SDL_RenderPresent(render_);
-    SDL_UpdateWindowSurface(window_);
 
     /**
      * Gerer la souris

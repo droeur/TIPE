@@ -2,6 +2,7 @@
 #include <queue>
 #include <algorithm>
 #include <cassert>
+#include <fstream>
 #include "hex_map.hpp"
 
 using namespace std;

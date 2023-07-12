@@ -2,7 +2,7 @@
 #include "game_class.hpp"
 #include "state_class.hpp"
 #include "units.hpp"
-#include <SDL3/SDL.h>
+#include <SDL2/SDL.h>
 
 using namespace std;
 

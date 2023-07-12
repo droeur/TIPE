@@ -3,6 +3,7 @@
 #include "parser.hpp"
 #include "init.hpp"
 
+#include <fstream>
 
 using namespace std;
 

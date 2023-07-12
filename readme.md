@@ -18,7 +18,7 @@ Options:
 ```
 standard launch:
 ```
-TIPE.exe -m ${projectDir}/map_empty.txt -g ${projectDir} -t ${projectDir}/cour.ttf -p ${projectDir}/expe.txt
+TIPE.exe -m ${projectDir}/ressources/map_empty.txt -g ${projectDir}/ressources -t ${projectDir}/ressources/cour.ttf -p ${projectDir}/ressources/expe.txt
 ```
 Generate vs files:
 ```

@@ -3,6 +3,7 @@
 #include "units.hpp"
 #include "state_class.hpp"
 #include <vector>
+#include <iostream>
 
 class virtual_player_class
 {
