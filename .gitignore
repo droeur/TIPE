@@ -16,7 +16,7 @@ CodeAnalyst/
 ipch/
 *.sdf
 *.opensdf
-Builds/
+builds/
 *.log
 
 # CMake
@@ -40,3 +40,6 @@ docs/tipe.fls
 docs/tipe.log
 docs/tipe.synctex.gz
 *.out
+
+#vcpkg
+vcpkg_installed/

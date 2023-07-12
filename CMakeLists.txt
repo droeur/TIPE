@@ -60,9 +60,6 @@ set_target_properties(${LOCAL_PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
 #   Dependencies   #
 ####################
 set( BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE )
-#rapidcsv pour la map
-add_subdirectory(external/rapidcsv)
-target_include_directories(${LOCAL_PROJECT_NAME} PRIVATE external/rapidcsv/src)
 
 
 #glfw
@@ -70,13 +67,10 @@ set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 
-add_subdirectory(external/glfw)
-
-target_include_directories(${LOCAL_PROJECT_NAME} PRIVATE external/glfw/include)
-target_link_directories(${LOCAL_PROJECT_NAME} PRIVATE external/glfw/src)
-target_link_libraries(${LOCAL_PROJECT_NAME} glfw)
+find_package(glfw3 CONFIG REQUIRED)
+target_link_libraries(${LOCAL_PROJECT_NAME} PRIVATE glfw)
 find_package(OpenGL REQUIRED)
-target_link_libraries(${LOCAL_PROJECT_NAME} OpenGL::GL)
+target_link_libraries(${LOCAL_PROJECT_NAME} PRIVATE OpenGL::GL)
 
 
 #SDL3
@@ -84,22 +78,20 @@ set( BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE )
 set( SDL_LIBC ON CACHE BOOL "" FORCE )
 set( SDL_TEST OFF CACHE BOOL "" FORCE )
 
-add_subdirectory(external/sdl)
-target_link_libraries(${LOCAL_PROJECT_NAME} SDL3::SDL3)
+find_package(SDL2 CONFIG REQUIRED)
+target_link_libraries(${LOCAL_PROJECT_NAME}
+    PRIVATE
+    $<TARGET_NAME_IF_EXISTS:SDL2::SDL2main>
+    $<IF:$<TARGET_EXISTS:SDL2::SDL2>,SDL2::SDL2,SDL2::SDL2-static>
+)
 
-add_subdirectory(external/sdl-image)
-target_link_libraries(${LOCAL_PROJECT_NAME} SDL3_image)
+find_package(SDL2_image CONFIG REQUIRED)
+target_link_libraries(${LOCAL_PROJECT_NAME} PRIVATE $<IF:$<TARGET_EXISTS:SDL2_image::SDL2_image>,SDL2_image::SDL2_image,SDL2_image::SDL2_image-static>)
 
-add_subdirectory(external/sdl-ttf)
-target_link_libraries(${LOCAL_PROJECT_NAME} SDL3_ttf)
-
-#YAML-CPP
-add_subdirectory(external/yaml-cpp)
-
-target_include_directories(${LOCAL_PROJECT_NAME} PRIVATE external/yaml-cpp/include)
-target_link_libraries(${LOCAL_PROJECT_NAME} yaml-cpp)
+find_package(SDL2_ttf CONFIG REQUIRED)
+target_link_libraries(${LOCAL_PROJECT_NAME} PRIVATE $<IF:$<TARGET_EXISTS:SDL2_ttf::SDL2_ttf>,SDL2_ttf::SDL2_ttf,SDL2_ttf::SDL2_ttf-static>)
 
 #boost
 find_package(Boost 1.81.0 COMPONENTS program_options REQUIRED)
 target_include_directories(${LOCAL_PROJECT_NAME} PRIVATE ${Boost_INCLUDE_DIR})
-target_link_libraries(${LOCAL_PROJECT_NAME} ${Boost_LIBRARIES})
+target_link_libraries(${LOCAL_PROJECT_NAME} PRIVATE ${Boost_LIBRARIES})

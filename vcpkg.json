@@ -1,0 +1,14 @@
+{
+  "builtin-baseline": "5269f4f4f6b3970ad21f6956f6bb2322c024910c",
+  "name": "tipe",
+  "version-string": "0.0.1",
+  "dependencies": [
+    "boost",
+    "freetype",
+    "glfw3",
+    "sdl2",
+    "sdl2-ttf",
+    "sdl2-image",
+    "libigl"
+  ]
+}
