@@ -4,6 +4,7 @@
 #include "state_class.hpp"
 #include <vector>
 #include <iostream>
+#include <boost/log/trivial.hpp>
 
 class virtual_player_class
 {
@@ -21,7 +22,7 @@ public:
 
     virtual void moves_get(state_class* s)
     {
-        std::cout << "Error: base player" << std::endl;
+        BOOST_LOG_TRIVIAL(error) << "virtual player called";
     }
 
     [[nodiscard]] player_id player_id_get() const

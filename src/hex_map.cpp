@@ -212,15 +212,6 @@ std::vector<hex_tile*> map_class::path_a_star(hex_tile* start, hex_tile* end) co
                         current_node = list_parents[current_node->parent_x()][current_node->parent_y()];
                     }
                     reverse(path.begin(), path.end());
-                    for (const auto t : path)
-                    {
-                        vector<int> a = {0};
-                        if (t->q() > 100 || t->r() > 100)
-                        {
-                            a[3] = 10;
-                            cout << "error";
-                        }
-                    }
                     return path;
                 }
                 children = tile_get(current_node->neighbor(dir).q(), current_node->neighbor(dir).r());

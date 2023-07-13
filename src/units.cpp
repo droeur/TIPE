@@ -159,6 +159,10 @@ void unit_class::pick(food_class* food, const bool queuing)
 
 void unit_class::update_cooldown()
 {
+    if (pathfinding_cooldown_ > 0)
+        pathfinding_cooldown_--;
+    else
+        pathfinding_cooldown_ = 0;
     if (t_m_ > 0)
         t_m_--;
     else

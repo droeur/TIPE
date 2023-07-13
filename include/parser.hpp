@@ -7,7 +7,7 @@ class options_class final
     boost::program_options::options_description* desc_;
     boost::program_options::variables_map* vm_;
     std::string map_file_ = "map.txt";
-    std::string parameter_file_;
+    std::string parameter_file_ = "expe.txt";
     std::string output_file_ = "result.txt";
     std::string graphic_folder_ = ".";
     std::string font_file_ = "cour.ttf";

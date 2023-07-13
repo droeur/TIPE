@@ -40,7 +40,7 @@ void game_players_init(state_class* s, game_class* g, const std::string& paramet
                 {
                     if (player_id_order_check != stoi(tokens[2]))
                     {
-                        cerr << "Error: players not in order";
+                        BOOST_LOG_TRIVIAL(error) << "players not in order";
                     }
                     virtual_player_class* player_temp;
                     if (tokens[1] == "rand")
@@ -49,7 +49,8 @@ void game_players_init(state_class* s, game_class* g, const std::string& paramet
                         player_temp = new player_group(stoi(tokens[2]));
                     else
                     {
-                        cerr << "Error: unknown player " << tokens[2] << " type: " << tokens[1] << endl;
+                        BOOST_LOG_TRIVIAL(error)
+                            << "unknown player " << tokens[2] << " type: " << tokens[1];
                         player_temp = new player_rand(stoi(tokens[2]));
                     }
                     g->player_set(player_temp, stoi(tokens[2]));
@@ -64,7 +65,6 @@ void game_players_init(state_class* s, game_class* g, const std::string& paramet
                             const double radius = (static_cast<double>(rand_gen()) / mt19937::max()) * 10;
                             q_pos = stoi(tokens[5]) + static_cast<int>(radius * cos(angle));
                             r_pos = stoi(tokens[6]) + static_cast<int>(radius * sin(angle));
-                            cout << q_pos << " " << r_pos << endl;
                         } while (!map_class::in_map(q_pos, r_pos, g->map_get()));
                         auto u = new unit_class{q_pos, r_pos, player_id_order_check, unit_hp};
                         unit_list.push_back(u);

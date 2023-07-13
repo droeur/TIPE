@@ -3,6 +3,7 @@
 #include "state_class.hpp"
 #include "units.hpp"
 #include <SDL2/SDL.h>
+#include <boost/log/trivial.hpp>
 
 using namespace std;
 
@@ -160,6 +161,10 @@ void state_class::move_execute(unit_class* u, const position& p, const map_class
 {
     hex_tile* start = map->tile_get(u->q_get(), u->r_get());
     hex_tile* end = map->tile_get(p.q_get(), p.r_get());
+    if (u->pathfinding_cooldown_get() == 0)
+    {
+        u->pathfinding_cooldown_reinitialize();
+    }
     if (u->path_get()->empty())
     {
         const vector<hex_tile*> path = map->path_a_star(start, end);
@@ -198,7 +203,6 @@ void state_class::action_execute(unit_action* action, unit_class* unit, const ma
         {
             unit->actual_action_remove();
             unit->path_get()->clear();
-            cout << food->id_get() << unit->carry_food_get() << endl;
             if (food->id_get() == -1 && !unit->carry_food_get())
             {
                 // to avoid duplication
@@ -293,8 +297,8 @@ void state_class::attack_execute(unit_class* u, object_abstract_class* enemy_obj
             }
         }
     }
-    std::cout << "unit " << this << " ,player " << u->player_get() << " attacked unit " << enemy_obj << " ,player " << enemy_obj->player_get()
-              << " hp = " << enemy_obj->hp_get() << std::endl;
+    BOOST_LOG_TRIVIAL(debug) << "unit " << this << " ,player " << u->player_get() << " attacked unit " << enemy_obj << " ,player " << enemy_obj->player_get()
+              << " hp = " << enemy_obj->hp_get();
     u->reinitialize_attack_cooldown();
 }
 

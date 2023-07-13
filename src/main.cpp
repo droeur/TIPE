@@ -4,6 +4,8 @@
 #include "init.hpp"
 
 #include <fstream>
+#include <boost/log/trivial.hpp>
+#include <Windows.h>
 
 using namespace std;
 
@@ -11,6 +13,7 @@ using namespace std;
 
 int main(const int argc, char* argv[])
 {
+    ::ShowWindow(::GetConsoleWindow(), SW_SHOW);
     const auto settings = new options_class{argc, argv};
     if (!settings->check())
     {
@@ -23,7 +26,7 @@ int main(const int argc, char* argv[])
     ofstream result{settings->output_file_get().c_str(), ofstream::out};
     for (int i = 0; i < settings->n_test_get(); i++)
     {
-        cout << i << endl;
+        BOOST_LOG_TRIVIAL(debug) << "Running test " << i;
         const auto state = new state_class;
         const auto game = new game_class{&map, state};
         bool quit = false;

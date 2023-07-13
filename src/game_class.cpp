@@ -14,7 +14,7 @@ void game_class::player_set(virtual_player_class* p, const player_id id)
     if (static_cast<unsigned long long>(id) == players_.size())
         players_.push_back(p);
     else
-        std::cerr << "Error: mismatched player id: player:" << id << " vs "
+        BOOST_LOG_TRIVIAL(error) << "mismatched player id: player:" << id << " vs "
             << players_.size();
 }
 

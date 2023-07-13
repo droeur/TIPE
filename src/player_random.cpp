@@ -8,7 +8,8 @@ void player_rand::moves_get(state_class *s){
     const vector<unit_action>::size_type unit_list_size = s->unit_list_get()[player_id_].size();
     vector<unit_action>::size_type unit_index = 0;
     while(unit_index < unit_list_size){
-        if(!possible_actions_vec[unit_index].empty()){
+        if (!possible_actions_vec[unit_index].empty() && s->unit_list_get()[player_id_][unit_index]->actual_action_get() == nullptr)
+        {
             const vector<unit_action>::size_type r = (*rand_gen_)() % possible_actions_vec[unit_index].size();
             switch (const auto action_temp_chosen = new unit_action(possible_actions_vec[unit_index][r]); action_temp_chosen->action_type_get())
             {
@@ -28,8 +29,7 @@ void player_rand::moves_get(state_class *s){
             case unit_action_id::follow:
                 s->unit_list_get()[player_id_][unit_index]->follow(action_temp_chosen->target_unit_get());
                 break;
-            case unit_action_id::error:
-                cerr << "Error: Unknown action" << endl;
+            case unit_action_id::error: BOOST_LOG_TRIVIAL(error) << "Unknown action";
             }
         }
         unit_index++;

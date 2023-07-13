@@ -54,7 +54,7 @@ void graphic_class::draw_tile(const hex_tile *hex) const
         SDL_RenderCopy(render_, hex_blocked_texture_, nullptr, &map_tile_rect);
 }
 
-void graphic_class::draw_unit(const unit_class* unit, const game_class *game) const
+void graphic_class::draw_unit(unit_class* unit, const game_class *game) const
 {
     SDL_Rect life_rect;
     life_rect.h = static_cast<float>(0.1 * zoom_);
@@ -79,6 +79,28 @@ void graphic_class::draw_unit(const unit_class* unit, const game_class *game) co
 
     life_rect.w = 0.1 * unit->hp_get() * zoom_;
     SDL_RenderFillRect(render_, &life_rect);
+
+    const unit_action* action = unit->actual_action_get();
+    if (action != nullptr)
+    {
+        switch (action->action_type_get())
+        {
+        case unit_action_id::pick:
+        case unit_action_id::attack: {
+            object_abstract_class* enemy_u = action->target_unit_get();
+            SDL_RenderDrawLine(
+                render_,
+                static_cast<float>((unit->position_get().graphic_x_get(game->map_get()) + x_shift_) * zoom_),
+                static_cast<float>(unit->position_get().graphic_y_get(game->map_get()) * hex_height_coefficient *
+                                    zoom_) +
+                    y_shift_ * zoom_,
+                enemy_u->position_get().graphic_x_get(game->map_get()) * zoom_ + x_shift_ * zoom_,
+                (enemy_u->position_get().graphic_y_get(game->map_get()) * hex_height_coefficient) * zoom_ +
+                    y_shift_ * zoom_);
+        }
+        break;
+        }
+    }
 }
 
 void graphic_class::draw_food(const food_class* food, const game_class* game) const
@@ -201,14 +223,14 @@ void graphic_class::print_screen(const game_class* game, const vector<object_abs
     char arr_fps[20];
     if (sprintf_s(arr_fps, "%d", static_cast<int>(game->state_get()->fps_get())) == -1)
     {
-        cerr << "Error: printing" << endl;
+        BOOST_LOG_TRIVIAL(error) << "printing" ;
     }
     print(2, 2, arr_fps, text_white);
 
     char arr_size[3];
     if (sprintf_s(arr_size, "%d", static_cast<int>(pointed_objects.size())) == -1)
     {
-        cerr << "Error: printing" << endl;
+        BOOST_LOG_TRIVIAL(error) << "printing" ;
     }
     print(50, 2, arr_size, text_white);
     string pos_str;
@@ -250,21 +272,21 @@ void graphic_class::print_screen(const game_class* game, const vector<object_abs
             }
             if (sprintf_s(arr_info, "HP: %d carry: %s", u->hp_get(), u->carry_food_get() ? "true" : "false") == -1)
             {
-                cerr << "Error printing" << endl;
+                BOOST_LOG_TRIVIAL(error) << "printing" ;
             }
         }
         else
         {
             if (sprintf_s(arr_info, "HP: %d", obj->hp_get()) == -1)
             {
-                cerr << "Error printing" << endl;
+                BOOST_LOG_TRIVIAL(error) << "printing" ;
             }
         }
         print_right(window_w, static_cast<float>(2 + i * 20), arr_info, text_color);
         i++;
         if (sprintf_s(arr_info, "%d %d", obj->q_get(), obj->r_get()) == -1)
         {
-            cerr << "Error printing" << endl;
+            BOOST_LOG_TRIVIAL(error) << "printing";
         }
         print_right(window_w, static_cast<float>(2 + i * 20), arr_info, text_color);
         i++;
@@ -277,12 +299,12 @@ graphic_class::graphic_class(const std::string& graphic_folder, const std::strin
 {
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
-        std::cerr << "SDL could not initialize! SDL_Error:" << SDL_GetError();
+        BOOST_LOG_TRIVIAL(error) << "SDL could not initialize! SDL_Error:" << SDL_GetError();
     }
     constexpr int flags = IMG_INIT_PNG;
     if (const int init_status = IMG_Init(flags); (init_status & flags) != flags)
     {
-        std::cerr << "SDL image not available" << std::endl;
+        BOOST_LOG_TRIVIAL(error) << "SDL image not available";
     }
     window_ = SDL_CreateWindow("TIPE", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screen_width, screen_height,
                                SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED);
@@ -291,12 +313,12 @@ graphic_class::graphic_class(const std::string& graphic_folder, const std::strin
 
     if (TTF_Init() < 0)
     {
-        std::cerr << "SDL ttf not available" << std::endl;
+        BOOST_LOG_TRIVIAL(error) << "SDL ttf not available";
     }
     font_ = TTF_OpenFont(font.c_str(), 20);
     if (font_ == nullptr)
     {
-        std::cerr << "Error opening " << font << " file" << std::endl;
+        BOOST_LOG_TRIVIAL(error) << "Canno't open font file " << font;
     }
 
     const std::string hex_p = graphic_folder + "/hex_p.png";
@@ -305,11 +327,11 @@ graphic_class::graphic_class(const std::string& graphic_folder, const std::strin
     SDL_Surface* hex_blocked_surface = IMG_Load(hex_b.c_str());
     if (!hex_passable_surface)
     {
-        std::cerr << "Error opening " << hex_p << " file " << std::endl;
+        BOOST_LOG_TRIVIAL(error) << "Error opening " << hex_p << " file ";
     }
     if (!hex_blocked_surface)
     {
-        std::cerr << "Error opening " << hex_b << " file " << std::endl;
+        BOOST_LOG_TRIVIAL(error) << "Error opening " << hex_b << " file ";
     }
     hex_passable_texture_ = SDL_CreateTextureFromSurface(render_, hex_passable_surface);
     hex_blocked_texture_ = SDL_CreateTextureFromSurface(render_, hex_blocked_surface);
@@ -381,38 +403,7 @@ bool graphic_class::update(const game_class* game)
             }
         }
     }
-    /*
-    SDL_SetRenderDrawColor(render_, BLUE);
-    for (int player = 0; player < NUMBER_OF_PLAYERS; player++)
-    {
-        if (!g->chosen_actions_get(player).empty())
-        {
-            int action_index = 0;
-            for (unit_action action : g->chosen_actions_get(player))
-            {
-                unit* u = action.unit_get();
-                switch (action.action_type_get())
-                {
-                case u_action_id::pick:
-                case u_action_id::attack: {
-                    object_abstract_class* enemy_u = action.target_unit_get();
-                    SDL_RenderLine(render_,
-                                   static_cast<float>((u->position_get().getXGraphic(g->map_get()) + x_shift_) * zoom_),
-                                   static_cast<float>(
-                                       u->position_get().getYGraphic(g->map_get()) * HEX_HEIGHT_COEFF * zoom_) +
-                                   y_shift_ * zoom_,
-                                   enemy_u->position_get().getXGraphic(g->map_get()) * zoom_ + x_shift_ * zoom_,
-                                   (enemy_u->position_get().getYGraphic(g->map_get()) * HEX_HEIGHT_COEFF) * zoom_ +
-                                   y_shift_ * zoom_);
-                }
-                break;
-                }
-                action_index++;
-            }
-        }
-        SDL_SetRenderDrawColor(render_, RED);
-    }
-    */
+
     /**
      * draw food
      * 

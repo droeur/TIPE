@@ -1,9 +1,13 @@
 #include <fstream>
 #include<iostream>
 #include <string>
+#include <boost/log/core.hpp>
+#include <boost/log/trivial.hpp>
+#include <boost/log/expressions.hpp>
 #include "parser.hpp"
 
 using namespace std;
+namespace logging = boost::log;
 
 bool file_check(const string &name)
 {
@@ -47,6 +51,13 @@ options_class::options_class(const int argc, char* argv[])
         fast_ = true;
     if (vm_->count("log"))
         log_level_ = (*vm_)["log"].as<int>();
+
+    if (log_level_ >= 2)
+        logging::core::get()->set_filter(logging::trivial::severity >= logging::trivial::trace);
+    else if (log_level_ == 1)
+        logging::core::get()->set_filter(logging::trivial::severity >= logging::trivial::debug);
+    else
+        logging::core::get()->set_filter(logging::trivial::severity >= logging::trivial::info);
 }
 
 options_class::~options_class()
@@ -59,17 +70,17 @@ bool options_class::check() const
 {
     if (!file_check(map_file_))
     {
-        cerr << "Error: no map file " << map_file_ << endl;
+        BOOST_LOG_TRIVIAL(error) << "no map file " << map_file_;
         return false;
     }
     if (!file_check(parameter_file_))
     {
-        cerr << "Error: no parameter file " << parameter_file_ << endl;
+        BOOST_LOG_TRIVIAL(error) << "no parameter file " << parameter_file_;
         return false;
     }
     if (!file_check(font_file_))
     {
-        cerr << "Error: no font file " << font_file_ << endl;
+        BOOST_LOG_TRIVIAL(error) << "no font file " << font_file_;
         return false;
     }
 

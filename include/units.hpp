@@ -47,7 +47,7 @@ public:
 class unit_class final : public object_abstract_class
 {
     int t_a_ = 5, t_m_ = 5; // attack cooldown and move cooldown
-    unit_action *actual_action_ = nullptr;
+    int pathfinding_cooldown_ = 0;
     std::queue<unit_action*> action_queue_;
     std::vector<hex_tile*> path_;
     bool carry_food_ = false;
@@ -57,12 +57,13 @@ class unit_class final : public object_abstract_class
 
 public:
     unit_class(const int q, const int r, const player_id id, const int hp)
-        : object_abstract_class(q, r, hp, id, object_type::undefined) {}
+        : object_abstract_class(q, r, hp, id, object_type::undefined)
+    {
+    }
 
     ~unit_class() override = default;
 
-
-    //actions
+    // actions
     void actual_action_remove();
     [[nodiscard]] unit_action* actual_action_get() const;
 
@@ -74,8 +75,11 @@ public:
 
     [[nodiscard]] bool can_move() const { return t_m_ == 0 && hit_point_ > 0; }
     [[nodiscard]] bool can_attack() const { return t_a_ == 0 && hit_point_ > 0; }
+    [[nodiscard]] bool can_wait() const { return hit_point_ > 0; }
 
     void update_cooldown();
+    int pathfinding_cooldown_get() { return pathfinding_cooldown_; }
+    void pathfinding_cooldown_reinitialize() { pathfinding_cooldown_ = 5; }
     void reinitialize_attack_cooldown(){t_a_ = ATTACK_COOLDOWN;}
     void reinitialize_move_cooldown(){t_m_ = MOVE_COOLDOWN;}
 
