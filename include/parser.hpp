@@ -15,6 +15,7 @@ class options_class final
     bool fast_ = false;
     int log_level_ = 0;
     int n_test_ = 1;
+    bool pause_ = false;
 
 public:
     options_class(int argc, char* argv[]);
@@ -39,4 +40,7 @@ public:
     [[nodiscard]] int log_level_get() const;
 
     [[nodiscard]] int n_test_get() const;
+
+    bool pause_get() const { return pause_; }
+    void pause_toggle() { pause_ = !pause_; } 
 };

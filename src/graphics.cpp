@@ -42,16 +42,21 @@ void graphic_class::print_right(const int width, const float y, const char* text
 
 void graphic_class::draw_tile(const hex_tile *hex) const
 {
+    SDL_Color text_white{255, 255, 255, 255};
     SDL_Rect map_tile_rect;
     map_tile_rect.x = static_cast<float>((hex->graphic_x() - 0.5) * zoom_ + x_shift_ * zoom_);
     map_tile_rect.y = static_cast<float>((hex->graphic_y() - 0.5) * hex_height_coefficient * zoom_ +
                                          y_shift_ * zoom_);
     map_tile_rect.w = static_cast<float>(zoom_);
     map_tile_rect.h = static_cast<float>(zoom_);
+    //string info;
+    //info += to_string(static_cast<int>(hex->cost_f));
     if (hex->passable())
         SDL_RenderCopy(render_, hex_passable_texture_, nullptr, &map_tile_rect);
     else
         SDL_RenderCopy(render_, hex_blocked_texture_, nullptr, &map_tile_rect);
+    //if (hex->cost_f != FLT_MAX)
+    //print(map_tile_rect.x, map_tile_rect.y, info.c_str(), text_white);
 }
 
 void graphic_class::draw_unit(unit_class* unit, const game_class *game) const
@@ -89,9 +94,8 @@ void graphic_class::draw_unit(unit_class* unit, const game_class *game) const
         case unit_action_id::attack: {
             object_abstract_class* enemy_u = action->target_unit_get();
             SDL_RenderDrawLine(
-                render_,
-                static_cast<float>((unit->position_get().graphic_x_get(game->map_get()) + x_shift_) * zoom_),
-                static_cast<float>(unit->position_get().graphic_y_get(game->map_get()) * hex_height_coefficient *
+                render_, static_cast<int>((unit->position_get().graphic_x_get(game->map_get()) + x_shift_) * zoom_),
+                static_cast<int>(unit->position_get().graphic_y_get(game->map_get()) * hex_height_coefficient *
                                     zoom_) +
                     y_shift_ * zoom_,
                 enemy_u->position_get().graphic_x_get(game->map_get()) * zoom_ + x_shift_ * zoom_,
@@ -99,6 +103,20 @@ void graphic_class::draw_unit(unit_class* unit, const game_class *game) const
                     y_shift_ * zoom_);
         }
         break;
+        }
+    }
+    
+    if (!unit->path_get()->empty())
+    {
+        hex_tile* precendent_tile = game->map_get()->tile_get(unit->position_get().q_get(), unit->position_get().r_get());
+        for (auto tile : *(unit->path_get()))
+        {
+            SDL_RenderDrawLine(render_, 
+                static_cast<int>(precendent_tile->graphic_x() * zoom_ + x_shift_ * zoom_), 
+                static_cast<int>(precendent_tile->graphic_y() * hex_height_coefficient * zoom_ + y_shift_ * zoom_),
+                static_cast<int>(tile->graphic_x() * zoom_ + x_shift_ * zoom_),
+                static_cast<int>(tile->graphic_y() * hex_height_coefficient * zoom_ + y_shift_ * zoom_));
+            precendent_tile = tile;
         }
     }
 }
@@ -145,7 +163,7 @@ void graphic_class::draw_base(const base_class* base, const game_class* game) co
     SDL_RenderFillRect(render_, &life_rect);
 }
 
-bool graphic_class::event_handle(const game_class *game)
+bool graphic_class::event_handle(const game_class* game, options_class* settings)
 {
     SDL_Event e;
     bool quit = false;
@@ -182,6 +200,10 @@ bool graphic_class::event_handle(const game_class *game)
             else if (e.key.keysym.sym == SDLK_DOWN)
             {
                 y_shift_ -= 100 / zoom_;
+            }
+            else if (e.key.keysym.sym == SDLK_SPACE)
+            {
+                settings->pause_toggle();
             }
         }
         if (e.type == SDL_MOUSEMOTION)
@@ -238,7 +260,14 @@ void graphic_class::print_screen(const game_class* game, const vector<object_abs
     pos_str += " ";
     pos_str += to_string(mouse_get_r());
     print_right(window_w, 0, pos_str.c_str(), text_white);
-    int i = 2;
+    if (map_class::in_map(mouse_get_q(), mouse_get_r(), game->map_get()))
+    {
+        pos_str = to_string(game->map_get()->tile_get(mouse_get_q(), mouse_get_r())->index_x());
+        pos_str += " ";
+        pos_str += to_string(game->map_get()->tile_get(mouse_get_q(), mouse_get_r())->index_y());
+        print_right(window_w, 22, pos_str.c_str(), text_white);
+    }
+    int i = 4;
     for (object_abstract_class* obj : pointed_objects)
     {
         char arr_info[250];
@@ -355,7 +384,7 @@ graphic_class::~graphic_class()
     SDL_QuitSubSystem(SDL_INIT_VIDEO);
 }
 
-bool graphic_class::update(const game_class* game)
+bool graphic_class::update(const game_class* game, options_class* settings)
 {
     bool quit = false;
     vector<object_abstract_class*> pointed_objects;
@@ -444,7 +473,7 @@ bool graphic_class::update(const game_class* game)
      * Gerer la souris
      * 
      */
-    quit = event_handle(game);
+    quit = event_handle(game, settings);
     return quit;
 }
 

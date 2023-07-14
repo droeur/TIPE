@@ -1,5 +1,5 @@
 #include <fstream>
-#include<iostream>
+#include <iostream>
 #include <string>
 #include <boost/log/core.hpp>
 #include <boost/log/trivial.hpp>

@@ -36,13 +36,13 @@ int main(const int argc, char* argv[])
         while (!quit)
         {
             state->fps_check_before();
-
-            game->play();
+            if (!settings->pause_get())
+                game->play();
 
             if (!settings->graphics_get())
                 quit = game->winner_check();
             else
-                quit = game_graphic->update(game);
+                quit = game_graphic->update(game, settings);
             state->frame_increment();
             state->fps_check_after(settings->fast_get());
         }

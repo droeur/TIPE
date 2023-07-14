@@ -26,6 +26,7 @@ protected:
     player_id player_ = -1;
     int id_ = -1;
     object_type type_ = object_type::undefined;
+    int temporary_hp_ = 0;
 
 public:
     virtual ~object_abstract_class() = default;
@@ -43,6 +44,7 @@ public:
         this->location_.r_set(r);
         this->hit_point_ = hp;
         this->type_ = t;
+        this->temporary_hp_ = hp;
     }
 
     object_abstract_class(const int q, const int r, const int hp, const player_id id, const object_type t)
@@ -52,6 +54,7 @@ public:
         this->hit_point_ = hp;
         this->player_ = id;
         this->type_ = t;
+        this->temporary_hp_ = hp;
     }
 
     [[nodiscard]] virtual object_type object_type_get() const
@@ -114,4 +117,9 @@ public:
     {
         this->id_ = id;
     }
+
+    virtual void temporary_hp_set(const int hp);
+    virtual void temporary_hp_remove(const int hp);
+    virtual void temporary_hp_apply();
+    virtual int temporary_hp_get();
 };

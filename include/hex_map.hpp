@@ -28,9 +28,7 @@ public:
         , s_(-q - r)
         , x_graphic_(q + static_cast<double>(r) / 2)
         , x_index_(q + (r + (r & 1)) / 2)
-    {
-
-    }
+    {}
 
     hex_tile(const int q, const int r, const int s)
         : q_(q)
@@ -68,9 +66,6 @@ public:
     [[nodiscard]] float distance(const hex_tile& a) const;
     float distance(const hex_tile* a) const;
 
-    static hex_tile direction(int dir);
-    [[nodiscard]] hex_tile neighbor(int dir) const;
-
     // coordinates cube
     [[nodiscard]] int q() const;
     [[nodiscard]] int r() const;
@@ -89,6 +84,7 @@ public:
     float cost_g = FLT_MAX; //distance from start
     float cost_h = FLT_MAX; //heuristic
     float cost_f = FLT_MAX; //g+h
+    hex_tile* parent = nullptr;
 
     [[nodiscard]] int parent_x() const;
     [[nodiscard]] int parent_y() const;
@@ -116,6 +112,7 @@ public:
     void row_add(std::vector<hex_tile*>* row) const;
 
     [[nodiscard]] std::vector<std::vector<hex_tile*>*>* tiles_map_get() const;
+    hex_tile* neighbor(int q, int r, int dir) const;
 
     [[nodiscard]] bool passable(int q, int r) const;
 

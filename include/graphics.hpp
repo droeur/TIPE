@@ -5,6 +5,7 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 #include "state_class.hpp"
+#include "parser.hpp"
 
 enum
 {
@@ -29,7 +30,7 @@ class graphic_class
     void draw_unit(unit_class* unit, const game_class* game) const;
     void draw_food(const food_class* food, const game_class* game) const;
     void draw_base(const base_class* base, const game_class* game) const;
-    bool event_handle(const game_class* game);
+    bool event_handle(const game_class* game, options_class* settings);
     void print_screen(const game_class* game, const std::vector<object_abstract_class*>& pointed_objects) const;
     SDL_Window* window_;
     SDL_Surface* screen_surface_;
@@ -47,7 +48,7 @@ public:
     graphic_class(const std::string& graphic_folder, const std::string& font);
     ~graphic_class();
 
-    bool update(const game_class* game);
+    bool update(const game_class* game, options_class* settings);
 
     [[nodiscard]] int mouse_get_q() const;
     [[nodiscard]] int mouse_get_r() const;

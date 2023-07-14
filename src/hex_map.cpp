@@ -3,13 +3,14 @@
 #include <algorithm>
 #include <cassert>
 #include <fstream>
+#include <initializer_list>
+#include <boost/log/trivial.hpp>
 #include "hex_map.hpp"
 
 using namespace std;
 
-class compare
+struct compare
 {
-public:
     bool operator()(const hex_tile* a, const hex_tile* b) const
     {
         return a->cost_f > b->cost_f;
@@ -46,28 +47,12 @@ bool hex_tile::passable() const
 
 float hex_tile::distance(const hex_tile& a) const
 {
-    const hex_tile temp = *this - a;
-    return static_cast<float>(abs(temp.q_) + abs(temp.r_) + abs(temp.s_)) / 2.0f;
+    return sqrt(pow(this->graphic_x() - a.graphic_x(), 2) + pow(this->graphic_y() - a.graphic_y(), 2));
 }
 
 float hex_tile::distance(const hex_tile* a) const
 {
-    const hex_tile temp = *this - *a;
-    return static_cast<float>(abs(temp.q_) + abs(temp.r_) + abs(temp.s_)) / 2.0f;
-}
-
-hex_tile hex_tile::direction(const int dir)
-{
-    const hex_tile hex_tile_directions[6] = {
-        hex_tile(1, 0), hex_tile(1, -1), hex_tile(0, -1),
-        hex_tile(-1, 0), hex_tile(-1, 1), hex_tile(0, 1)
-    };
-    return hex_tile_directions[dir];
-}
-
-hex_tile hex_tile::neighbor(const int dir) const
-{
-    return *this + direction(dir);
+    return sqrt(pow(this->graphic_x() - a->graphic_x(), 2) + pow(this->graphic_y() - a->graphic_y(), 2));
 }
 
 int hex_tile::q() const
@@ -130,6 +115,8 @@ bool hex_tile::is_valid() const
     return this->passable_;
 }
 
+//--------------------------map_class--------------------------\\
+
 map_class::map_class(const std::string& file_name)
 {
     tiles_map_ = new std::vector<std::vector<hex_tile*>*>;
@@ -137,6 +124,7 @@ map_class::map_class(const std::string& file_name)
     std::string line;
     int r = 0;
     int q = 0;
+    size_x_ = 0;
     while (std::getline(file, line))
     {
         const auto row = new std::vector<hex_tile*>;
@@ -155,7 +143,88 @@ map_class::map_class(const std::string& file_name)
     size_y_ = r;
 }
 
-std::vector<hex_tile*> map_class::path_a_star(hex_tile* start, hex_tile* end) const
+std::vector<hex_tile*> map_class::path_a_star(hex_tile* start, hex_tile* end) const 
+{
+    constexpr int a_weight = 5;
+    constexpr int profondeur = 20;
+    bool** list_closed = new bool*[size_y_];
+    for (int i = 0; i < size_y_; i++)
+    {
+        list_closed[i] = new bool[size_x_];
+    }
+    vector<hex_tile*> list_open;
+    hex_tile* current_node = start;
+    current_node->cost_g = 0;
+    current_node->cost_h = current_node->distance(end) * a_weight;
+    current_node->cost_f = current_node->cost_g + current_node->cost_h;
+    list_open.push_back(current_node);
+    make_heap(list_open.begin(), list_open.end(), compare());
+    int index = 0;
+    while (!list_open.empty())
+    {
+        index++;
+        current_node = list_open.front();
+        list_open.erase(list_open.begin());
+        list_closed[current_node->index_y()][current_node->index_x()] = false;
+        int cost_g = current_node->cost_g + 1;
+        if (!list_closed[end->index_y()][end->index_x()])
+        {
+            break;
+        }
+        if (cost_g > profondeur)
+        {
+            break;
+        }
+        for (int dir = 0; dir < 6; dir++)
+        {
+            hex_tile* children = neighbor(current_node->q(), current_node->r(), dir);
+            if (children == nullptr)
+            {
+                continue;
+            }
+            if (!children->passable())
+            {
+                continue;
+            }
+            if (!list_closed[children->index_y()][children->index_x()])
+            {
+                continue;
+            }
+            if (!(find(list_open.begin(), list_open.end(), children) != list_open.end()))
+            {
+                children->cost_g = cost_g;
+                children->cost_h = children->distance(end) * a_weight;
+                children->cost_f = children->cost_g + children->cost_h;
+                list_open.push_back(children);
+                push_heap(list_open.begin(), list_open.end(), compare());
+                children->parent = current_node;
+            }
+            else if (children->cost_f > cost_g + children->cost_h)
+            {
+                children->cost_g = cost_g;
+                children->cost_f = children->cost_g + children->cost_h;
+                children->parent = current_node;
+                make_heap(list_open.begin(), list_open.end(), compare());
+            }
+        }
+    }
+    cout << index << endl;
+    vector<hex_tile*> path;
+    if (!list_closed[current_node->index_y()][current_node->index_x()])
+    {
+        while (current_node != start && current_node != nullptr)
+        {
+            path.push_back(current_node);
+            current_node = current_node->parent;
+        }
+        reverse(path.begin(), path.end());
+    }
+    for (int i = 0; i < size_y_; i++)
+        delete[] list_closed[i];
+    delete[] list_closed;
+    return path;
+}
+/* std::vector<hex_tile*> map_class::path_a_star(hex_tile* start, hex_tile* end) const
 {
     std::vector<hex_tile*> path;
     priority_queue<hex_tile*, vector<hex_tile*>, compare> list_open;
@@ -189,7 +258,7 @@ std::vector<hex_tile*> map_class::path_a_star(hex_tile* start, hex_tile* end) co
     list_open.push(start);
     int i = 0;
 
-    while (!list_open.empty() && i < size_x_ * size_y_)
+    while (!list_open.empty() && i < size_x_ * size_y_*100)
     {
         hex_tile* current_node = list_open.top();
         list_closed[current_node->index_x()][current_node->index_y()] = true;
@@ -197,11 +266,10 @@ std::vector<hex_tile*> map_class::path_a_star(hex_tile* start, hex_tile* end) co
         list_open.pop();
         for (int dir = 0; dir < 6; dir++)
         {
-            if (in_map(current_node->neighbor(dir).q(), current_node->neighbor(dir).r(), this) &&
-                tile_get(current_node->neighbor(dir).q(), current_node->neighbor(dir).r())->passable() &&
-                !list_closed[current_node->neighbor(dir).index_x()][current_node->neighbor(dir).index_y()])
+            if (neighbor(current_node, dir) != nullptr && neighbor(current_node, dir)->passable() &&
+                !list_closed[neighbor(current_node, dir)->index_x()][neighbor(current_node, dir)->index_y()])
             {
-                if (current_node->neighbor(dir).q() == end->q() && current_node->neighbor(dir).r() == end->r())
+                if (neighbor(current_node, dir)->q() == end->q() && neighbor(current_node, dir)->r() == end->r())
                 {
                     path.push_back(end);
                     path.push_back(tile_get(current_node->q(), current_node->r()));
@@ -212,9 +280,10 @@ std::vector<hex_tile*> map_class::path_a_star(hex_tile* start, hex_tile* end) co
                         current_node = list_parents[current_node->parent_x()][current_node->parent_y()];
                     }
                     reverse(path.begin(), path.end());
+                    path.erase(path.begin());
                     return path;
                 }
-                children = tile_get(current_node->neighbor(dir).q(), current_node->neighbor(dir).r());
+                children = neighbor(current_node, dir);
                 children->cost_g = current_node->cost_g + 1.0f;
                 children->cost_h = children->distance(end);
                 children->cost_f = children->cost_h + children->cost_g;
@@ -227,7 +296,7 @@ std::vector<hex_tile*> map_class::path_a_star(hex_tile* start, hex_tile* end) co
         i++;
     }
     return path;
-}
+}*/
 
 hex_tile* map_class::tile_get(const int q, const int r) const
 {
@@ -246,6 +315,41 @@ std::vector<std::vector<hex_tile*>*>* map_class::tiles_map_get() const
     return tiles_map_;
 }
 
+hex_tile* map_class::neighbor(int q, int r, int dir) const
+{
+    int n_q = q;
+    int n_r = r;
+    if (dir == 0)
+    {
+        n_q++;
+    }
+    else if (dir == 1)
+    {
+        n_q++;
+        n_r--;
+    }
+    else if (dir == 2)
+    {
+        n_r--;
+    }
+    else if (dir == 3)
+    {
+        n_q--;
+    }
+    else if (dir == 4)
+    {
+        n_q--;
+        n_r++;
+    }
+    else if (dir == 5)
+    {
+        n_r++;
+    }
+    else
+        return nullptr;
+    return tile_get(n_q, n_r);
+}
+
 bool map_class::in_map(const int q, const int r, const map_class* map)
 {
     return q + (r + (r & 1)) / 2 >= 0 && r >= 0 && q + (r + (r & 1)) / 2 < map->size_x_get() && r < map->size_y_get();
@@ -255,7 +359,7 @@ bool map_class::passable(const int q, const int r) const
 {
     if (!in_map(q, r, this))
         return false;
-    return (*(*tiles_map_)[r])[q + (r + (r & 1)) / 2]->passable();
+    return tile_get(q,r)->passable();
 }
 
 int map_class::size_x_get() const
@@ -278,7 +382,7 @@ hex_tile* map_class::neighbor(const hex_tile* tile, const int dir) const
     }
     else if (dir == 1)
     {
-        x_shift = 1;
+        x_shift = -1;
         y_shift = -1;
     }
     else if (dir == 2)
@@ -291,13 +395,16 @@ hex_tile* map_class::neighbor(const hex_tile* tile, const int dir) const
     }
     else if (dir == 4)
     {
-        x_shift = -1;
+        x_shift = 1;
+        y_shift = 1;
+    }
+    else if (dir == 5)
+    {
         y_shift = 1;
     }
     else
     {
-        x_shift = 1;
-        y_shift = 1;
+        BOOST_LOG_TRIVIAL(error) << "unknown direction " << dir;
     }
     if (!(tile->index_x() + x_shift >= 0 && tile->index_y() + y_shift >= 0 && tile->index_x() + x_shift < size_x_ &&
           tile->index_y() + y_shift < size_y_))

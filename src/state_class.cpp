@@ -164,13 +164,14 @@ void state_class::move_execute(unit_class* u, const position& p, const map_class
     if (u->pathfinding_cooldown_get() == 0)
     {
         u->pathfinding_cooldown_reinitialize();
+        u->path_get()->clear();
     }
     if (u->path_get()->empty())
     {
         const vector<hex_tile*> path = map->path_a_star(start, end);
         u->path_set(path);
     }
-    else
+    if (!u->path_get()->empty())
     {
         u->temporary_position_set((*u->path_get())[0]->q(), (*u->path_get())[0]->r());
         u->path_get()->erase(u->path_get()->begin());
@@ -262,7 +263,9 @@ void state_class::moves_make(const map_class *map)
         {
             unit_class* u = u_list_[player][index];
             u->update_cooldown();
-            u->temporary_position_apply();
+            if (u->temporary_hp_get() == u->hp_get())
+                u->temporary_position_apply();
+            u->temporary_hp_apply();
             if (u->carry_food_get())
             {
                 for (const auto base : base_list_)
@@ -280,14 +283,18 @@ void state_class::moves_make(const map_class *map)
             }
         }
     }
+    for (auto base : base_list_)
+    {
+        base->temporary_hp_apply();
+    }
 }
 
 void state_class::attack_execute(unit_class* u, object_abstract_class* enemy_obj)
 {
-    enemy_obj->hp_remove(1);
-    if (enemy_obj->hp_get() < 0)
+    enemy_obj->temporary_hp_remove(1);
+    if (enemy_obj->hp_get() - 1 < 0)
     {
-        enemy_obj->hp_set(0);
+        enemy_obj->temporary_hp_set(0);
         if (enemy_obj->object_type_get() == object_type::unit)
         {
             if (const auto* enemy_u = dynamic_cast<unit_class*>(enemy_obj); enemy_u->carry_food_get())
