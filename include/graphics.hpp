@@ -1,8 +1,6 @@
 #pragma once
 
-#include <iostream>
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 #include "state_class.hpp"
 #include "parser.hpp"
@@ -13,7 +11,7 @@ enum
     screen_height = 480
 };
 
-constexpr auto hex_height_coefficient = 0.78f;
+constexpr auto hex_height_coefficient = 0.78;
 
 #define RED 255, 0, 0, 255
 #define GREEN 0, 255, 0, 255
@@ -24,8 +22,8 @@ constexpr auto hex_height_coefficient = 0.78f;
 
 class graphic_class
 {
-    void print(float x, float y, const char* text, const SDL_Color& text_color) const;
-    void print_right(int width, float y, const char* text, const SDL_Color& text_color) const;
+    void print(int x, int y, const char* text, const SDL_Color& text_color) const;
+    void print_right(int width, int y, const char* text, const SDL_Color& text_color) const;
     void draw_tile(const hex_tile* hex) const;
     void draw_unit(unit_class* unit, const game_class* game) const;
     void draw_food(const food_class* food, const game_class* game) const;

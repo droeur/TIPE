@@ -1,4 +1,3 @@
-#include <cassert>
 #include <cmath>
 #include <vector>
 #include <GLFW/glfw3.h>
@@ -11,30 +10,30 @@
 
 using namespace std;
 
-void graphic_class::print(const float x, const float y, const char* text, const SDL_Color& text_color) const
+void graphic_class::print(const int x, const int y, const char* text, const SDL_Color& text_color) const
 {
     SDL_Rect mess_rect = {x, y, 0, 0};
     int w, h;
     SDL_Surface* mess_fps = TTF_RenderText_Solid(font_, text, text_color);
     SDL_Texture* texture = SDL_CreateTextureFromSurface(render_, mess_fps);
     TTF_SizeText(font_, text, &w, &h);
-    mess_rect.w = static_cast<float>(w);
-    mess_rect.h = static_cast<float>(h);
+    mess_rect.w = w;
+    mess_rect.h = h;
     SDL_RenderCopy(render_, texture, nullptr, &mess_rect);
     SDL_FreeSurface(mess_fps);
     SDL_DestroyTexture(texture);
 }
 
-void graphic_class::print_right(const int width, const float y, const char* text, const SDL_Color& text_color) const
+void graphic_class::print_right(const int width, const int y, const char* text, const SDL_Color& text_color) const
 {
     SDL_Rect mess_rect = {0, y, 0, 0};
     int w, h;
     SDL_Surface* mess_fps = TTF_RenderText_Solid(font_, text, text_color);
     SDL_Texture* texture = SDL_CreateTextureFromSurface(render_, mess_fps);
     TTF_SizeText(font_, text, &w, &h);
-    mess_rect.x = static_cast<float>(width - w);
-    mess_rect.w = static_cast<float>(w);
-    mess_rect.h = static_cast<float>(h);
+    mess_rect.x = width - w;
+    mess_rect.w = w;
+    mess_rect.h = h;
     SDL_RenderCopy(render_, texture, nullptr, &mess_rect);
     SDL_FreeSurface(mess_fps);
     SDL_DestroyTexture(texture);
@@ -42,47 +41,42 @@ void graphic_class::print_right(const int width, const float y, const char* text
 
 void graphic_class::draw_tile(const hex_tile *hex) const
 {
-    SDL_Color text_white{255, 255, 255, 255};
     SDL_Rect map_tile_rect;
-    map_tile_rect.x = static_cast<float>((hex->graphic_x() - 0.5) * zoom_ + x_shift_ * zoom_);
-    map_tile_rect.y = static_cast<float>((hex->graphic_y() - 0.5) * hex_height_coefficient * zoom_ +
+    map_tile_rect.x = static_cast<int>((hex->graphic_x() - 0.5) * zoom_ + x_shift_ * zoom_);
+    map_tile_rect.y =
+        static_cast<int>((hex->graphic_y() - 0.5) * static_cast<double>(hex_height_coefficient) * zoom_ +
                                          y_shift_ * zoom_);
-    map_tile_rect.w = static_cast<float>(zoom_);
-    map_tile_rect.h = static_cast<float>(zoom_);
-    //string info;
-    //info += to_string(static_cast<int>(hex->cost_f));
+    map_tile_rect.w = zoom_;
+    map_tile_rect.h = zoom_;
     if (hex->passable())
         SDL_RenderCopy(render_, hex_passable_texture_, nullptr, &map_tile_rect);
     else
         SDL_RenderCopy(render_, hex_blocked_texture_, nullptr, &map_tile_rect);
-    //if (hex->cost_f != FLT_MAX)
-    //print(map_tile_rect.x, map_tile_rect.y, info.c_str(), text_white);
 }
 
 void graphic_class::draw_unit(unit_class* unit, const game_class *game) const
 {
     SDL_Rect life_rect;
-    life_rect.h = static_cast<float>(0.1 * zoom_);
+    life_rect.h = static_cast<int>(0.1 * zoom_);
     SDL_Rect unit_rect;
-    unit_rect.w = static_cast<float>(zoom_ * 0.5);
-    unit_rect.h = static_cast<float>(zoom_ * 0.5);
+    unit_rect.w = static_cast<int>(zoom_ * 0.5);
+    unit_rect.h = static_cast<int>(zoom_ * 0.5);
 
     if (unit->player_get() == 0)
         SDL_SetRenderDrawColor(render_, BLUE);
     else
         SDL_SetRenderDrawColor(render_, RED);
     const hex_tile* tile = game->map_get()->tile_get(unit->q_get(), unit->r_get());
-    unit_rect.x = (tile->graphic_x()) * zoom_ - unit_rect.w / 2 + x_shift_ * zoom_ + unit->player_get()*zoom_/5;
-    unit_rect.y =
-        (unit->r_get() * hex_height_coefficient) * zoom_ - unit_rect.h / 2 + y_shift_ * zoom_;
+    unit_rect.x = static_cast<int>(tile->graphic_x()) * zoom_ - unit_rect.w / 2 + x_shift_ * zoom_ + unit->player_get()*zoom_/5;
+    unit_rect.y = static_cast<int>(unit->r_get() * hex_height_coefficient * zoom_ - unit_rect.h / 2) + y_shift_ * zoom_;
     SDL_RenderFillRect(render_, &unit_rect);
 
-    life_rect.w = 0.1 * unit_hp * zoom_;
-    life_rect.x = unit_rect.x + unit_rect.w / 2 - life_rect.w / 2;
-    life_rect.y = unit_rect.y + 0.7 * zoom_;
+    life_rect.w = static_cast<int> (0.1f * unit_hp * zoom_);
+    life_rect.x = static_cast<int> (unit_rect.x + unit_rect.w / 2 - life_rect.w / 2);
+    life_rect.y = static_cast<int> (unit_rect.y + 0.7 * zoom_);
     SDL_RenderDrawRect(render_, &life_rect);
 
-    life_rect.w = 0.1 * unit->hp_get() * zoom_;
+    life_rect.w = static_cast<int> (0.1f * unit->hp_get() * zoom_);
     SDL_RenderFillRect(render_, &life_rect);
 
     const unit_action* action = unit->actual_action_get();
@@ -103,10 +97,11 @@ void graphic_class::draw_unit(unit_class* unit, const game_class *game) const
                     y_shift_ * zoom_);
         }
         break;
+        default: ;
         }
     }
     
-    if (!unit->path_get()->empty())
+    /*if (!unit->path_get()->empty())
     {
         hex_tile* precendent_tile = game->map_get()->tile_get(unit->position_get().q_get(), unit->position_get().r_get());
         for (auto tile : *(unit->path_get()))
@@ -118,18 +113,19 @@ void graphic_class::draw_unit(unit_class* unit, const game_class *game) const
                 static_cast<int>(tile->graphic_y() * hex_height_coefficient * zoom_ + y_shift_ * zoom_));
             precendent_tile = tile;
         }
-    }
+    }*/
 }
 
 void graphic_class::draw_food(const food_class* food, const game_class* game) const
 {
     SDL_Rect food_rect;
-    food_rect.w = static_cast<float>(0.2 * zoom_);
-    food_rect.h = static_cast<float>(0.2 * zoom_);
+    food_rect.w = static_cast<int>(0.2 * zoom_);
+    food_rect.h = static_cast<int>(0.2 * zoom_);
     SDL_SetRenderDrawColor(render_, GREEN);
     const hex_tile* tile = game->map_get()->tile_get(food->q_get(), food->r_get());
-    food_rect.x = (tile->graphic_x()) * zoom_ - food_rect.w / 2 + x_shift_ * zoom_;
-    food_rect.y = (tile->graphic_y() * hex_height_coefficient) * zoom_ - food_rect.h / 2 + y_shift_ * zoom_;
+    food_rect.x = static_cast<int>(tile->graphic_x()) * zoom_ - food_rect.w / 2 + x_shift_ * zoom_;
+    food_rect.y =
+        static_cast<int>(tile->graphic_y() * hex_height_coefficient) * zoom_ - food_rect.h / 2 + y_shift_ * zoom_;
     SDL_RenderFillRect(render_, &food_rect);
     
 }
@@ -137,16 +133,16 @@ void graphic_class::draw_food(const food_class* food, const game_class* game) co
 void graphic_class::draw_base(const base_class* base, const game_class* game) const
 {
     SDL_Rect life_rect;
-    life_rect.h = static_cast<float>(0.1 * zoom_);
+    life_rect.h = static_cast<int>(0.1 * zoom_);
     SDL_Rect base_rect;
-    base_rect.w = static_cast<float>(zoom_);
-    base_rect.h = static_cast<float>(zoom_);
+    base_rect.w = static_cast<int>(zoom_);
+    base_rect.h = static_cast<int>(zoom_);
     SDL_SetRenderDrawColor(render_, BLACK);
     constexpr int bar_width = static_cast<int>(0.01 * base_hp);
     const hex_tile* tile = game->map_get()->tile_get(base->q_get(), base->r_get());
-    base_rect.x = static_cast<float>(tile->graphic_x() * zoom_ - base_rect.w / 2 + x_shift_ * zoom_);
+    base_rect.x = static_cast<int>(tile->graphic_x() * zoom_ - base_rect.w / 2 + x_shift_ * zoom_);
     base_rect.y =
-        static_cast<float>(tile->graphic_y() * hex_height_coefficient * zoom_ - base_rect.h / 2 + y_shift_ * zoom_);
+        static_cast<int>(tile->graphic_y() * hex_height_coefficient * zoom_ - base_rect.h / 2 + y_shift_ * zoom_);
     if (base->player_id_get() == 0)
         SDL_SetRenderDrawColor(render_, DARK_BLUE);
     else
@@ -155,11 +151,11 @@ void graphic_class::draw_base(const base_class* base, const game_class* game) co
     SDL_RenderFillRect(render_, &base_rect);
 
     life_rect.x = base_rect.x;
-    life_rect.y = base_rect.y + 1.5f * static_cast<float>(zoom_);
-    life_rect.w = static_cast<float>(bar_width * zoom_);
+    life_rect.y = base_rect.y + static_cast<int> (1.5f * static_cast<float>(zoom_));
+    life_rect.w = bar_width * zoom_;
     SDL_RenderDrawRect(render_, &life_rect);
 
-    life_rect.w = static_cast<float>(0.01 * base->hp_get() * zoom_);
+    life_rect.w = static_cast<int>(0.01 * base->hp_get() * zoom_);
     SDL_RenderFillRect(render_, &life_rect);
 }
 
@@ -311,15 +307,15 @@ void graphic_class::print_screen(const game_class* game, const vector<object_abs
                 BOOST_LOG_TRIVIAL(error) << "printing" ;
             }
         }
-        print_right(window_w, static_cast<float>(2 + i * 20), arr_info, text_color);
+        print_right(window_w, 2 + i * 20, arr_info, text_color);
         i++;
         if (sprintf_s(arr_info, "%d %d", obj->q_get(), obj->r_get()) == -1)
         {
             BOOST_LOG_TRIVIAL(error) << "printing";
         }
-        print_right(window_w, static_cast<float>(2 + i * 20), arr_info, text_color);
+        print_right(window_w, 2 + i * 20, arr_info, text_color);
         i++;
-        print_right(window_w, static_cast<float>(2 + i * 20), path.c_str(), text_color);
+        print_right(window_w, 2 + i * 20, path.c_str(), text_color);
         i += 2;
     }
 }
@@ -347,7 +343,7 @@ graphic_class::graphic_class(const std::string& graphic_folder, const std::strin
     font_ = TTF_OpenFont(font.c_str(), 20);
     if (font_ == nullptr)
     {
-        BOOST_LOG_TRIVIAL(error) << "Canno't open font file " << font;
+        BOOST_LOG_TRIVIAL(error) << "can't open font file " << font;
     }
 
     const std::string hex_p = graphic_folder + "/hex_p.png";
@@ -356,11 +352,11 @@ graphic_class::graphic_class(const std::string& graphic_folder, const std::strin
     SDL_Surface* hex_blocked_surface = IMG_Load(hex_b.c_str());
     if (!hex_passable_surface)
     {
-        BOOST_LOG_TRIVIAL(error) << "Error opening " << hex_p << " file ";
+        BOOST_LOG_TRIVIAL(error) << "can't open " << hex_p << " file ";
     }
     if (!hex_blocked_surface)
     {
-        BOOST_LOG_TRIVIAL(error) << "Error opening " << hex_b << " file ";
+        BOOST_LOG_TRIVIAL(error) << "can't open " << hex_b << " file ";
     }
     hex_passable_texture_ = SDL_CreateTextureFromSurface(render_, hex_passable_surface);
     hex_blocked_texture_ = SDL_CreateTextureFromSurface(render_, hex_blocked_surface);
@@ -386,7 +382,6 @@ graphic_class::~graphic_class()
 
 bool graphic_class::update(const game_class* game, options_class* settings)
 {
-    bool quit = false;
     vector<object_abstract_class*> pointed_objects;
 
     SDL_RenderClear(render_);
@@ -473,7 +468,7 @@ bool graphic_class::update(const game_class* game, options_class* settings)
      * Gerer la souris
      * 
      */
-    quit = event_handle(game, settings);
+    const bool quit = event_handle(game, settings);
     return quit;
 }
 

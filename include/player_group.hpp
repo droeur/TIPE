@@ -1,7 +1,7 @@
 #pragma once
 #include "game_class.hpp"
 #include "player_class.hpp"
-#include "dbscan.hpp"
+#include "db_scan.hpp"
 
 
 class squad_class

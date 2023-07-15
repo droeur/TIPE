@@ -63,8 +63,8 @@ public:
 
     [[nodiscard]] bool passable() const;
 
-    [[nodiscard]] float distance(const hex_tile& a) const;
-    float distance(const hex_tile* a) const;
+    [[nodiscard]] double distance(const hex_tile& a) const;
+    double distance(const hex_tile* a) const;
 
     // coordinates cube
     [[nodiscard]] int q() const;
@@ -104,7 +104,7 @@ class map_class
 public:
     explicit map_class(const std::string& file_name);
 
-    std::vector<hex_tile*> path_a_star(hex_tile* start, hex_tile* end) const;
+    std::vector<hex_tile*> path_a_star(hex_tile* start, const hex_tile* end) const;
 
     static bool in_map(int q, int r, const map_class* map);
     [[nodiscard]] hex_tile* tile_get(int q, int r) const;
@@ -112,7 +112,7 @@ public:
     void row_add(std::vector<hex_tile*>* row) const;
 
     [[nodiscard]] std::vector<std::vector<hex_tile*>*>* tiles_map_get() const;
-    hex_tile* neighbor(int q, int r, int dir) const;
+    [[nodiscard]] hex_tile* neighbor(int q, int r, int dir) const;
 
     [[nodiscard]] bool passable(int q, int r) const;
 

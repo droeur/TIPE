@@ -3,7 +3,6 @@
 #include <algorithm>
 #include <cassert>
 #include <fstream>
-#include <initializer_list>
 #include <boost/log/trivial.hpp>
 #include "hex_map.hpp"
 
@@ -45,12 +44,12 @@ bool hex_tile::passable() const
     return passable_;
 }
 
-float hex_tile::distance(const hex_tile& a) const
+double hex_tile::distance(const hex_tile& a) const
 {
     return sqrt(pow(this->graphic_x() - a.graphic_x(), 2) + pow(this->graphic_y() - a.graphic_y(), 2));
 }
 
-float hex_tile::distance(const hex_tile* a) const
+double hex_tile::distance(const hex_tile* a) const
 {
     return sqrt(pow(this->graphic_x() - a->graphic_x(), 2) + pow(this->graphic_y() - a->graphic_y(), 2));
 }
@@ -115,7 +114,7 @@ bool hex_tile::is_valid() const
     return this->passable_;
 }
 
-//--------------------------map_class--------------------------\\
+
 
 map_class::map_class(const std::string& file_name)
 {
@@ -143,11 +142,11 @@ map_class::map_class(const std::string& file_name)
     size_y_ = r;
 }
 
-std::vector<hex_tile*> map_class::path_a_star(hex_tile* start, hex_tile* end) const 
+std::vector<hex_tile*> map_class::path_a_star(hex_tile* start, const hex_tile* end) const
 {
     constexpr int a_weight = 5;
-    constexpr int profondeur = 20;
-    bool** list_closed = new bool*[size_y_];
+    constexpr float depth = 200.0f;
+    const auto list_closed = new bool*[size_y_];
     for (int i = 0; i < size_y_; i++)
     {
         list_closed[i] = new bool[size_x_];
@@ -155,7 +154,7 @@ std::vector<hex_tile*> map_class::path_a_star(hex_tile* start, hex_tile* end) co
     vector<hex_tile*> list_open;
     hex_tile* current_node = start;
     current_node->cost_g = 0;
-    current_node->cost_h = current_node->distance(end) * a_weight;
+    current_node->cost_h = static_cast<float>(current_node->distance(end)) * a_weight;
     current_node->cost_f = current_node->cost_g + current_node->cost_h;
     list_open.push_back(current_node);
     make_heap(list_open.begin(), list_open.end(), compare());
@@ -166,12 +165,12 @@ std::vector<hex_tile*> map_class::path_a_star(hex_tile* start, hex_tile* end) co
         current_node = list_open.front();
         list_open.erase(list_open.begin());
         list_closed[current_node->index_y()][current_node->index_x()] = false;
-        int cost_g = current_node->cost_g + 1;
+        const float cost_g = current_node->cost_g + 1.0f;
         if (!list_closed[end->index_y()][end->index_x()])
         {
             break;
         }
-        if (cost_g > profondeur)
+        if (cost_g > depth)
         {
             break;
         }
@@ -190,10 +189,10 @@ std::vector<hex_tile*> map_class::path_a_star(hex_tile* start, hex_tile* end) co
             {
                 continue;
             }
-            if (!(find(list_open.begin(), list_open.end(), children) != list_open.end()))
+            if (find(list_open.begin(), list_open.end(), children) == list_open.end())
             {
                 children->cost_g = cost_g;
-                children->cost_h = children->distance(end) * a_weight;
+                children->cost_h = static_cast<float>(children->distance(end)) * a_weight;
                 children->cost_f = children->cost_g + children->cost_h;
                 list_open.push_back(children);
                 push_heap(list_open.begin(), list_open.end(), compare());
@@ -208,7 +207,6 @@ std::vector<hex_tile*> map_class::path_a_star(hex_tile* start, hex_tile* end) co
             }
         }
     }
-    cout << index << endl;
     vector<hex_tile*> path;
     if (!list_closed[current_node->index_y()][current_node->index_x()])
     {

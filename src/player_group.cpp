@@ -34,7 +34,7 @@ void player_group::squads_update(const vector<unit_class*> &unit_list)
             point p{u,u->q_get(), u->r_get(), -1};
             point_list.push_back(p);
         }
-        dbscan db(min_pts_, characteristic_size_, point_list);
+        db_scan db(min_pts_, characteristic_size_, point_list);
         db.run();
         point_list = db.m_points;
         int size = 0;
