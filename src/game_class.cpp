@@ -27,7 +27,7 @@ void game_class::play() const
 {
     for (const auto p : players_)
     {
-        p->moves_get(state_);
+        p->moves_get(this, state_);
     }
     state_->moves_make(map_);
 }

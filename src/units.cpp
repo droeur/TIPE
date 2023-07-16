@@ -54,6 +54,10 @@ void unit_class::actual_action_remove()
     action_queue_.pop();
 }
 
+/**
+ * \brief Returns the actual action
+ * \return Actual action or nullptr if empty
+ */
 unit_action* unit_class::actual_action_get() const
 {
     if (action_queue_.empty())
@@ -63,40 +67,46 @@ unit_action* unit_class::actual_action_get() const
 
 void unit_class::move(const int q, const int r, const bool queuing)
 {
-    const position p(q, r);
-    const auto action = new unit_action(this, unit_action_id::move, p);
-    if (queuing)
+    if (t_m_ == 0)
     {
-        action_queue_.push(action);
-    }
-    else
-    {
-        while (!action_queue_.empty())
+        const position p(q, r);
+        const auto action = new unit_action(this, unit_action_id::move, p);
+        if (queuing)
         {
-            const unit_action* temp_action = action_queue_.front();
-            delete temp_action;
-            action_queue_.pop();
+            action_queue_.push(action);
         }
-        action_queue_.push(action);
+        else
+        {
+            while (!action_queue_.empty())
+            {
+                const unit_action* temp_action = action_queue_.front();
+                delete temp_action;
+                action_queue_.pop();
+            }
+            action_queue_.push(action);
+        }
     }
 }
 
 void unit_class::attack(object_abstract_class* b, const bool queuing)
 {
-    const auto action = new unit_action(this, unit_action_id::attack, b);
-    if (queuing)
+    if (t_a_ == 0)
     {
-        action_queue_.push(action);
-    }
-    else
-    {
-        while (!action_queue_.empty())
+        const auto action = new unit_action(this, unit_action_id::attack, b);
+        if (queuing)
         {
-            const unit_action* temp_action = action_queue_.front();
-            delete temp_action;
-            action_queue_.pop();
+            action_queue_.push(action);
         }
-        action_queue_.push(action);
+        else
+        {
+            while (!action_queue_.empty())
+            {
+                const unit_action* temp_action = action_queue_.front();
+                delete temp_action;
+                action_queue_.pop();
+            }
+            action_queue_.push(action);
+        }
     }
 }
 
@@ -121,40 +131,46 @@ void unit_class::wait(const time_t t, const bool queuing)
 
 void unit_class::follow(object_abstract_class* b, const bool queuing)
 {
-    const auto action = new unit_action(this, unit_action_id::follow, b);
-    if (queuing)
+    if (t_m_ == 0)
     {
-        action_queue_.push(action);
-    }
-    else
-    {
-        while (!action_queue_.empty())
+        const auto action = new unit_action(this, unit_action_id::follow, b);
+        if (queuing)
         {
-            const unit_action* temp_action = action_queue_.front();
-            delete temp_action;
-            action_queue_.pop();
+            action_queue_.push(action);
         }
-        action_queue_.push(action);
+        else
+        {
+            while (!action_queue_.empty())
+            {
+                const unit_action* temp_action = action_queue_.front();
+                delete temp_action;
+                action_queue_.pop();
+            }
+            action_queue_.push(action);
+        }
     }
 }
 
 void unit_class::pick(food_class* food, const bool queuing)
 {
-    const auto action = new unit_action(this, unit_action_id::pick, food);
-    if (queuing)
+    if (t_m_ == 0)
     {
-        action_queue_.push(action);
-    }
-    else
-    {
-        while (!action_queue_.empty())
+        const auto action = new unit_action(this, unit_action_id::pick, food);
+        if (queuing)
         {
-            const unit_action* temp_action = action_queue_.front();
-            delete temp_action;
-            action_queue_.pop();
+            action_queue_.push(action);
         }
-        action_queue_.push(action);
-    }
+        else
+        {
+            while (!action_queue_.empty())
+            {
+                const unit_action* temp_action = action_queue_.front();
+                delete temp_action;
+                action_queue_.pop();
+            }
+            action_queue_.push(action);
+        }
+    }   
 }
 
 void unit_class::update_cooldown()

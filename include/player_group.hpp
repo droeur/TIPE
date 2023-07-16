@@ -1,5 +1,4 @@
 #pragma once
-#include "game_class.hpp"
 #include "player_class.hpp"
 #include "db_scan.hpp"
 
@@ -25,6 +24,8 @@ public:
     }
 
     void unit_append(unit_class* unit);
+    void moves_generate(const map_class* map) const;
+    [[nodiscard]] unit_class& leader_get() const;
 };
 
 class player_group final : public virtual_player_class
@@ -35,6 +36,8 @@ class player_group final : public virtual_player_class
     int min_pts_ = 3;
     int last_squad_check_ = 0;
     int last_squad_check_delta_ = 24;
+    int last_squad_move_check_ = 0;
+    int last_squad_move_check_delta_ = 24;
 
 public:
     explicit player_group(const player_id id)
@@ -42,5 +45,5 @@ public:
     {
     }
 
-    void moves_get(state_class* s) override;
+    void moves_get(const game_class* game, state_class* state) override;
 };
