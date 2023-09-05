@@ -7,6 +7,7 @@
 #include "player_class.hpp"
 #include "player_random.hpp"
 #include "player_group.hpp"
+#include "player_mcts.hpp"
 
 using namespace std;
 
@@ -47,6 +48,8 @@ void game_players_init(state_class* s, game_class* g, const std::string& paramet
                         player_temp = new player_rand(stoi(tokens[2]));
                     else if (tokens[1] == "group")
                         player_temp = new player_group(stoi(tokens[2]));
+                    else if (tokens[1] == "mcts")
+                        player_temp = new player_mcts(stoi(tokens[2]));
                     else
                     {
                         BOOST_LOG_TRIVIAL(error)

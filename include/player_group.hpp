@@ -15,16 +15,15 @@ class squad_class
 public:
     explicit squad_class(unit_class* leader)
         : leader_(leader)
-          , hit_points_(leader->hp_get())
-          , damage_per_frame_(leader->damage_per_frame_get())
-          , max_speed_(leader->max_speed_get())
-          , location_(leader->position_get())
-
+        , hit_points_(leader->hp_get())
+        , damage_per_frame_(leader->damage_per_frame_get())
+        , max_speed_(leader->max_speed_get())
+        , location_(leader->position_get())
     {
     }
 
     void unit_append(unit_class* unit);
-    void moves_generate(const map_class* map) const;
+    void moves_generate(const map_class* map, const state_class* state) const;
     [[nodiscard]] unit_class& leader_get() const;
 };
 
@@ -35,13 +34,13 @@ class player_group final : public virtual_player_class
     int characteristic_size_ = 5;
     int min_pts_ = 3;
     int last_squad_check_ = 0;
-    int last_squad_check_delta_ = 24;
+    int last_squad_check_delta_ = 1;
     int last_squad_move_check_ = 0;
-    int last_squad_move_check_delta_ = 24;
+    int last_squad_move_check_delta_ = 1;
 
 public:
     explicit player_group(const player_id id)
-        : virtual_player_class(id)
+        : virtual_player_class(id, player_type::group)
     {
     }
 

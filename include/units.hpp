@@ -15,7 +15,7 @@ enum
 };
 
 enum class unit_type { normal };
-enum class unit_action_id { error, move, attack, wait, pick, follow };
+enum class unit_action_id { error, move, attack, wait, pick, follow, nothing };
 
 class unit_class;
 class unit_action;
@@ -35,6 +35,7 @@ public:
     unit_action(unit_class* u, unit_action_id type, object_abstract_class* target);
     unit_action(unit_class* u, unit_action_id type, position target);
     unit_action(unit_class* u, unit_action_id type, time_t time);
+    unit_action(unit_class* u, unit_action_id type);
 
     [[nodiscard]] unit_class* unit_get() const;
     [[nodiscard]] unit_action_id action_type_get() const;

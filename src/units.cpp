@@ -24,6 +24,12 @@ unit_action::unit_action(unit_class* u, const unit_action_id type, const time_t 
 {
 }
 
+unit_action::unit_action(unit_class* u, const unit_action_id type)
+    : u_(u)
+    , action_type_(type)
+{
+}
+
 unit_class* unit_action::unit_get() const
 {
     return u_;

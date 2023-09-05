@@ -34,6 +34,7 @@ public:
     [[nodiscard]] frame frame_get() const;
 
     [[nodiscard]] std::vector<std::vector<unit_action>> moves_generate(player_id id) const;
+    [[nodiscard]] std::vector<unit_action> moves_generate(player_id id, unit_class* unit) const;
     void moves_make(const map_class* map);
 
     void unit_list_add(const std::vector<unit_class*>& u_list);
@@ -51,4 +52,6 @@ public:
 
     void fps_set(double f);
     [[nodiscard]] double fps_get() const;
+
+    int evaluate(player_id player);
 };

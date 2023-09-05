@@ -71,6 +71,56 @@ std::vector<base_class*>* state_class::base_list_get()
     return &base_list_;
 }
 
+vector<unit_action> state_class::moves_generate(const player_id id, unit_class *unit) const
+{
+    vector<unit_action> this_unit_action;
+
+    // we switch between different possibles actions
+    if (unit->can_attack())
+    {
+        const player_id enemy_player = game_class::enemy_player_get(id);
+        for (const auto enemy_u : u_list_[enemy_player])
+        {
+            if (enemy_u->hp_get() > 0)
+            {
+                unit_action action{unit, unit_action_id::attack, enemy_u};
+                this_unit_action.push_back(action);
+            }
+        }
+        for (const auto base : base_list_)
+        {
+            if (base->hp_get() > 0 && base->player_get() == enemy_player)
+            {
+                unit_action action{unit, unit_action_id::attack, base};
+                this_unit_action.push_back(action);
+            }
+        }
+    }
+    if (unit->can_move())
+    {
+        if (!unit->carry_food_get())
+        {
+            for (const auto food : food_list_)
+            {
+                unit_action action{unit, unit_action_id::pick, food};
+                this_unit_action.push_back(action);
+            }
+        }
+        else
+        {
+            for (const auto base : base_list_)
+            {
+                if (base->hp_get() > 0 && base->player_get() == id)
+                {
+                    unit_action action{unit, unit_action_id::move, base->position_get()};
+                    this_unit_action.push_back(action);
+                }
+            }
+        }
+    }
+    return this_unit_action;
+}
+
 vector<vector<unit_action>> state_class::moves_generate(const player_id id) const
 {
     vector<vector<unit_action>> possibles_actions;
@@ -79,52 +129,7 @@ vector<vector<unit_action>> state_class::moves_generate(const player_id id) cons
     possibles_actions.clear();
     for (const auto u : u_list_[id])
     {
-        vector<unit_action> this_unit_action;
-
-        // we switch between different possibles actions
-        if (u->can_attack())
-        {
-            const player_id enemy_player = game_class::enemy_player_get(id);
-            for (const auto enemy_u : u_list_[enemy_player])
-            {
-                if (enemy_u->hp_get() > 0)
-                {
-                    unit_action action{u, unit_action_id::attack, enemy_u};
-                    this_unit_action.push_back(action);
-                }
-            }
-            for (const auto base : base_list_)
-            {
-                if (base->hp_get() > 0 && base->player_get() == enemy_player)
-                {
-                    unit_action action{u, unit_action_id::attack, base};
-                    this_unit_action.push_back(action);
-                }
-            }
-        }
-        if (u->can_move())
-        {
-            if (!u->carry_food_get())
-            {
-                for (const auto food : food_list_)
-                {
-                    unit_action action{u, unit_action_id::pick, food};
-                    this_unit_action.push_back(action);
-                }
-            }
-            else
-            {
-                for (const auto base : base_list_)
-                {
-                    if (base->hp_get() > 0 && base->player_get() == id)
-                    {
-                        unit_action action{u, unit_action_id::move, base->position_get()};
-                        this_unit_action.push_back(action);
-                    }
-                }
-            }
-        }
-        possibles_actions.push_back(this_unit_action);
+        possibles_actions.push_back(moves_generate(id, u));
     }
     return possibles_actions;
 }
@@ -155,6 +160,13 @@ void state_class::fps_set(const double f)
 double state_class::fps_get() const
 {
     return fps_;
+}
+
+
+//TODO
+int state_class::evaluate(const player_id player)
+{
+    return 0;
 }
 
 void state_class::move_execute(unit_class* u, const position& p, const map_class* map)

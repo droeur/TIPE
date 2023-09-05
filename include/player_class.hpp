@@ -7,14 +7,18 @@ class virtual_player_class;
 #include <iostream>
 #include <boost/log/trivial.hpp>
 
+enum class player_type{error, random, mcts, group};
+
 class virtual_player_class
 {
 protected:
     player_id player_id_;
+    player_type player_type_;
 
 public:
-    explicit virtual_player_class(const player_id id)
+    explicit virtual_player_class(const player_id id, const player_type type)
         : player_id_(id)
+        , player_type_(type)
     {
     }
 
@@ -25,9 +29,7 @@ public:
         BOOST_LOG_TRIVIAL(error) << "virtual player called";
     }
 
-    [[nodiscard]] player_id player_id_get() const
-    {
-        return player_id_;
-    }
+    [[nodiscard]] player_id player_id_get()     const   {   return player_id_;      }
+    [[nodiscard]] player_type player_type_get() const   {   return player_type_;    }
     
 };

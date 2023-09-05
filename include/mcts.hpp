@@ -1,75 +1,50 @@
 #pragma once
 
+#include "units.hpp"
+#include "state_class.hpp"
 
-template <GameState State>
-typename State::Move compute_move(const State root_state, const ComputeOptions options)
+class mcts_node
 {
-    using namespace std;
+    std::vector<mcts_node> children_;
+    mcts_node* parent_ = nullptr;
+    int visits_ = 0;
+    int wins_ = 0;
+    int uct_ = 0;
 
-    // Will support more players later.
-    minimum_core_assert(root_state.player_to_move == 1 || root_state.player_to_move == 2);
+    player_id player_ = -1;
 
-    auto moves = root_state.get_moves();
-    minimum_core_assert(moves.size() > 0);
-    if (moves.size() == 1)
+public:
+    mcts_node() = default;
+
+    mcts_node(mcts_node* parent, const player_id player)
+        : parent_(parent)
+        , player_(player)
     {
-        return moves[0];
     }
 
-    double start_time = core::wall_time();
+    [[nodiscard]]   int visits_get()    const   {   return visits_; }
+                    void visits_increment()     {   visits_++; }
 
-    // Start all jobs to compute trees.
-    vector<future<unique_ptr<Node<State>>>> root_futures;
-    ComputeOptions job_options = options;
-    job_options.verbose = false;
-    for (int t = 0; t < options.number_of_threads; ++t)
+    [[nodiscard]]   int player_get()    const   {   return player_; }
+
+
+
+};
+
+class mcts
+{
+    mcts_node root_node_;
+
+    int traversals_max_;
+    int traversals_;
+
+    void traverse(mcts_node& node, state_class& state);
+
+public:
+    mcts(const int traversals_max)
+        : traversals_max_(traversals_max)
     {
-        auto func = [t, &root_state, &job_options]() -> std::unique_ptr<Node<State>> {
-            return compute_tree(root_state, job_options, 1012411 * t + 12515);
-        };
-
-        root_futures.push_back(std::async(std::launch::async, func));
     }
 
-    // Collect the results.
-    vector<unique_ptr<Node<State>>> roots;
-    for (int t = 0; t < options.number_of_threads; ++t)
-    {
-        roots.push_back(std::move(root_futures[t].get()));
-    }
-
-    // Merge the children of all root nodes.
-    map<typename State::Move, int> visits;
-    map<typename State::Move, double> wins;
-    long long games_played = 0;
-    for (int t = 0; t < options.number_of_threads; ++t)
-    {
-        auto root = roots[t].get();
-        games_played += root->visits;
-        for (auto child = root->children.cbegin(); child != root->children.cend(); ++child)
-        {
-            visits[(*child)->move] += (*child)->visits;
-            wins[(*child)->move] += (*child)->wins;
-        }
-    }
-
-    // Find the node with the most visits.
-    double best_score = -1;
-    typename State::Move best_move = typename State::Move();
-    for (auto itr : visits)
-    {
-        auto move = itr.first;
-        double v = itr.second;
-        double w = wins[move];
-        // Expected success rate assuming a uniform prior (Beta(1, 1)).
-        // https://en.wikipedia.org/wiki/Beta_distribution
-        double expected_success_rate = (w + 1) / (v + 2);
-        if (expected_success_rate > best_score)
-        {
-            best_move = move;
-            best_score = expected_success_rate;
-        }
-    }
-
-    return best_move;
-}
+    unit_action best_action_get(unit_class* unit, const state_class& initial_state);
+};

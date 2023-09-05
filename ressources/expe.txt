@@ -1,6 +1,6 @@
 # player type id number_of_unit number_of_base start_q start_r
-player group 0 100 1 0 14
-player rand 1 100 1 27 51
+player mcts 0 10 1 0 14
+player rand 1 10 1 27 51
 
 #player rand 0 100 1 0 14
 #player rand 1 100 1 27 51
