@@ -1,10 +1,12 @@
 #pragma once
 #include "player_class.hpp"
 #include "db_scan.hpp"
+#include "mcts.hpp"
 
 
 class squad_class
 {
+    mcts *mcts_;
     unit_class* leader_;
     std::vector<unit_class*> unit_list_;
     int hit_points_;
@@ -20,6 +22,7 @@ public:
         , max_speed_(leader->max_speed_get())
         , location_(leader->position_get())
     {
+        mcts_ = new mcts(10);
     }
 
     void unit_append(unit_class* unit);

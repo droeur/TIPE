@@ -10,7 +10,7 @@ void player_mcts::moves_get(const game_class* game, state_class* state)
     {
         if (const auto unit = state->unit_list_get()[player_id_][unit_index]; unit->can_attack() || unit->can_move())
         {
-            switch (unit_action action = mcts::best_action_get(unit, state); action.action_type_get())
+            switch (unit_action action = mcts_->best_action_get(unit, *state); action.action_type_get())
             {
             case unit_action_id::attack:
                 unit->attack(action.target_unit_get());

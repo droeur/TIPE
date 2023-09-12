@@ -80,7 +80,7 @@ void squad_class::unit_append(unit_class* unit)
 
 void squad_class::moves_generate(const map_class *map, const state_class *state) const
 {
-    switch (unit_action action = mcts::best_action_get(leader_, state); action.action_type_get())
+    switch (unit_action action = mcts_->best_action_get(leader_, *state); action.action_type_get())
     {
         case unit_action_id::follow: {
             leader_->follow(action.target_unit_get());
