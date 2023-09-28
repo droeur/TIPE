@@ -7,17 +7,40 @@
 
 using namespace std;
 
-state_class::~state_class()
+state_class::state_class(const state_class& state) 
 {
-    for (const auto f:food_list_)
+    for (auto f : state.food_list_)
+    {
+        food_list_.push_back(new food_class(*f));
+    }
+    for (auto b : state.base_list_)
+    {
+        base_list_.push_back(new base_class(*b));
+    }
+    int player_index = 0;
+    for (auto u_list : state.list_of_u_list_)
+    {
+        vector<unit_class*> local_list;
+        for (auto u : u_list)
+        {
+            local_list.push_back(new unit_class(*u));
+        }
+        list_of_u_list_.push_back(local_list);
+        player_index++;
+    }
+}
+
+state_class::~state_class() 
+{
+    for (const auto f : food_list_)
     {
         delete f;
     }
-    for (const auto b:base_list_)
+    for (const auto b : base_list_)
     {
         delete b;
     }
-    for (const auto &u_l:u_list_)
+    for (const auto& u_l : list_of_u_list_)
     {
         for (const auto u : u_l)
         {
@@ -38,17 +61,17 @@ frame state_class::frame_get() const
 
 void state_class::unit_list_add(const vector<unit_class*>& u_list)
 {
-    this->u_list_.push_back(u_list);
+    this->list_of_u_list_.push_back(u_list);
 }
 
 std::vector<std::vector<unit_class*>> state_class::unit_list_get()
 {
-    return this->u_list_;
+    return this->list_of_u_list_;
 }
 
 void state_class::unit_append(unit_class* u, const player_id player)
 {
-    return this->u_list_[player].push_back(u);
+    return this->list_of_u_list_[player].push_back(u);
 }
 
 void state_class::food_append(food_class* f)
@@ -79,7 +102,7 @@ vector<unit_action> state_class::moves_generate(const player_id id, unit_class *
     if (unit->can_attack())
     {
         const player_id enemy_player = game_class::enemy_player_get(id);
-        for (const auto enemy_u : u_list_[enemy_player])
+        for (const auto enemy_u : list_of_u_list_[enemy_player])
         {
             if (enemy_u->hp_get() > 0)
             {
@@ -127,7 +150,7 @@ vector<vector<unit_action>> state_class::moves_generate(const player_id id) cons
     vector v{unit_action_id::error, unit_action_id::move, unit_action_id::attack, unit_action_id::wait};
     
     possibles_actions.clear();
-    for (const auto u : u_list_[id])
+    for (const auto u : list_of_u_list_[id])
     {
         possibles_actions.push_back(moves_generate(id, u));
     }
@@ -166,7 +189,21 @@ double state_class::fps_get() const
 //TODO
 int state_class::evaluate(const player_id player)
 {
-    return 0;
+    player_id enemy = game_class::enemy_player_get(player);
+    int score = 0;
+    for (auto base : base_list_)
+    {
+        if (base->player_get() == player)
+            score += base->hp_get();
+        else
+            score -= base->hp_get();
+    }
+
+    for (auto unit : list_of_u_list_[player])
+        score += unit->hp_get();
+    for (auto unit : list_of_u_list_[enemy])
+        score -= unit->hp_get();
+    return score;
 }
 
 void state_class::move_execute(unit_class* u, const position& p, const map_class* map)
@@ -261,7 +298,7 @@ void state_class::moves_make(const map_class *map)
 {
     for (int player = 0; player < number_of_players; player++)
     {
-        for (const auto unit : u_list_[player])
+        for (const auto unit : list_of_u_list_[player])
         {
             if (unit_action *action = unit->actual_action_get(); action != nullptr){
                 action_execute(action,unit, map);
@@ -270,10 +307,10 @@ void state_class::moves_make(const map_class *map)
     }
     for (int player = 0; player < number_of_players; player++)
     {
-        vector<unit_class*>::size_type size = u_list_[player].size();
+        vector<unit_class*>::size_type size = list_of_u_list_[player].size();
         for (vector<unit_class*>::size_type index = 0; index < size; ++index)
         {
-            unit_class* u = u_list_[player][index];
+            unit_class* u = list_of_u_list_[player][index];
             u->update_cooldown();
             if (u->temporary_hp_get() == u->hp_get())
                 u->temporary_position_apply();
@@ -288,7 +325,7 @@ void state_class::moves_make(const map_class *map)
                         const int q = base->q_get();
                         const int r = base->r_get();
                         auto u_new = new unit_class{q, r, u->player_get(), 10};
-                        u_list_[player].push_back(u_new);
+                        list_of_u_list_[player].push_back(u_new);
                         ++size;
                     }
                 }

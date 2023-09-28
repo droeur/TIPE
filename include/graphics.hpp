@@ -41,6 +41,8 @@ class graphic_class
     int x_mouse_ = 0;
     int y_mouse_ = 0;
     TTF_Font* font_ = nullptr;
+    bool path_debug_ = false;
+    bool target_debug_ = false;
 
 public:
     graphic_class(const std::string& graphic_folder, const std::string& font);

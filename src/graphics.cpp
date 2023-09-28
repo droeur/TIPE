@@ -80,7 +80,7 @@ void graphic_class::draw_unit(unit_class* unit, const game_class *game) const
     SDL_RenderFillRect(render_, &life_rect);
 
     const unit_action* action = unit->actual_action_get();
-    if (action != nullptr)
+    if (target_debug_ && action != nullptr)
     {
         switch (action->action_type_get())
         {
@@ -101,7 +101,7 @@ void graphic_class::draw_unit(unit_class* unit, const game_class *game) const
         }
     }
     
-    /*if (!unit->path_get()->empty())
+    if (path_debug_ && !unit->path_get()->empty())
     {
         hex_tile* precendent_tile = game->map_get()->tile_get(unit->position_get().q_get(), unit->position_get().r_get());
         for (auto tile : *(unit->path_get()))
@@ -113,7 +113,7 @@ void graphic_class::draw_unit(unit_class* unit, const game_class *game) const
                 static_cast<int>(tile->graphic_y() * hex_height_coefficient * zoom_ + y_shift_ * zoom_));
             precendent_tile = tile;
         }
-    }*/
+    }
 }
 
 void graphic_class::draw_food(const food_class* food, const game_class* game) const
@@ -200,6 +200,14 @@ bool graphic_class::event_handle(const game_class* game, options_class* settings
             else if (e.key.keysym.sym == SDLK_SPACE)
             {
                 settings->pause_toggle();
+            }
+            else if (e.key.keysym.sym == SDLK_p)
+            {
+                path_debug_ = !path_debug_;
+            }
+            else if (e.key.keysym.sym == SDLK_t)
+            {
+                target_debug_ = !target_debug_;
             }
         }
         if (e.type == SDL_MOUSEMOTION)

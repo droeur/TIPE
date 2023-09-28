@@ -16,8 +16,9 @@ class state_class
     static void move_execute(unit_class* u, const position& p, const map_class* map);
     void attack_execute(unit_class* u, object_abstract_class* enemy_obj);
     void action_execute(unit_action* action, unit_class* unit, const map_class* map);
+    
     frame frame_ = 0;
-    std::vector<std::vector<unit_class*>> u_list_;
+    std::vector<std::vector<unit_class*>> list_of_u_list_;
     double fps_ = 0;
     std::vector<food_class*> food_list_;
     std::vector<base_class*> base_list_;
@@ -27,7 +28,7 @@ class state_class
 
 public:
     state_class() = default;
-
+    state_class(const state_class& state);
     ~state_class();
 
     void frame_increment();

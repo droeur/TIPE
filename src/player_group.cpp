@@ -9,6 +9,9 @@ using namespace std;
 
 void player_group::moves_get(const game_class* game, state_class* state)
 {
+    if (map_ != nullptr)
+        map_ = game->map_get();
+
     if (last_squad_check_ <= 0)
     {
         squads_update(state->unit_list_get()[player_id_]);
@@ -61,7 +64,7 @@ void player_group::squads_update(const vector<unit_class*>& unit_list)
             {
                 if (squad_list_[cluster_id - 1] == nullptr)
                 {
-                    const auto s = new squad_class(u);
+                    const auto s = new squad_class(u, map_);
                     squad_list_[cluster_id - 1] = s;
                 }
                 else
@@ -80,7 +83,8 @@ void squad_class::unit_append(unit_class* unit)
 
 void squad_class::moves_generate(const map_class *map, const state_class *state) const
 {
-    switch (unit_action action = mcts_->best_action_get(leader_, *state); action.action_type_get())
+    switch (unit_action action = mcts_->best_action_calculate(leader_, *state, leader_->player_get());
+            action.action_type_get())
     {
         case unit_action_id::follow: {
             leader_->follow(action.target_unit_get());

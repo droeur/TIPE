@@ -15,14 +15,14 @@ class squad_class
     position location_;
 
 public:
-    explicit squad_class(unit_class* leader)
+    explicit squad_class(unit_class* leader, map_class* map)
         : leader_(leader)
         , hit_points_(leader->hp_get())
         , damage_per_frame_(leader->damage_per_frame_get())
         , max_speed_(leader->max_speed_get())
         , location_(leader->position_get())
     {
-        mcts_ = new mcts(10);
+        mcts_ = new mcts(10, map);
     }
 
     void unit_append(unit_class* unit);
@@ -40,6 +40,7 @@ class player_group final : public virtual_player_class
     int last_squad_check_delta_ = 1;
     int last_squad_move_check_ = 0;
     int last_squad_move_check_delta_ = 1;
+    map_class *map_ = nullptr;
 
 public:
     explicit player_group(const player_id id)

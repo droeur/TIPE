@@ -62,6 +62,14 @@ public:
     {
     }
 
+    unit_class(const unit_class& u)
+        : object_abstract_class(u.q_get(), u.r_get(), hit_point_, player_, object_type::undefined)
+    {
+        *this = u;
+        std::queue<unit_action*> queue;
+        action_queue_ = queue;
+    }
+
     ~unit_class() override = default;
 
     // actions
