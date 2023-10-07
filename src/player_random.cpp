@@ -15,7 +15,10 @@ void player_rand::moves_get(const game_class* game, state_class* state)
             switch (const auto action_temp_chosen = new unit_action(possible_actions_vec[unit_index][r]); action_temp_chosen->action_type_get())
             {
             case unit_action_id::attack: 
-                state->unit_list_get()[player_id_][unit_index].attack(action_temp_chosen->target_unit_get());
+                state->unit_list_get()[player_id_][unit_index].attack(
+                    state->object_get( action_temp_chosen->target_type_get(), 
+                                            action_temp_chosen->target_player_get(),
+                                            action_temp_chosen->target_id_get()));
                 break;
             case unit_action_id::move:
                 state->unit_list_get()[player_id_][unit_index].move(action_temp_chosen->position_get().q_get(),
@@ -25,10 +28,14 @@ void player_rand::moves_get(const game_class* game, state_class* state)
                 state->unit_list_get()[player_id_][unit_index].wait(action_temp_chosen->time_get());
                 break;
             case unit_action_id::pick:
-                state->unit_list_get()[player_id_][unit_index].pick(dynamic_cast<food_class*>(action_temp_chosen->target_unit_get()));
+                state->unit_list_get()[player_id_][unit_index].pick(dynamic_cast<food_class&>(
+                    state->object_get(action_temp_chosen->target_type_get(), action_temp_chosen->target_player_get(),
+                                      action_temp_chosen->target_id_get())));
                 break;
             case unit_action_id::follow:
-                state->unit_list_get()[player_id_][unit_index].follow(action_temp_chosen->target_unit_get());
+                state->unit_list_get()[player_id_][unit_index].follow(
+                    state->object_get(action_temp_chosen->target_type_get(), action_temp_chosen->target_player_get(),
+                                      action_temp_chosen->target_id_get()));
                 break;
             case unit_action_id::error: BOOST_LOG_TRIVIAL(error) << "Unknown action";
             }

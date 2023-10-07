@@ -59,5 +59,5 @@ public:
     {
     }
 
-    unit_action best_action_calculate(unit_class& unit, const state_class& initial_state, player_id player);
+    std::vector<unit_action> best_action_calculate(state_class& initial_state, const player_id player);
 };

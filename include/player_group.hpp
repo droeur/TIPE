@@ -26,7 +26,7 @@ public:
     }
 
     void unit_append(unit_class* unit);
-    void moves_generate(const map_class* map, const state_class* state) const;
+    void moves_generate(const map_class* map, state_class* state) const;
     [[nodiscard]] unit_class& leader_get() const;
 };
 

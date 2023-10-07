@@ -17,10 +17,9 @@ void mcts::traverse(mcts_node& node, state_class& state)
     }
 }
 
-unit_action mcts::best_action_calculate(unit_class& unit, const state_class& initial_state, player_id player)
+vector<unit_action> mcts::best_action_calculate(state_class& initial_state, const player_id player)
 {
     const clock_t begin = clock();
-    const player_id id = unit.player_get();
 
     root_node_ = mcts_node(nullptr, player);
 
@@ -34,15 +33,24 @@ unit_action mcts::best_action_calculate(unit_class& unit, const state_class& ini
     }
     cout << traversals_ << endl;
 
-    const auto rand_gen = new std::mt19937{static_cast<unsigned>(time(nullptr)) * 5};
-    if (const std::vector<unit_action> possible_actions_vec = initial_state.moves_generate(id, unit);
-        !possible_actions_vec.empty())
+    //TODO
+    vector<unit_action> action_vec;
+    for (unit_class& u : initial_state.unit_list_get()[player])
     {
-        const std::vector<unit_action>::size_type r = (*rand_gen)() % possible_actions_vec.size();
-        return possible_actions_vec[r];
+        const auto rand_gen = new std::mt19937{static_cast<unsigned>(time(nullptr)) * 5};
+        if (const std::vector<unit_action> possible_actions_vec = initial_state.moves_generate(player, u);
+            !possible_actions_vec.empty())
+        {
+            const std::vector<unit_action>::size_type r = (*rand_gen)() % possible_actions_vec.size();
+            action_vec.push_back(possible_actions_vec[r]);
+        }
+        else
+        {
+            const unit_action action(&u, unit_action_id::nothing);
+            action_vec.push_back(action);
+        }
     }
-    const unit_action action(&unit, unit_action_id::nothing);
     const clock_t end = clock();
     results.time = end - begin;
-    return action;
+    return action_vec;
 }

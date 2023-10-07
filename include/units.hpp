@@ -27,19 +27,23 @@ class unit_action
 {
     const unit_class* u_;
     unit_action_id action_type_;
-    object_abstract_class* target_ = nullptr;
+    object_id target_id_ = -1;
+    object_type target_type_;
+    player_id target_player_ = -1;
     position location_;
     time_t time_ = 0;
 
 public:
-    unit_action(const unit_class* u, const unit_action_id type, object_abstract_class* target);
+    unit_action(const unit_class* u, const unit_action_id type, const object_abstract_class& target);
     unit_action(const unit_class* u, const unit_action_id type, position target);
-    unit_action(const unit_class* u, const unit_action_id type, const time_t time);
+    unit_action(const unit_class* u, const unit_action_id type, time_t time);
     unit_action(const unit_class* u, const unit_action_id type);
 
     [[nodiscard]] const unit_class* unit_get() const;
     [[nodiscard]] unit_action_id action_type_get() const;
-    [[nodiscard]] object_abstract_class* target_unit_get() const;
+    [[nodiscard]] object_id target_id_get() const;
+    [[nodiscard]] object_type target_type_get() const;
+    [[nodiscard]] player_id target_player_get() const;
     [[nodiscard]] time_t time_get() const;
     position& position_get();
 };
@@ -57,16 +61,16 @@ class unit_class final : public object_abstract_class
     int max_speed_ = 1;
 
 public:
-    unit_class(const int q, const int r, const player_id id, const int hp)
-        : object_abstract_class(q, r, hp, id, object_type::undefined)
+    unit_class(const int q, const int r, const player_id p_id, const int hp, const object_id obj_id)
+        : object_abstract_class(q, r, hp, p_id, object_type::unit, obj_id)
     {
     }
 
     unit_class(const unit_class& u)
-        : object_abstract_class(u.q_get(), u.r_get(), hit_point_, player_, object_type::undefined)
+        : object_abstract_class(u.q_get(), u.r_get(), u.hit_point_, u.player_, object_type::unit, u.id_)
     {
         *this = u;
-        std::queue<unit_action> queue;
+        const std::queue<unit_action> queue;
         action_queue_ = queue;
     }
 
@@ -77,17 +81,17 @@ public:
     [[nodiscard]] unit_action actual_action_get() const;
 
     void move(int q, int r, bool queuing = false);
-    void attack(object_abstract_class* b, bool queuing = false);
+    void attack(object_abstract_class& b, bool queuing = false);
     void wait(time_t t, bool queuing = false);
-    void follow(object_abstract_class* b, bool queuing = false);
-    void pick(food_class* food, bool queuing = false);
+    void follow(object_abstract_class& b, bool queuing = false);
+    void pick(const food_class& food, bool queuing = false);
 
     [[nodiscard]] bool can_move() const { return t_m_ == 0 && hit_point_ > 0; }
     [[nodiscard]] bool can_attack() const { return t_a_ == 0 && hit_point_ > 0; }
     [[nodiscard]] bool can_wait() const { return hit_point_ > 0; }
 
     void update_cooldown();
-    int pathfinding_cooldown_get() { return pathfinding_cooldown_; }
+    [[nodiscard]] int pathfinding_cooldown_get() const { return pathfinding_cooldown_; }
     void pathfinding_cooldown_reinitialize() { pathfinding_cooldown_ = 5; }
     void reinitialize_attack_cooldown(){t_a_ = ATTACK_COOLDOWN;}
     void reinitialize_move_cooldown(){t_m_ = MOVE_COOLDOWN;}

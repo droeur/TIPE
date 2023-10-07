@@ -81,17 +81,18 @@ void squad_class::unit_append(unit_class* unit)
     unit_list_.push_back(unit);
 }
 
-void squad_class::moves_generate(const map_class *map, const state_class *state) const
-{
+void squad_class::moves_generate(const map_class *map, state_class *state) const
+{/*
     switch (unit_action action = mcts_->best_action_calculate(leader_, *state, leader_.player_get());
             action.action_type_get())
     {
         case unit_action_id::follow: {
-            leader_.follow(action.target_unit_get());
+        leader_.follow(state->object_get(action.target_type_get(), action.target_player_get(), action.target_id_get()));
             break;
         }
         case unit_action_id::pick: {
-            leader_.pick(dynamic_cast<food_class*>(action.target_unit_get()));
+            leader_.pick(dynamic_cast<food_class&>(
+                state->object_get(action.target_type_get(), action.target_player_get(), action.target_id_get())));
             break;
         }
         case unit_action_id::move: {
@@ -99,7 +100,8 @@ void squad_class::moves_generate(const map_class *map, const state_class *state)
             break;
         }
         case unit_action_id::attack: {
-            leader_.attack(action.target_unit_get());
+            leader_.attack(
+                state->object_get(action.target_type_get(), action.target_player_get(), action.target_id_get()));
             break;
         }
         case unit_action_id::wait: {
@@ -116,16 +118,19 @@ void squad_class::moves_generate(const map_class *map, const state_class *state)
     case unit_action_id::move: {
         for (const auto unit : unit_list_)
         {
-            unit->follow(&leader_);
+            unit->follow(leader_);
         }
         break;
     }
     case unit_action_id::attack: {
-        object_abstract_class* enemy = leader_.actual_action_get().target_unit_get();
+        object_abstract_class& enemy = state->object_get(leader_.actual_action_get().target_type_get(),
+                                                         leader_.actual_action_get().target_player_get(),
+                                                         leader_.actual_action_get().target_id_get());
+                
         for (const auto unit : unit_list_)
         {
-            if (unit->position_get().distance(enemy->position_get(), map) > attack_distance * 2)
-                unit->follow(&leader_);
+            if (unit->position_get().distance(enemy.position_get(), map) > attack_distance * 2)
+                unit->follow(leader_);
             else
                 unit->attack(enemy);
         }
@@ -140,7 +145,7 @@ void squad_class::moves_generate(const map_class *map, const state_class *state)
     }
     case unit_action_id::error: BOOST_LOG_TRIVIAL(error) << "unknown squad leader action";
     }
-    
+    */
 }
 
 unit_class& squad_class::leader_get() const

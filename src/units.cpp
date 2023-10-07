@@ -3,14 +3,16 @@
 
 using namespace std;
 
-unit_action::unit_action(const unit_class* u, const unit_action_id type, object_abstract_class* target)
+unit_action::unit_action(const unit_class* u, const unit_action_id type, const object_abstract_class& target)
     : u_(u)
-      , action_type_(type)
-      , target_(target)
+    , action_type_(type)
+    , target_id_(target.id_get())
+    , target_type_(target.object_type_get())
+    , target_player_(target.player_get())
 {
 }
 
-unit_action::unit_action(const unit_class* u, const unit_action_id type, position target)
+unit_action::unit_action(const unit_class* u, const unit_action_id type, const position target)
     : u_(u)
       , action_type_(type)
       , location_(target)
@@ -40,9 +42,19 @@ unit_action_id unit_action::action_type_get() const
     return action_type_;
 }
 
-object_abstract_class* unit_action::target_unit_get() const
+object_id unit_action::target_id_get() const
 {
-    return target_;
+    return target_id_;
+}
+
+object_type unit_action::target_type_get() const
+{
+    return target_type_;
+}
+
+player_id unit_action::target_player_get() const
+{
+    return target_player_;
 }
 
 time_t unit_action::time_get() const
@@ -90,7 +102,7 @@ void unit_class::move(const int q, const int r, const bool queuing)
     }
 }
 
-void unit_class::attack(object_abstract_class* b, const bool queuing)
+void unit_class::attack(object_abstract_class& b, const bool queuing)
 {
     if (t_a_ == 0)
     {
@@ -123,7 +135,7 @@ void unit_class::wait(const time_t t, const bool queuing)
     }
 }
 
-void unit_class::follow(object_abstract_class* b, const bool queuing)
+void unit_class::follow(object_abstract_class& b, const bool queuing)
 {
     if (t_m_ == 0)
     {
@@ -141,18 +153,18 @@ void unit_class::follow(object_abstract_class* b, const bool queuing)
     }
 }
 
-void unit_class::pick(food_class* food, const bool queuing)
+void unit_class::pick(const food_class& food, const bool queuing)
 {
     if (t_m_ == 0)
     {
-        unit_action action(this, unit_action_id::pick, food);
+        const unit_action action(this, unit_action_id::pick, food);
         if (queuing)
         {
             action_queue_.push(action);
         }
         else
         {
-            queue<unit_action> queue;
+            const queue<unit_action> queue;
             action_queue_ = queue;
             action_queue_.push(action);
         }

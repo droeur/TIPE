@@ -86,14 +86,14 @@ void graphic_class::draw_unit(unit_class& unit, const game_class *game) const
         {
         case unit_action_id::pick:
         case unit_action_id::attack: {
-            object_abstract_class* enemy_u = action.target_unit_get();
+            object_abstract_class& enemy_u = game->state_get()->object_get(action.target_type_get(), action.target_player_get(), action.target_id_get());
             SDL_RenderDrawLine(
                 render_, static_cast<int>((unit.position_get().graphic_x_get(game->map_get()) + x_shift_) * zoom_),
                 static_cast<int>(unit.position_get().graphic_y_get(game->map_get()) * hex_height_coefficient *
                                     zoom_) +
                     y_shift_ * zoom_,
-                enemy_u->position_get().graphic_x_get(game->map_get()) * zoom_ + x_shift_ * zoom_,
-                (enemy_u->position_get().graphic_y_get(game->map_get()) * hex_height_coefficient) * zoom_ +
+                enemy_u.position_get().graphic_x_get(game->map_get()) * zoom_ + x_shift_ * zoom_,
+                (enemy_u.position_get().graphic_y_get(game->map_get()) * hex_height_coefficient) * zoom_ +
                     y_shift_ * zoom_);
         }
         break;
@@ -218,18 +218,15 @@ bool graphic_class::event_handle(const game_class* game, options_class* settings
         {
             if (e.button.button == SDL_BUTTON_LEFT && game->map_get()->passable(mouse_get_q(), mouse_get_r()))
             {
-                unit_class u{mouse_get_q(), mouse_get_r(), 0, unit_hp};
-                game->state_get()->unit_append(u, 0);
+                game->state_get()->unit_new(mouse_get_q(), mouse_get_r(), 0, unit_hp);
             }
             if (e.button.button == SDL_BUTTON_RIGHT && game->map_get()->passable(mouse_get_q(), mouse_get_r()))
             {
-                unit_class u{mouse_get_q(), mouse_get_r(), 1, unit_hp};
-                game->state_get()->unit_append(u, 1);
+                game->state_get()->unit_new(mouse_get_q(), mouse_get_r(), 1, unit_hp);
             }
             if (e.button.button == SDL_BUTTON_MIDDLE && game->map_get()->passable(mouse_get_q(), mouse_get_r()))
             {
-                food_class food{mouse_get_q(), mouse_get_r()};
-                game->state_get()->food_append(food);
+                game->state_get()->food_new(mouse_get_q(), mouse_get_r());
             }
         }
     }
@@ -289,31 +286,9 @@ void graphic_class::print_screen(const game_class* game, const vector<object_abs
         {
             text_color = text_red;
         }
-        if (obj->object_type_get() == object_type::undefined)
+        if (sprintf_s(arr_info, "HP: %d", obj->hp_get()) == -1)
         {
-            auto* u = dynamic_cast<unit_class*>(obj);
-            vector<hex_tile*>* p = u->path_get();
-            path += "[";
-            path += to_string(p->size());
-            path += "]: ";
-            for (hex_tile* t : *p)
-            {
-                path += to_string(t->q());
-                path += " ";
-                path += to_string(t->r());
-                path += " / ";
-            }
-            if (sprintf_s(arr_info, "HP: %d carry: %s", u->hp_get(), u->carry_food_get() ? "true" : "false") == -1)
-            {
-                BOOST_LOG_TRIVIAL(error) << "printing" ;
-            }
-        }
-        else
-        {
-            if (sprintf_s(arr_info, "HP: %d", obj->hp_get()) == -1)
-            {
-                BOOST_LOG_TRIVIAL(error) << "printing" ;
-            }
+            BOOST_LOG_TRIVIAL(error) << "printing" ;
         }
         print_right(window_w, 2 + i * 20, arr_info, text_color);
         i++;

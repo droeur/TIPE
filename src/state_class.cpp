@@ -17,8 +17,9 @@ frame state_class::frame_get() const
     return frame_;
 }
 
-void state_class::unit_list_add(const vector<unit_class>& u_list)
+void state_class::unit_list_add()
 {
+    const vector<unit_class> u_list;
     this->list_of_u_list_.push_back(u_list);
 }
 
@@ -27,12 +28,25 @@ std::vector<std::vector<unit_class>>& state_class::unit_list_get()
     return this->list_of_u_list_;
 }
 
-void state_class::unit_append(unit_class& u, const player_id player)
+unit_class& state_class::unit_get(const player_id player, const object_id id)
+{
+    return this->list_of_u_list_[player][id];
+}
+
+void state_class::unit_append(const unit_class& u, const player_id player)
 {
     return this->list_of_u_list_[player].push_back(u);
 }
 
-void state_class::food_append(food_class& f)
+object_id state_class::unit_new(const int q, const int r, const player_id p_id, const int hp)
+{
+    const auto obj_id = static_cast<object_id>(list_of_u_list_[p_id].size());
+    const unit_class u{q,r,p_id,hp, obj_id};
+    unit_append(u, p_id);
+    return obj_id;
+}
+
+void state_class::food_append(const food_class& f)
 {
     food_list_.push_back(f);
 }
@@ -42,7 +56,15 @@ std::vector<food_class>& state_class::food_list_get()
     return food_list_;
 }
 
-void state_class::base_append(base_class& b)
+object_id state_class::food_new(const int q, const int r)
+{
+    const auto obj_id = static_cast<object_id>(food_list_.size());
+    const food_class f{q, r, obj_id};
+    food_append(f);
+    return obj_id;
+}
+
+void state_class::base_append(const base_class& b)
 {
     base_list_.push_back(b);
 }
@@ -50,6 +72,15 @@ void state_class::base_append(base_class& b)
 std::vector<base_class>& state_class::base_list_get()
 {
     return base_list_;
+}
+
+object_id state_class::base_new(const int q, const int r, const player_id p_id)
+{
+
+    const auto obj_id = static_cast<object_id>(base_list_.size());
+    const base_class b{q, r, p_id, obj_id};
+    base_append(b);
+    return obj_id;
 }
 
 vector<unit_action> state_class::moves_generate(const player_id id, unit_class& unit) const
@@ -64,7 +95,7 @@ vector<unit_action> state_class::moves_generate(const player_id id, unit_class& 
         {
             if (enemy_u.hp_get() > 0)
             {
-                unit_action action{&unit, unit_action_id::attack, &enemy_u};
+                unit_action action{&unit, unit_action_id::attack, enemy_u};
                 this_unit_action.push_back(action);
             }
         }
@@ -72,7 +103,7 @@ vector<unit_action> state_class::moves_generate(const player_id id, unit_class& 
         {
             if (base.hp_get() > 0 && base.player_get() == enemy_player)
             {
-                unit_action action{&unit, unit_action_id::attack, &base};
+                unit_action action{&unit, unit_action_id::attack, base};
                 this_unit_action.push_back(action);
             }
         }
@@ -83,7 +114,7 @@ vector<unit_action> state_class::moves_generate(const player_id id, unit_class& 
         {
             for (auto food : food_list_)
             {
-                unit_action action{&unit, unit_action_id::pick, &food};
+                unit_action action{&unit, unit_action_id::pick, food};
                 this_unit_action.push_back(action);
             }
         }
@@ -190,36 +221,36 @@ void state_class::action_execute(unit_action* action, unit_class* unit, const ma
     switch (action->action_type_get())
     {
     case unit_action_id::attack: {
-        object_abstract_class* enemy_obj = action->target_unit_get();
-        if (const int distance = unit->position_get().distance(enemy_obj->position_get(), map);
+        object_abstract_class enemy_obj = object_get(action->target_type_get(), action->target_player_get(), action->target_id_get());
+        if (const int distance = unit->position_get().distance(enemy_obj.position_get(), map);
             attack_distance > distance)
         {
-            attack_execute(unit, enemy_obj);
+            attack_execute(*unit, enemy_obj);
             unit->actual_action_remove();
             unit->path_get()->clear();
         }
         else
         {
-            const position& p = enemy_obj->position_get();
+            const position& p = enemy_obj.position_get();
             move_execute(unit, p, map);
         }
     }
     break;
     case unit_action_id::pick: {
-        object_abstract_class* food = action->target_unit_get();
-        if (const double distance = unit->position_get().distance(food->position_get(), map); distance < 1)
+        object_abstract_class food = object_get(action->target_type_get(), action->target_player_get(), action->target_id_get());
+        if (const double distance = unit->position_get().distance(food.position_get(), map); distance < 1)
         {
             unit->actual_action_remove();
             unit->path_get()->clear();
-            if (food->id_get() == -1 && !unit->carry_food_get())
+            if (food.id_get() == -1 && !unit->carry_food_get())
             {
                 // to avoid duplication
                 unit->carry_food_set(true);
-                food->id_set(0);
+                food.id_set(0);
                 vector<food_class*>::size_type i = 0;
                 for (auto &f : food_list_)
                 {
-                    if (f.position_get() == food->position_get() && i < food_list_.size())
+                    if (f.position_get() == food.position_get() && i < food_list_.size())
                     {
                         food_list_.erase(food_list_.begin() + static_cast<int>(i));
                     }
@@ -229,7 +260,7 @@ void state_class::action_execute(unit_action* action, unit_class* unit, const ma
         }
         else
         {
-            const position& p = food->position_get();
+            const position& p = food.position_get();
             move_execute(unit, p, map);
         }
     }
@@ -248,7 +279,8 @@ void state_class::action_execute(unit_action* action, unit_class* unit, const ma
     }
     break;
     case unit_action_id::error:
-    case unit_action_id::wait: break;
+    case unit_action_id::wait:
+    default: break;
     }
 }
 
@@ -282,10 +314,7 @@ void state_class::moves_make(const map_class *map)
                     if (base.player_get() == player && base.position_get().distance(u.position_get(), map) < 1)
                     {
                         u.carry_food_set(false);
-                        const int q = base.q_get();
-                        const int r = base.r_get();
-                        unit_class u_new{q, r, u.player_get(), 10};
-                        list_of_u_list_[player].push_back(u_new);
+                        unit_new(base.q_get(), base.r_get(), u.player_get(), 10);
                         ++size;
                     }
                 }
@@ -298,23 +327,36 @@ void state_class::moves_make(const map_class *map)
     }
 }
 
-void state_class::attack_execute(unit_class* u, object_abstract_class* enemy_obj)
+object_abstract_class& state_class::object_get(const object_type type, const player_id player, const object_id id)
 {
-    enemy_obj->temporary_hp_remove(1);
-    if (enemy_obj->hp_get() - 1 < 0)
+    switch (type)
     {
-        enemy_obj->temporary_hp_set(0);
-        if (enemy_obj->object_type_get() == object_type::unit)
+    case object_type::base: 
+        return base_list_get()[id];
+    case object_type::unit: 
+        return unit_get(player, id);
+    case object_type::food: 
+        return food_list_get()[id];
+    }
+    return food_list_get()[id];
+}
+
+void state_class::attack_execute(unit_class& u, object_abstract_class& enemy_obj)
+{
+    enemy_obj.temporary_hp_remove(1);
+    if (enemy_obj.hp_get() - 1 < 0)
+    {
+        enemy_obj.temporary_hp_set(0);
+        if (enemy_obj.object_type_get() == object_type::unit)
         {
-            if (const auto* enemy_u = dynamic_cast<unit_class*>(enemy_obj); enemy_u->carry_food_get())
+            if (const auto enemy_u = dynamic_cast<unit_class&>(enemy_obj); enemy_u.carry_food_get())
             {
-                food_class f{enemy_u->q_get(), enemy_u->r_get()};
-                food_append(f);
+                food_new(enemy_u.q_get(), enemy_u.r_get());
             }
         }
     }
-    BOOST_LOG_TRIVIAL(debug) << "unit " << this << " ,player " << u->player_get() << " attacked unit " << enemy_obj << " ,player " << enemy_obj->player_get()
-              << " hp = " << enemy_obj->hp_get();
-    u->reinitialize_attack_cooldown();
+    //BOOST_LOG_TRIVIAL(debug) << "unit " << this << " ,player " << u.player_get() << " attacked unit " << enemy_obj << " ,player " << enemy_obj.player_get()
+    //          << " hp = " << enemy_obj.hp_get();
+    u.reinitialize_attack_cooldown();
 }
 
