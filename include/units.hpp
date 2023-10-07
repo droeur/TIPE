@@ -25,19 +25,19 @@ class unit_action;
 
 class unit_action
 {
-    unit_class* u_;
+    const unit_class* u_;
     unit_action_id action_type_;
     object_abstract_class* target_ = nullptr;
     position location_;
     time_t time_ = 0;
 
 public:
-    unit_action(unit_class* u, unit_action_id type, object_abstract_class* target);
-    unit_action(unit_class* u, unit_action_id type, position target);
-    unit_action(unit_class* u, unit_action_id type, time_t time);
-    unit_action(unit_class* u, unit_action_id type);
+    unit_action(const unit_class* u, const unit_action_id type, object_abstract_class* target);
+    unit_action(const unit_class* u, const unit_action_id type, position target);
+    unit_action(const unit_class* u, const unit_action_id type, const time_t time);
+    unit_action(const unit_class* u, const unit_action_id type);
 
-    [[nodiscard]] unit_class* unit_get() const;
+    [[nodiscard]] const unit_class* unit_get() const;
     [[nodiscard]] unit_action_id action_type_get() const;
     [[nodiscard]] object_abstract_class* target_unit_get() const;
     [[nodiscard]] time_t time_get() const;
@@ -49,7 +49,7 @@ class unit_class final : public object_abstract_class
 {
     int t_a_ = 5, t_m_ = 5; // attack cooldown and move cooldown
     int pathfinding_cooldown_ = 0;
-    std::queue<unit_action*> action_queue_;
+    std::queue<unit_action> action_queue_;
     std::vector<hex_tile*> path_;
     bool carry_food_ = false;
     position temporary_p_{-1, -1};
@@ -66,7 +66,7 @@ public:
         : object_abstract_class(u.q_get(), u.r_get(), hit_point_, player_, object_type::undefined)
     {
         *this = u;
-        std::queue<unit_action*> queue;
+        std::queue<unit_action> queue;
         action_queue_ = queue;
     }
 
@@ -74,7 +74,7 @@ public:
 
     // actions
     void actual_action_remove();
-    [[nodiscard]] unit_action* actual_action_get() const;
+    [[nodiscard]] unit_action actual_action_get() const;
 
     void move(int q, int r, bool queuing = false);
     void attack(object_abstract_class* b, bool queuing = false);

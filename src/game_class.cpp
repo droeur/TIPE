@@ -39,7 +39,7 @@ bool game_class::winner_check()
     {
         for (const auto u : u_l)
         {
-            sums[u->player_get()] += u->hp_get();
+            sums[u.player_get()] += u.hp_get();
         }
     }
     if (sums[0] == 0 && sums[1] == 0)
@@ -49,9 +49,9 @@ bool game_class::winner_check()
     else if (sums[1] == 0)
         winner_ = 0;
 
-    for (const auto& b : *state_->base_list_get())
+    for (auto b : state_->base_list_get())
     {
-        sums[b->player_get() + 2] += b->hp_get();
+        sums[b.player_get() + 2] += b.hp_get();
     }
     if ((sums[2] == 0 && sums[3] == 0) || ((sums[2] == 0 || sums[3] == 0) && winner_ != -1))
         winner_ = 2;

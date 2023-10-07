@@ -43,7 +43,7 @@ class mcts
     clock_t max_time_ = 40;
 
     int traversals_max_;
-    int traversals_;
+    int traversals_ = 0;
 
     void traverse(mcts_node& node, state_class& state);
 
@@ -59,5 +59,5 @@ public:
     {
     }
 
-    unit_action best_action_calculate(unit_class* unit, const state_class& initial_state, player_id player);
+    unit_action best_action_calculate(unit_class& unit, const state_class& initial_state, player_id player);
 };

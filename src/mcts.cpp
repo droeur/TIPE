@@ -17,10 +17,10 @@ void mcts::traverse(mcts_node& node, state_class& state)
     }
 }
 
-unit_action mcts::best_action_calculate(unit_class* unit, const state_class& initial_state, player_id player)
+unit_action mcts::best_action_calculate(unit_class& unit, const state_class& initial_state, player_id player)
 {
     const clock_t begin = clock();
-    const player_id id = unit->player_get();
+    const player_id id = unit.player_get();
 
     root_node_ = mcts_node(nullptr, player);
 
@@ -41,7 +41,7 @@ unit_action mcts::best_action_calculate(unit_class* unit, const state_class& ini
         const std::vector<unit_action>::size_type r = (*rand_gen)() % possible_actions_vec.size();
         return possible_actions_vec[r];
     }
-    const unit_action action(unit, unit_action_id::nothing);
+    const unit_action action(&unit, unit_action_id::nothing);
     const clock_t end = clock();
     results.time = end - begin;
     return action;

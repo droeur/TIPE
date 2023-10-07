@@ -57,7 +57,7 @@ void game_players_init(state_class* s, game_class* g, const std::string& paramet
                         player_temp = new player_rand(stoi(tokens[2]));
                     }
                     g->player_set(player_temp, stoi(tokens[2]));
-                    vector<unit_class*> unit_list;
+                    vector<unit_class> unit_list;
                     for (int i = 0; i < stoi(tokens[3]); i++)
                     {
                         int q_pos;
@@ -70,13 +70,13 @@ void game_players_init(state_class* s, game_class* g, const std::string& paramet
                             r_pos = stoi(tokens[6]) + static_cast<int>(radius * sin(angle));
                         } while (!map_class::in_map(q_pos, r_pos, g->map_get()) &&
                                  !g->map_get()->passable(q_pos, r_pos));
-                        auto u = new unit_class{q_pos, r_pos, player_id_order_check, unit_hp};
+                        unit_class u{q_pos, r_pos, player_id_order_check, unit_hp};
                         unit_list.push_back(u);
                     }
                     s->unit_list_add(unit_list);
                     for (int i = 0; i < stoi(tokens[4]); i++)
                     {
-                        const auto base = new base_class{stoi(tokens[5]), stoi(tokens[6]), player_id_order_check};
+                        base_class base{stoi(tokens[5]), stoi(tokens[6]), player_id_order_check};
                         s->base_append(base);
                     }
                     player_id_order_check++;

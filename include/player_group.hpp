@@ -7,7 +7,7 @@
 class squad_class
 {
     mcts *mcts_;
-    unit_class* leader_;
+    unit_class& leader_;
     std::vector<unit_class*> unit_list_;
     int hit_points_;
     int damage_per_frame_;
@@ -15,12 +15,12 @@ class squad_class
     position location_;
 
 public:
-    explicit squad_class(unit_class* leader, map_class* map)
+    explicit squad_class(unit_class& leader, map_class* map)
         : leader_(leader)
-        , hit_points_(leader->hp_get())
-        , damage_per_frame_(leader->damage_per_frame_get())
-        , max_speed_(leader->max_speed_get())
-        , location_(leader->position_get())
+        , hit_points_(leader.hp_get())
+        , damage_per_frame_(leader.damage_per_frame_get())
+        , max_speed_(leader.max_speed_get())
+        , location_(leader.position_get())
     {
         mcts_ = new mcts(10, map);
     }
@@ -32,7 +32,7 @@ public:
 
 class player_group final : public virtual_player_class
 {
-    void squads_update(const std::vector<unit_class*>& unit_list);
+    void squads_update(const std::vector<unit_class>& unit_list);
     std::vector<squad_class*> squad_list_;
     int characteristic_size_ = 5;
     int min_pts_ = 3;
