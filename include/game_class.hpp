@@ -26,6 +26,7 @@ public:
     static player_id enemy_player_get(player_id p);
 
     void player_set(virtual_player_class* p, player_id id);
+    [[nodiscard]] player_type player_type_get(player_id player) const;
 
     [[nodiscard]] std::vector<virtual_player_class*>::size_type player_number_get() const;
 

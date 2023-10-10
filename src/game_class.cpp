@@ -18,6 +18,13 @@ void game_class::player_set(virtual_player_class* p, const player_id id)
             << players_.size();
 }
 
+player_type game_class::player_type_get(const player_id player) const
+{
+    if (player > player_number_get())
+        return player_type::error;
+    return players_[player]->player_type_get();
+}
+
 std::vector<virtual_player_class*>::size_type game_class::player_number_get() const
 {
     return players_.size();

@@ -83,7 +83,7 @@ object_id state_class::base_new(const int q, const int r, const player_id p_id)
     return obj_id;
 }
 
-vector<unit_action> state_class::moves_generate(const player_id id, unit_class& unit) const
+vector<unit_action> state_class::moves_generate(const player_id id, unit_class& unit)
 {
     vector<unit_action> this_unit_action;
 
@@ -91,7 +91,7 @@ vector<unit_action> state_class::moves_generate(const player_id id, unit_class& 
     if (unit.can_attack())
     {
         const player_id enemy_player = game_class::enemy_player_get(id);
-        for (auto enemy_u : list_of_u_list_[enemy_player])
+        for (auto& enemy_u : list_of_u_list_[enemy_player])
         {
             if (enemy_u.hp_get() > 0)
             {
@@ -99,7 +99,7 @@ vector<unit_action> state_class::moves_generate(const player_id id, unit_class& 
                 this_unit_action.push_back(action);
             }
         }
-        for (auto base : base_list_)
+        for (auto& base : base_list_)
         {
             if (base.hp_get() > 0 && base.player_get() == enemy_player)
             {
@@ -112,7 +112,7 @@ vector<unit_action> state_class::moves_generate(const player_id id, unit_class& 
     {
         if (!unit.carry_food_get())
         {
-            for (auto food : food_list_)
+            for (auto& food : food_list_)
             {
                 unit_action action{&unit, unit_action_id::pick, food};
                 this_unit_action.push_back(action);
@@ -120,7 +120,7 @@ vector<unit_action> state_class::moves_generate(const player_id id, unit_class& 
         }
         else
         {
-            for (auto base : base_list_)
+            for (auto& base : base_list_)
             {
                 if (base.hp_get() > 0 && base.player_get() == id)
                 {
@@ -133,13 +133,12 @@ vector<unit_action> state_class::moves_generate(const player_id id, unit_class& 
     return this_unit_action;
 }
 
-vector<vector<unit_action>> state_class::moves_generate(const player_id id) const
+vector<vector<unit_action>> state_class::moves_generate(const player_id id)
 {
     vector<vector<unit_action>> possibles_actions;
     vector v{unit_action_id::error, unit_action_id::move, unit_action_id::attack, unit_action_id::wait};
     
-    possibles_actions.clear();
-    for (auto u : list_of_u_list_[id])
+    for (unit_class& u : list_of_u_list_[id])
     {
         possibles_actions.push_back(moves_generate(id, u));
     }
@@ -176,11 +175,11 @@ double state_class::fps_get() const
 
 
 //TODO
-int state_class::evaluate(const player_id player)
+int state_class::evaluate(const player_id player) const
 {
-    player_id enemy = game_class::enemy_player_get(player);
+    const player_id enemy = game_class::enemy_player_get(player);
     int score = 0;
-    for (auto base : base_list_)
+    for (const auto& base : base_list_)
     {
         if (base.player_get() == player)
             score += base.hp_get();
@@ -188,11 +187,21 @@ int state_class::evaluate(const player_id player)
             score -= base.hp_get();
     }
 
-    for (auto unit : list_of_u_list_[player])
+    for (const auto& unit : list_of_u_list_[player])
         score += unit.hp_get();
-    for (auto unit : list_of_u_list_[enemy])
+    for (const auto& unit : list_of_u_list_[enemy])
         score -= unit.hp_get();
     return score;
+}
+
+std::vector<unit_action> state_class::action_vec_get(const player_id player)
+{
+    vector<unit_action> action_vec;
+    for (auto& u : unit_list_get()[player])
+    {
+        action_vec.push_back(u.actual_action_get());
+    }
+    return action_vec;
 }
 
 void state_class::move_execute(unit_class* u, const position& p, const map_class* map)
@@ -221,7 +230,7 @@ void state_class::action_execute(unit_action* action, unit_class* unit, const ma
     switch (action->action_type_get())
     {
     case unit_action_id::attack: {
-        object_abstract_class enemy_obj = object_get(action->target_type_get(), action->target_player_get(), action->target_id_get());
+        object_abstract_class& enemy_obj = object_get(action->target_type_get(), action->target_player_get(), action->target_id_get());
         if (const int distance = unit->position_get().distance(enemy_obj.position_get(), map);
             attack_distance > distance)
         {
@@ -237,7 +246,7 @@ void state_class::action_execute(unit_action* action, unit_class* unit, const ma
     }
     break;
     case unit_action_id::pick: {
-        object_abstract_class food = object_get(action->target_type_get(), action->target_player_get(), action->target_id_get());
+        object_abstract_class& food = object_get(action->target_type_get(), action->target_player_get(), action->target_id_get());
         if (const double distance = unit->position_get().distance(food.position_get(), map); distance < 1)
         {
             unit->actual_action_remove();
@@ -355,8 +364,8 @@ void state_class::attack_execute(unit_class& u, object_abstract_class& enemy_obj
             }
         }
     }
-    //BOOST_LOG_TRIVIAL(debug) << "unit " << this << " ,player " << u.player_get() << " attacked unit " << enemy_obj << " ,player " << enemy_obj.player_get()
-    //          << " hp = " << enemy_obj.hp_get();
+    BOOST_LOG_TRIVIAL(debug) << "unit " << &u << " ,player " << u.player_get() << " attacked unit " << &enemy_obj << " ,player " << enemy_obj.player_get()
+                << " hp = " << enemy_obj.hp_get();
     u.reinitialize_attack_cooldown();
 }
 

@@ -246,9 +246,20 @@ void graphic_class::print_screen(const game_class* game, const vector<object_abs
     char arr_fps[20];
     if (sprintf_s(arr_fps, "%d", static_cast<int>(game->state_get()->fps_get())) == -1)
     {
-        BOOST_LOG_TRIVIAL(error) << "printing" ;
+        BOOST_LOG_TRIVIAL(error) << "printing";
     }
     print(2, 2, arr_fps, text_white);
+    char arr_player[100];
+    if (sprintf_s(arr_player, "P0: %d eval: %d", game->player_type_get(0), game->state_get()->evaluate(0)) == -1)
+    {
+        BOOST_LOG_TRIVIAL(error) << "printing";
+    }
+    print(2, 22, arr_player, text_white);
+    if (sprintf_s(arr_player, "P1: %d eval: %d", game->player_type_get(1), game->state_get()->evaluate(1)) == -1)
+    {
+        BOOST_LOG_TRIVIAL(error) << "printing";
+    }
+    print(2, 42, arr_player, text_white);
 
     char arr_size[3];
     if (sprintf_s(arr_size, "%d", static_cast<int>(pointed_objects.size())) == -1)
@@ -286,7 +297,7 @@ void graphic_class::print_screen(const game_class* game, const vector<object_abs
         {
             text_color = text_red;
         }
-        if (sprintf_s(arr_info, "HP: %d", obj->hp_get()) == -1)
+        if (sprintf_s(arr_info, "HP: %d ID: %d", obj->hp_get(), obj->id_get()) == -1)
         {
             BOOST_LOG_TRIVIAL(error) << "printing" ;
         }
@@ -395,10 +406,10 @@ bool graphic_class::update(const game_class* game, options_class* settings)
      * Draw units
      * 
      */
-    const vector<vector<unit_class>> list_of_u_list = game->state_get()->unit_list_get();
-    for (auto& unit_list : list_of_u_list)
+    vector<vector<unit_class>>& list_of_u_list = game->state_get()->unit_list_get();
+    for (vector<unit_class>& unit_list : list_of_u_list)
     {
-        for (auto unit : unit_list)
+        for (unit_class& unit : unit_list)
         {
             if (unit.hp_get() > 0)
             {

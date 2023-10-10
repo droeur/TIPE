@@ -36,8 +36,8 @@ public:
     void frame_increment();
     [[nodiscard]] frame frame_get() const;
 
-    [[nodiscard]] std::vector<std::vector<unit_action>> moves_generate(player_id id) const;
-    [[nodiscard]] std::vector<unit_action> moves_generate(player_id id, unit_class& unit) const;
+    [[nodiscard]] std::vector<std::vector<unit_action>> moves_generate(player_id id);
+    [[nodiscard]] std::vector<unit_action> moves_generate(player_id id, unit_class& unit);
     void moves_make(const map_class* map);
 
     object_abstract_class& object_get(const object_type type, const player_id player, const object_id id);
@@ -59,5 +59,6 @@ public:
     void fps_set(double f);
     [[nodiscard]] double fps_get() const;
 
-    int evaluate(player_id player);
+    [[nodiscard]] int evaluate(player_id player) const;
+    std::vector<unit_action> action_vec_get(player_id player);
 };

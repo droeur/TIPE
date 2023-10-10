@@ -2,12 +2,20 @@
 
 class virtual_player_class;
 
+enum class player_type
+{
+    error,
+    random,
+    mcts,
+    group
+};
+
+
 #include "units.hpp"
 #include "state_class.hpp"
 #include <iostream>
 #include <boost/log/trivial.hpp>
 
-enum class player_type{error, random, mcts, group};
 
 class virtual_player_class
 {
