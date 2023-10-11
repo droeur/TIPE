@@ -3,8 +3,10 @@
 
 using namespace std;
 
-unit_action::unit_action(const unit_class* u, const unit_action_id type, const object_abstract_class& target)
-    : u_(u)
+unit_action::unit_action(const int u_id, const player_id player_id, const unit_action_id type,
+                         const object_abstract_class& target)
+    : u_id_(u_id)
+    , player_id_(player_id)
     , action_type_(type)
     , target_id_(target.id_get())
     , target_type_(target.object_type_get())
@@ -12,29 +14,37 @@ unit_action::unit_action(const unit_class* u, const unit_action_id type, const o
 {
 }
 
-unit_action::unit_action(const unit_class* u, const unit_action_id type, const position target)
-    : u_(u)
-      , action_type_(type)
-      , location_(target)
+unit_action::unit_action(const int u_id, const player_id player_id, const unit_action_id type, const position target)
+    : u_id_(u_id)
+    , player_id_(player_id)
+    , action_type_(type)
+    , location_(target)
 {
 }
 
-unit_action::unit_action(const unit_class* u, const unit_action_id type, const time_t time)
-    : u_(u)
-      , action_type_(type)
-      , time_(time)
+unit_action::unit_action(const int u_id, const player_id player_id, const unit_action_id type, const time_t time)
+    : u_id_(u_id)
+    , player_id_(player_id)
+    , action_type_(type)
+    , time_(time)
 {
 }
 
-unit_action::unit_action(const unit_class* u, const unit_action_id type)
-    : u_(u)
+unit_action::unit_action(const int u_id, const player_id player_id, const unit_action_id type)
+    : u_id_(u_id)
+    , player_id_(player_id)
     , action_type_(type)
 {
 }
 
-const unit_class* unit_action::unit_get() const
+int unit_action::unit_id_get() const
 {
-    return u_;
+    return u_id_;
+}
+
+player_id unit_action::unit_player_id_get() const
+{
+    return player_id_;
 }
 
 unit_action_id unit_action::action_type_get() const
@@ -79,7 +89,7 @@ void unit_class::actual_action_remove()
 unit_action unit_class::actual_action_get() const
 {
     if (action_queue_.empty())
-        return unit_action{this, unit_action_id::nothing};
+        return unit_action{this->id_, this->player_, unit_action_id::nothing};
     return action_queue_.front();
 }
 
@@ -88,14 +98,14 @@ void unit_class::move(const int q, const int r, const bool queuing)
     if (t_m_ == 0)
     {
         const position p(q, r);
-        unit_action action(this, unit_action_id::move, p);
+        const unit_action action(this->id_, this->player_, unit_action_id::move, p);
         if (queuing)
         {
             action_queue_.push(action);
         }
         else
         {
-            queue<unit_action> queue;
+            const queue<unit_action> queue;
             action_queue_ = queue;
             action_queue_.push(action);
         }
@@ -106,14 +116,14 @@ void unit_class::attack(object_abstract_class& b, const bool queuing)
 {
     if (t_a_ == 0)
     {
-        unit_action action(this, unit_action_id::attack, b);
+        const unit_action action(this->id_, this->player_, unit_action_id::attack, b);
         if (queuing)
         {
             action_queue_.push(action);
         }
         else
         {
-            queue<unit_action> queue;
+            const queue<unit_action> queue;
             action_queue_ = queue;
             action_queue_.push(action);
         }
@@ -122,14 +132,14 @@ void unit_class::attack(object_abstract_class& b, const bool queuing)
 
 void unit_class::wait(const time_t t, const bool queuing)
 {
-    unit_action action(this, unit_action_id::wait, t);
+    const unit_action action(this->id_, this->player_, unit_action_id::wait, t);
     if (queuing)
     {
         action_queue_.push(action);
     }
     else
     {
-        queue<unit_action> queue;
+        const queue<unit_action> queue;
         action_queue_ = queue;
         action_queue_.push(action);
     }
@@ -139,14 +149,14 @@ void unit_class::follow(object_abstract_class& b, const bool queuing)
 {
     if (t_m_ == 0)
     {
-        unit_action action(this, unit_action_id::follow, b);
+        const unit_action action(this->id_, this->player_, unit_action_id::follow, b);
         if (queuing)
         {
             action_queue_.push(action);
         }
         else
         {
-            queue<unit_action> queue;
+            const queue<unit_action> queue;
             action_queue_ = queue;
             action_queue_.push(action);
         }
@@ -157,7 +167,7 @@ void unit_class::pick(const food_class& food, const bool queuing)
 {
     if (t_m_ == 0)
     {
-        const unit_action action(this, unit_action_id::pick, food);
+        const unit_action action(this->id_, this->player_, unit_action_id::pick, food);
         if (queuing)
         {
             action_queue_.push(action);

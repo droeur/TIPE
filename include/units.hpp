@@ -25,7 +25,8 @@ class unit_action;
 
 class unit_action
 {
-    const unit_class* u_;
+    object_id u_id_;
+    player_id player_id_;
     unit_action_id action_type_;
     object_id target_id_ = -1;
     object_type target_type_;
@@ -34,12 +35,13 @@ class unit_action
     time_t time_ = 0;
 
 public:
-    unit_action(const unit_class* u, const unit_action_id type, const object_abstract_class& target);
-    unit_action(const unit_class* u, const unit_action_id type, position target);
-    unit_action(const unit_class* u, const unit_action_id type, time_t time);
-    unit_action(const unit_class* u, const unit_action_id type);
+    unit_action(object_id u_id, player_id player_id, unit_action_id type, const object_abstract_class& target);
+    unit_action(object_id u_id, player_id player_id, const unit_action_id type, position target);
+    unit_action(object_id u_id, player_id player_id, const unit_action_id type, time_t time);
+    unit_action(object_id u_id, player_id player_id, const unit_action_id type);
 
-    [[nodiscard]] const unit_class* unit_get() const;
+    [[nodiscard]] int unit_id_get() const;
+    [[nodiscard]] player_id unit_player_id_get() const;
     [[nodiscard]] unit_action_id action_type_get() const;
     [[nodiscard]] object_id target_id_get() const;
     [[nodiscard]] object_type target_type_get() const;

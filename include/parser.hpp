@@ -41,6 +41,6 @@ public:
 
     [[nodiscard]] int n_test_get() const;
 
-    bool pause_get() const { return pause_; }
+    [[nodiscard]] bool pause_get() const { return pause_; }
     void pause_toggle() { pause_ = !pause_; } 
 };

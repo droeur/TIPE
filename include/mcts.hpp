@@ -12,6 +12,7 @@ public:
     int traversals = 0;
     int traversals_max = 0;
     std::vector<unit_action> best_actions;
+    frame tick_max = 0;
 };
 
 class mcts_node
@@ -20,6 +21,7 @@ class mcts_node
     mcts_node* parent_ = nullptr;
     int visits_ = 0;
     int wins_ = 0;
+    double uct_val_ = 0;
 
     bool is_max_;
 
@@ -49,15 +51,28 @@ public:
     }
 
     [[nodiscard]]   int visits_get()    const   {   return visits_; }
-                    void visits_increment()     {   visits_++; }
+    void visits_increment(const int visits) { visits_ += visits; }
 
     [[nodiscard]] int win_get() const { return wins_; }
-                    void win_increment() { wins_++; }
+    void win_increment(const int wins) { wins_ += wins; }
 
-    [[nodiscard]]   int player_get()    const   {   return player_; }
+    [[nodiscard]] double uct_val_get() const { return uct_val_; }
+    void uct_val_update()
+    {
+        if (parent_ != nullptr)
+        {
+            uct_val_ = static_cast<double>(win_get()) / visits_get() +
+                       0 * sqrt(log(parent_->visits_get() + 1) / visits_get());
+        }
+        else
+        {
+            uct_val_ = static_cast<double>(win_get()) / visits_get();
+        }
+    }
+
+    [[nodiscard]]   int player_get() const {   return player_; }
 
     std::vector<mcts_node>& children_get() { return children_; }
-
     [[nodiscard]] mcts_node* parent_get() const { return parent_; }
 
     void is_max_set(const bool max) { is_max_ = max; }
@@ -77,12 +92,14 @@ class mcts
     int traversals_max_;
     int traversals_ = 0;
 
+    double c_parameter_ = sqrt(2);
+
     player_id max_player_;
 
     mcts_node& uct_select(mcts_node& node) const;
     static void expansion(mcts_node& node);
-    void simulation(mcts_node& node);
-    static void back_propagation(const mcts_node& node);
+    void simulation(mcts_node& node, int& tick_max);
+    static void back_propagation(mcts_node& node);
 
     mcts_node& best_node_select();
 
@@ -93,14 +110,16 @@ class mcts
 
 
 public:
-    mcts(const int traversals_max, map_class* map, const player_id max_player, int max_time=20)
-        : max_time_(max_time)
-        , root_node_(mcts_node(nullptr, max_player))
+    mcts(const state_class &root_state, const int traversals_max, map_class* map, const player_id max_player, const int max_time=20, const double c_parameter=sqrt(2))
+        : root_node_(mcts_node(root_state, max_player))
+        , max_time_(max_time)
         , traversals_max_(traversals_max)
+        , c_parameter_(c_parameter)
         , max_player_(max_player)
         , map_(map)
     {
     }
-    std::vector<unit_action> best_action_calculate(const state_class& initial_state, const player_id player);
+    std::vector<unit_action> best_action_calculate(const state_class& initial_state, player_id player);
     mcts_result& results_get() { return results_; }
+    [[nodiscard]] double c_parameter_get() const { return c_parameter_; }
 };

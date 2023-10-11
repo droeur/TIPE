@@ -13,11 +13,11 @@
 
 using namespace std;
 
-void graphic_class::print(const int x, const int y, const char* text, const SDL_Color& text_color) const
+void graphic_class::print(const int x, const int y, const char* text, const SDL_Color& text_color, const SDL_Color& bg_color) const
 {
     SDL_Rect mess_rect = {x, y, 0, 0};
     int w, h;
-    SDL_Surface* mess_fps = TTF_RenderText_Solid(font_, text, text_color);
+    SDL_Surface* mess_fps = TTF_RenderText_Shaded(font_, text, text_color, bg_color);
     SDL_Texture* texture = SDL_CreateTextureFromSurface(render_, mess_fps);
     TTF_SizeText(font_, text, &w, &h);
     mess_rect.w = w;
@@ -27,11 +27,12 @@ void graphic_class::print(const int x, const int y, const char* text, const SDL_
     SDL_DestroyTexture(texture);
 }
 
-void graphic_class::print_right(const int width, const int y, const char* text, const SDL_Color& text_color) const
+void graphic_class::print_right(const int width, const int y, const char* text, const SDL_Color& text_color,
+                                const SDL_Color& bg_color) const
 {
     SDL_Rect mess_rect = {0, y, 0, 0};
     int w, h;
-    SDL_Surface* mess_fps = TTF_RenderText_Solid(font_, text, text_color);
+    SDL_Surface* mess_fps = TTF_RenderText_Shaded(font_, text, text_color, bg_color);
     SDL_Texture* texture = SDL_CreateTextureFromSurface(render_, mess_fps);
     TTF_SizeText(font_, text, &w, &h);
     mess_rect.x = width - w;
@@ -242,6 +243,7 @@ void graphic_class::print_screen(const game_class* game, const vector<object_abs
     SDL_Color text_red{255, 0, 0, 255};
     SDL_Color text_blue{0, 0, 255, 255};
     SDL_Color text_green{0, 255, 0, 255};
+    SDL_Color text_black{0, 0, 0, 255};
     int window_w, window_h;
 
     SDL_GetWindowSize(window_, &window_w, &window_h);
@@ -251,7 +253,7 @@ void graphic_class::print_screen(const game_class* game, const vector<object_abs
     {
         BOOST_LOG_TRIVIAL(error) << "printing";
     }
-    print(2, 2, arr_fps, text_white);
+    print(2, 2, arr_fps, text_white, text_black);
     print_player(game->player_get(0), *game->state_get(), 22);
     print_player(game->player_get(1), *game->state_get(), 42);
 
@@ -260,18 +262,18 @@ void graphic_class::print_screen(const game_class* game, const vector<object_abs
     {
         BOOST_LOG_TRIVIAL(error) << "printing" ;
     }
-    print(50, 2, arr_size, text_white);
+    print(50, 2, arr_size, text_white, text_black);
     string pos_str;
     pos_str += to_string(mouse_get_q());
     pos_str += " ";
     pos_str += to_string(mouse_get_r());
-    print_right(window_w, 0, pos_str.c_str(), text_white);
+    print_right(window_w, 0, pos_str.c_str(), text_white, text_black);
     if (map_class::in_map(mouse_get_q(), mouse_get_r(), game->map_get()))
     {
         pos_str = to_string(game->map_get()->tile_get(mouse_get_q(), mouse_get_r())->index_x());
         pos_str += " ";
         pos_str += to_string(game->map_get()->tile_get(mouse_get_q(), mouse_get_r())->index_y());
-        print_right(window_w, 22, pos_str.c_str(), text_white);
+        print_right(window_w, 22, pos_str.c_str(), text_white, text_black);
     }
     int i = 4;
     for (object_abstract_class* obj : pointed_objects)
@@ -295,34 +297,37 @@ void graphic_class::print_screen(const game_class* game, const vector<object_abs
         {
             BOOST_LOG_TRIVIAL(error) << "printing" ;
         }
-        print_right(window_w, 2 + i * 20, arr_info, text_color);
+        print_right(window_w, 2 + i * 20, arr_info, text_color, text_black);
         i++;
         if (sprintf_s(arr_info, "%d %d", obj->q_get(), obj->r_get()) == -1)
         {
             BOOST_LOG_TRIVIAL(error) << "printing";
         }
-        print_right(window_w, 2 + i * 20, arr_info, text_color);
+        print_right(window_w, 2 + i * 20, arr_info, text_color, text_black);
         i++;
-        print_right(window_w, 2 + i * 20, path.c_str(), text_color);
+        print_right(window_w, 2 + i * 20, path.c_str(), text_color, text_black);
         i += 2;
     }
 }
 
 void graphic_class::print_player(virtual_player_class& player, const state_class& state, const int y) const
 {
-    SDL_Color text_white{255, 255, 255, 255};
+    constexpr SDL_Color text_white{255, 255, 255, 255};
+    constexpr SDL_Color text_black{0, 0, 0, 255};
     char arr_player[100];
     ostringstream player_string_stream;
     player_string_stream << "P" << player.player_id_get() << ": " << static_cast<int>(player.player_type_get())
                   << " eval: " << state.evaluate(player.player_id_get());
     if (player.player_type_get() == player_type::mcts)
     {
-        player_string_stream << " " << dynamic_cast<player_mcts&>(player).mcts_get().results_get().traversals;
+        player_string_stream << " trav:" << dynamic_cast<player_mcts&>(player).mcts_get().results_get().traversals;
         player_string_stream << "/" << dynamic_cast<player_mcts&>(player).mcts_get().results_get().traversals_max;
-        player_string_stream << " " << dynamic_cast<player_mcts&>(player).mcts_get().results_get().time;
+        player_string_stream << " time:" << dynamic_cast<player_mcts&>(player).mcts_get().results_get().time;
         player_string_stream << "/" << dynamic_cast<player_mcts&>(player).mcts_get().results_get().time_max;
+        player_string_stream << " ticks:" << dynamic_cast<player_mcts&>(player).mcts_get().results_get().tick_max - state.frame_get();
+        player_string_stream << " c:" << dynamic_cast<player_mcts&>(player).mcts_get().c_parameter_get();
     }
-    print(2, y, player_string_stream.str().c_str(), text_white);
+    print(2, y, player_string_stream.str().c_str(), text_white, text_black);
 }
 
 graphic_class::graphic_class(const std::string& graphic_folder, const std::string& font)

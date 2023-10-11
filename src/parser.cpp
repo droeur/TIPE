@@ -28,7 +28,8 @@ options_class::options_class(const int argc, char* argv[])
         ("font,t", boost::program_options::value<std::string>(), "Font file")
         ("fast,f", "Start without speed limitation")
         ("log,l", boost::program_options::value<int>() ,"Log level")
-        ("output,o", boost::program_options::value<std::string>(), "Output file");
+        ("output,o", boost::program_options::value<std::string>(), "Output file")
+        ("games,s", boost::program_options::value<int>(), "Number of game to play");
     vm_ = new boost::program_options::variables_map;
     store(parse_command_line(argc, argv, *desc_), *vm_);
     notify(*vm_);
@@ -51,6 +52,8 @@ options_class::options_class(const int argc, char* argv[])
         fast_ = true;
     if (vm_->count("log"))
         log_level_ = (*vm_)["log"].as<int>();
+    if (vm_->count("games"))
+        n_test_ = (*vm_)["games"].as<int>();
 
     if (log_level_ >= 2)
         logging::core::get()->set_filter(logging::trivial::severity >= logging::trivial::trace);

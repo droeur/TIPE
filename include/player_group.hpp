@@ -22,7 +22,7 @@ public:
         , max_speed_(leader.max_speed_get())
         , location_(leader.position_get())
     {
-        mcts_ = new mcts(10, map, leader.player_get());
+        //mcts_ = new mcts(10, map, leader.player_get());
     }
 
     void unit_append(unit_class* unit);

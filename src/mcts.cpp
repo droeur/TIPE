@@ -16,17 +16,14 @@ mcts_node& mcts::uct_select(mcts_node& node) const
         int best_node_index = 0;
         double best_node_uct = 0;
         int index = 0;
-        for (const auto& child : selected_node->children_get())
+        for (auto& child : selected_node->children_get())
         {
-            const double uct_val = static_cast<double>(child.win_get()) / child.visits_get() +
-                                   sqrt(2) * sqrt(log(selected_node->visits_get()) / child.visits_get());
-            if (uct_val > best_node_uct)
+            child.uct_val_update();
+            if (child.uct_val_get() > best_node_uct)
             {
-                best_node_uct = uct_val;
+                best_node_uct = child.uct_val_get();
                 best_node_index = index;
             }
-            cout << selected_node->children_get().size()
-                 << "  ";
             index++;
         }
         selected_node = &selected_node->children_get()[best_node_index];
@@ -45,29 +42,39 @@ void mcts::expansion(mcts_node& node)
     children.push_back(new_child);
 }
 
-void mcts::simulation(mcts_node& node)
+void mcts::simulation(mcts_node& node, int& tick_max)
 {
     //TODO
-    state_class state = node.state_get();
     for (auto& child : node.children_get())
     {
+        state_class& state = child.state_get();
         players_[0].moves_get(nullptr, &state);
         players_[1].moves_get(nullptr, &state);
         child.action_vec_set(state.action_vec_get(max_player_));
-        state.moves_make(map_);
-        const int play_eval = state.evaluate(child.player_get());
-        node.visits_increment();
+        for (int i = 0; i < 10; i++)
+            state.moves_make(map_);
+        if (state.evaluate(max_player_) > 0)
+            child.win_increment(1);
+        child.visits_increment(1);
+        child.uct_val_update();
+        tick_max = max(state.frame_get(), tick_max);
     }
 }
 
-void mcts::back_propagation(const mcts_node& node)
+void mcts::back_propagation(mcts_node& node)
 {
+    int child_wins = 0;
+    int child_visits = 0;
+    for (auto& child : node.children_get())
+    {
+        child_wins += node.win_get();
+        child_visits++;
+    }
     mcts_node* parent_node = node.parent_get();
     while (parent_node != nullptr)
     {
-        parent_node->visits_increment();
-        if (node.win_get() != 0)
-            parent_node->win_increment();
+        parent_node->win_increment(child_wins);
+        parent_node->visits_increment(child_visits);
         parent_node = parent_node->parent_get();
     }
 }
@@ -88,15 +95,15 @@ mcts_node& mcts::best_node_select()
 vector<unit_action> mcts::best_action_calculate(const state_class& initial_state, const player_id player)
 {
     const clock_t begin = clock();
-
+    frame tick_max = 0;
     root_node_ = mcts_node(initial_state, player);
 
     for (traversals_ = 0; traversals_ < traversals_max_; traversals_++)
     {
         mcts_node &node = uct_select(root_node_);
         expansion(node);
-        simulation(node);
-        back_propagation(node.children_get().back());
+        simulation(node, tick_max);
+        back_propagation(node);
         if (const clock_t end = clock(); end - begin >= max_time_)
             break;
     }
@@ -108,11 +115,11 @@ vector<unit_action> mcts::best_action_calculate(const state_class& initial_state
     }
     mcts_node &best_node = best_node_select();
     vector<unit_action>& chosen_action = best_node.action_vec_get();
-    
     const clock_t end = clock();
     results_.time = end - begin;
     results_.time_max = max_time_;
     results_.traversals = traversals_;
     results_.traversals_max = traversals_max_;
+    results_.tick_max = tick_max;
     return chosen_action;
 }

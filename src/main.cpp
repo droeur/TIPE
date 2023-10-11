@@ -13,7 +13,6 @@ using namespace std;
 
 int main(const int argc, char* argv[])
 {
-    ::ShowWindow(::GetConsoleWindow(), SW_SHOW);
     const auto settings = new options_class{argc, argv};
     if (!settings->check())
     {
@@ -43,10 +42,11 @@ int main(const int argc, char* argv[])
                 quit = game->winner_check();
             else
                 quit = game_graphic->update(game, settings);
-            state->frame_increment();
             state->fps_check_after(settings->fast_get());
         }
         result << game->winner_get() << ",";
+        BOOST_LOG_TRIVIAL(info) << "Game " << i << " out of " << settings->n_test_get() << " : winner "
+                                << game->winner_get() << " " << state->evaluate(0) << "/" << state->evaluate(1);
         delete state;
         delete game;
     }

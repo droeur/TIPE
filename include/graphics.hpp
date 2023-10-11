@@ -23,8 +23,8 @@ constexpr auto hex_height_coefficient = 0.78;
 
 class graphic_class
 {
-    void print(int x, int y, const char* text, const SDL_Color& text_color) const;
-    void print_right(int width, int y, const char* text, const SDL_Color& text_color) const;
+    void print(const int x, const int y, const char* text, const SDL_Color& text_color, const SDL_Color& bg_color) const;
+    void print_right(const int width, const int y, const char* text, const SDL_Color& text_color, const SDL_Color& bg_color) const;
     void draw_tile(const hex_tile* hex) const;
     void draw_unit(unit_class& unit, const game_class* game) const;
     void draw_food(const food_class& food, const game_class* game) const;

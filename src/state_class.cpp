@@ -95,7 +95,7 @@ vector<unit_action> state_class::moves_generate(const player_id id, unit_class& 
         {
             if (enemy_u.hp_get() > 0)
             {
-                unit_action action{&unit, unit_action_id::attack, enemy_u};
+                unit_action action{unit.id_get(), unit.player_get(), unit_action_id::attack, enemy_u};
                 this_unit_action.push_back(action);
             }
         }
@@ -103,7 +103,7 @@ vector<unit_action> state_class::moves_generate(const player_id id, unit_class& 
         {
             if (base.hp_get() > 0 && base.player_get() == enemy_player)
             {
-                unit_action action{&unit, unit_action_id::attack, base};
+                unit_action action{unit.id_get(), unit.player_get(),unit_action_id::attack, base};
                 this_unit_action.push_back(action);
             }
         }
@@ -114,7 +114,7 @@ vector<unit_action> state_class::moves_generate(const player_id id, unit_class& 
         {
             for (auto& food : food_list_)
             {
-                unit_action action{&unit, unit_action_id::pick, food};
+                unit_action action{unit.id_get(), unit.player_get(), unit_action_id::pick, food};
                 this_unit_action.push_back(action);
             }
         }
@@ -124,7 +124,7 @@ vector<unit_action> state_class::moves_generate(const player_id id, unit_class& 
             {
                 if (base.hp_get() > 0 && base.player_get() == id)
                 {
-                    unit_action action{&unit, unit_action_id::move, base.position_get()};
+                    unit_action action{unit.id_get(), unit.player_get(), unit_action_id::move, base.position_get()};
                     this_unit_action.push_back(action);
                 }
             }
@@ -334,6 +334,7 @@ void state_class::moves_make(const map_class *map)
     {
         base.temporary_hp_apply();
     }
+    frame_increment();
 }
 
 object_abstract_class& state_class::object_get(const object_type type, const player_id player, const object_id id)
