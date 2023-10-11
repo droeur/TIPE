@@ -4,6 +4,7 @@
 #include <SDL2/SDL_ttf.h>
 #include "state_class.hpp"
 #include "parser.hpp"
+#include <player_class.hpp>
 
 enum
 {
@@ -30,6 +31,7 @@ class graphic_class
     void draw_base(const base_class& base, const game_class* game) const;
     bool event_handle(const game_class* game, options_class* settings);
     void print_screen(const game_class* game, const std::vector<object_abstract_class*>& pointed_objects) const;
+    void print_player(virtual_player_class& player, const state_class& state, const int y) const;
     SDL_Window* window_;
     SDL_Surface* screen_surface_;
     SDL_Renderer* render_;

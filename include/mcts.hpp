@@ -8,7 +8,9 @@ class mcts_result
 {
 public:
     clock_t time = 0;
-    int traversals;
+    clock_t time_max = 0;
+    int traversals = 0;
+    int traversals_max = 0;
     std::vector<unit_action> best_actions;
 };
 
@@ -91,13 +93,14 @@ class mcts
 
 
 public:
-    mcts(const int traversals_max, map_class* map, const player_id max_player)
-        : root_node_(mcts_node(nullptr, max_player))
+    mcts(const int traversals_max, map_class* map, const player_id max_player, int max_time=20)
+        : max_time_(max_time)
+        , root_node_(mcts_node(nullptr, max_player))
         , traversals_max_(traversals_max)
         , max_player_(max_player)
         , map_(map)
     {
     }
-
     std::vector<unit_action> best_action_calculate(const state_class& initial_state, const player_id player);
+    mcts_result& results_get() { return results_; }
 };

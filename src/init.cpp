@@ -49,7 +49,11 @@ void game_players_init(state_class* state, game_class* game, const std::string& 
                     else if (tokens[1] == "group")
                         player_temp = new player_group(stoi(tokens[2]));
                     else if (tokens[1] == "mcts")
+                    {
                         player_temp = new player_mcts(stoi(tokens[2]));
+                        dynamic_cast<player_mcts*>(player_temp)
+                            ->player_mcts_init(game, stoi(tokens[7]), stoi(tokens[8]));
+                    }
                     else
                     {
                         BOOST_LOG_TRIVIAL(error)

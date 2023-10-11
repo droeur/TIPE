@@ -1,5 +1,7 @@
 #include <cmath>
 #include <vector>
+#include <string>
+#include <sstream>
 #include <GLFW/glfw3.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -7,6 +9,7 @@
 #include "hex_map.hpp"
 #include "graphics.hpp"
 #include "state_class.hpp"
+#include "player_mcts.hpp"
 
 using namespace std;
 
@@ -249,17 +252,8 @@ void graphic_class::print_screen(const game_class* game, const vector<object_abs
         BOOST_LOG_TRIVIAL(error) << "printing";
     }
     print(2, 2, arr_fps, text_white);
-    char arr_player[100];
-    if (sprintf_s(arr_player, "P0: %d eval: %d", game->player_type_get(0), game->state_get()->evaluate(0)) == -1)
-    {
-        BOOST_LOG_TRIVIAL(error) << "printing";
-    }
-    print(2, 22, arr_player, text_white);
-    if (sprintf_s(arr_player, "P1: %d eval: %d", game->player_type_get(1), game->state_get()->evaluate(1)) == -1)
-    {
-        BOOST_LOG_TRIVIAL(error) << "printing";
-    }
-    print(2, 42, arr_player, text_white);
+    print_player(game->player_get(0), *game->state_get(), 22);
+    print_player(game->player_get(1), *game->state_get(), 42);
 
     char arr_size[3];
     if (sprintf_s(arr_size, "%d", static_cast<int>(pointed_objects.size())) == -1)
@@ -312,6 +306,23 @@ void graphic_class::print_screen(const game_class* game, const vector<object_abs
         print_right(window_w, 2 + i * 20, path.c_str(), text_color);
         i += 2;
     }
+}
+
+void graphic_class::print_player(virtual_player_class& player, const state_class& state, const int y) const
+{
+    SDL_Color text_white{255, 255, 255, 255};
+    char arr_player[100];
+    ostringstream player_string_stream;
+    player_string_stream << "P" << player.player_id_get() << ": " << static_cast<int>(player.player_type_get())
+                  << " eval: " << state.evaluate(player.player_id_get());
+    if (player.player_type_get() == player_type::mcts)
+    {
+        player_string_stream << " " << dynamic_cast<player_mcts&>(player).mcts_get().results_get().traversals;
+        player_string_stream << "/" << dynamic_cast<player_mcts&>(player).mcts_get().results_get().traversals_max;
+        player_string_stream << " " << dynamic_cast<player_mcts&>(player).mcts_get().results_get().time;
+        player_string_stream << "/" << dynamic_cast<player_mcts&>(player).mcts_get().results_get().time_max;
+    }
+    print(2, y, player_string_stream.str().c_str(), text_white);
 }
 
 graphic_class::graphic_class(const std::string& graphic_folder, const std::string& font)

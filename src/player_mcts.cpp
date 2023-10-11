@@ -3,10 +3,15 @@
 
 using namespace std;
 
+void player_mcts::player_mcts_init(const game_class* game, int time, int traversals_max)
+{
+    mcts_ = new mcts(traversals_max, game->map_get(), player_id_, time);
+}
+
 void player_mcts::moves_get(const game_class* game, state_class* state)
 {
     if (mcts_ == nullptr)
-        mcts_ = new mcts(1000, game->map_get(), player_id_);
+        BOOST_LOG_TRIVIAL(error) << "MCTS not initizalized";
     const auto size = state->unit_list_get()[player_id_].size();
 
     vector<unit_action> action_vec = mcts_->best_action_calculate(*state, player_id_);

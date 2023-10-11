@@ -30,6 +30,8 @@ public:
 
     [[nodiscard]] std::vector<virtual_player_class*>::size_type player_number_get() const;
 
+    virtual_player_class& player_get(const player_id id) const  { return *players_[id]; } 
+
     [[nodiscard]] map_class* map_get() const { return map_; }
     [[nodiscard]] state_class* state_get() const { return state_; }
 };
