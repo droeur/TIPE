@@ -29,7 +29,7 @@ void player_group::moves_get(const game_class* game, state_class* state)
     last_squad_check_--;
 }
 
-void player_group::squads_update(const vector<unit_class>& unit_list)
+void player_group::squads_update(vector<unit_class>& unit_list)
 {
     if (!squad_list_.empty())
     {
@@ -40,7 +40,7 @@ void player_group::squads_update(const vector<unit_class>& unit_list)
     if (!unit_list.empty())
     {
         vector<point> point_list;
-        for (auto u : unit_list)
+        for (auto& u : unit_list)
         {
             point p{&u, u.q_get(), u.r_get(), -1};
             point_list.push_back(p);

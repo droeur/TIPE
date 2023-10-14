@@ -32,7 +32,7 @@ public:
 
 class player_group final : public virtual_player_class
 {
-    void squads_update(const std::vector<unit_class>& unit_list);
+    void squads_update(std::vector<unit_class>& unit_list);
     std::vector<squad_class*> squad_list_;
     int characteristic_size_ = 5;
     int min_pts_ = 3;

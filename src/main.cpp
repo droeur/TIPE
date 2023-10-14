@@ -22,12 +22,25 @@ int main(const int argc, char* argv[])
     graphic_class* game_graphic = nullptr;
     if (settings->graphics_get())
         game_graphic = new graphic_class{settings->graphic_folder_get(), settings->font_file_get()};
-    ofstream result{settings->output_file_get().c_str(), ofstream::out};
-    for (int i = 0; i < settings->n_test_get(); i++)
+
+    time_t raw_time;
+    char buffer[20];
+
+    time(&raw_time);
+    tm time_info{};
+    localtime_s(&time_info, &raw_time);
+
+    strftime(buffer, 20, "%y_%m_%d %H_%M_%S", &time_info);
+    const string output_file = settings->output_folder_get() + "out " + buffer + ".txt";
+    ofstream result{output_file.c_str(), ofstream::out};
+    int numb_of_win[4] = {0};
+    int i = 0;
+    for (; i < settings->n_test_get(); i++)
     {
         BOOST_LOG_TRIVIAL(debug) << "Running test " << i;
         const auto state = new state_class;
-        const auto game = new game_class{&map, state};
+        state->options_set(*settings);
+        const auto game = new game_class{&map, state, settings};
         bool quit = false;
 
         game_players_init(state, game, settings->parameter_file_get());
@@ -45,14 +58,23 @@ int main(const int argc, char* argv[])
             state->fps_check_after(settings->fast_get());
         }
         result << game->winner_get() << ",";
-        BOOST_LOG_TRIVIAL(info) << "Game " << i << " out of " << settings->n_test_get() << " : winner "
-                                << game->winner_get() << " " << state->evaluate(0) << "/" << state->evaluate(1);
+        if (game->winner_get() < 3 && game->winner_get() >= -1)
+            numb_of_win[game->winner_get() + 1]++;
+
+        BOOST_LOG_TRIVIAL(info) << "Game " << i << "/" << settings->n_test_get() << " : winner " << game->winner_get()
+                                << " " << state->evaluate(0) << "/" << state->evaluate(1) << " after " << state->frame_get()
+                                << " ticks";
         delete state;
         delete game;
     }
 
     if (settings->graphics_get())
         delete game_graphic;
+
+    result << endl << "(" << numb_of_win[0] << ") " << numb_of_win[1] << "/" << numb_of_win[2] << " draws:" << numb_of_win[3];
+    result << endl << "win rate 0:" << 100.0*(static_cast<double>(numb_of_win[1])/i);
+    result << endl << "win rate 1:" << 100.0*(static_cast<double>(numb_of_win[2])/i);
+    result.close();
 
     delete settings;
     return EXIT_SUCCESS;

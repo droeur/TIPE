@@ -1,11 +1,11 @@
 #include "mcts.hpp"
 
-#include <random>
 #include <ctime>
+#include <thread>
 
 using namespace std;
 
-mcts_node& mcts::uct_select(mcts_node& node) const
+mcts_node& mcts::uct_select(mcts_node& node)
 {
     if (node.children_get().empty())
         return node;
@@ -31,20 +31,17 @@ mcts_node& mcts::uct_select(mcts_node& node) const
     return *selected_node;
 }
 
-void mcts::expansion(mcts_node& node)
+void mcts::expansion(mcts_node& node) const
 {
     vector<mcts_node>& children = node.children_get();
-    mcts_node new_child(&node, node.player_get());
-    children.push_back(new_child);
-    new_child = mcts_node(&node, node.player_get());
-    children.push_back(new_child);
-    new_child = mcts_node(&node, node.player_get());
-    children.push_back(new_child);
+    for (int i = 0; i < children_parameter_; i++)
+    {
+        children.emplace_back(&node, node.player_get());
+    }
 }
 
 void mcts::simulation(mcts_node& node, int& tick_max)
 {
-    //TODO
     for (auto& child : node.children_get())
     {
         state_class& state = child.state_get();
@@ -61,15 +58,45 @@ void mcts::simulation(mcts_node& node, int& tick_max)
     }
 }
 
+
+/*
+void mcts::simulation(mcts_node& node, int& tick_max)
+{
+    vector<thread> th_list;
+    for (auto& child : node.children_get())
+    {
+        th_list.emplace_back(& mcts::simulate_a_thread, this, &child);
+    }
+    for (auto& th : th_list)
+    {
+        th.join();
+    }
+    for (auto& child : node.children_get())
+    {
+        tick_max = max(child.state_get().frame_get(), tick_max);
+    }
+}
+
+void mcts::simulate_a_thread(mcts_node* child)
+{
+    state_class& state = child->state_get();
+    players_[0].moves_get(nullptr, &state);
+    players_[1].moves_get(nullptr, &state);
+    child->action_vec_set(state.action_vec_get(max_player_));
+    for (int i = 0; i < 10; i++)
+        state.moves_make(map_);
+    if (state.evaluate(max_player_) > 0)
+        child->win_increment(1);
+    child->visits_increment(1);
+    child->uct_val_update();
+}
+*/
 void mcts::back_propagation(mcts_node& node)
 {
     int child_wins = 0;
     int child_visits = 0;
-    for (auto& child : node.children_get())
-    {
-        child_wins += node.win_get();
-        child_visits++;
-    }
+    child_wins += node.win_get() * static_cast<int>(node.children_get().size());
+    child_visits += static_cast<int>(node.children_get().size());
     mcts_node* parent_node = node.parent_get();
     while (parent_node != nullptr)
     {

@@ -268,7 +268,7 @@ void graphic_class::print_screen(const game_class* game, const vector<object_abs
     pos_str += " ";
     pos_str += to_string(mouse_get_r());
     print_right(window_w, 0, pos_str.c_str(), text_white, text_black);
-    if (map_class::in_map(mouse_get_q(), mouse_get_r(), game->map_get()))
+    if (map_class::in_map(mouse_get_q(), mouse_get_r(), *game->map_get()))
     {
         pos_str = to_string(game->map_get()->tile_get(mouse_get_q(), mouse_get_r())->index_x());
         pos_str += " ";
@@ -326,6 +326,7 @@ void graphic_class::print_player(virtual_player_class& player, const state_class
         player_string_stream << "/" << dynamic_cast<player_mcts&>(player).mcts_get().results_get().time_max;
         player_string_stream << " ticks:" << dynamic_cast<player_mcts&>(player).mcts_get().results_get().tick_max - state.frame_get();
         player_string_stream << " c:" << dynamic_cast<player_mcts&>(player).mcts_get().c_parameter_get();
+        player_string_stream << " children:" << dynamic_cast<player_mcts&>(player).mcts_get().children_parameter_get();
     }
     print(2, y, player_string_stream.str().c_str(), text_white, text_black);
 }
@@ -442,8 +443,8 @@ bool graphic_class::update(const game_class* game, options_class* settings)
      * draw food
      * 
      */
-    const vector<food_class>& food_list = game->state_get()->food_list_get();
-    for (auto food : food_list)
+    vector<food_class>& food_list = game->state_get()->food_list_get();
+    for (auto& food : food_list)
     {
         draw_food(food, game);
         if (food.q_get() == mouse_get_q() && food.r_get() == mouse_get_r())
@@ -456,8 +457,8 @@ bool graphic_class::update(const game_class* game, options_class* settings)
      * draw bases
      * 
      */
-    const vector<base_class>& base_list = game->state_get()->base_list_get();
-    for (auto base : base_list)
+    vector<base_class>& base_list = game->state_get()->base_list_get();
+    for (auto& base : base_list)
     {
         draw_base(base, game);
         if (base.q_get() == mouse_get_q() && base.r_get() == mouse_get_r())

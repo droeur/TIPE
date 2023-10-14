@@ -1,4 +1,3 @@
-#include <random>
 #include "player_random.hpp"
 
 using namespace std;
@@ -11,8 +10,10 @@ void player_rand::moves_get(const game_class* game, state_class* state)
     while(unit_index < unit_list_size){
         if (!possible_actions_vec[unit_index].empty() )
         {
-            const vector<unit_action>::size_type r = (*rand_gen_)() % possible_actions_vec[unit_index].size();
-            switch (const auto action_temp_chosen = new unit_action(possible_actions_vec[unit_index][r]); action_temp_chosen->action_type_get())
+            const vector<unit_action>::size_type r =
+                (state->options_get().rand_n_get()) % possible_actions_vec[unit_index].size();
+            const auto action_temp_chosen = new unit_action(possible_actions_vec[unit_index][r]);
+            switch (action_temp_chosen->action_type_get())
             {
             case unit_action_id::attack: 
                 state->unit_list_get()[player_id_][unit_index].attack(
@@ -39,6 +40,7 @@ void player_rand::moves_get(const game_class* game, state_class* state)
                 break;
             case unit_action_id::error: BOOST_LOG_TRIVIAL(error) << "Unknown action";
             }
+            delete action_temp_chosen;
         }
         unit_index++;
     }

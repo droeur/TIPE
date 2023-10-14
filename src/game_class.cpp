@@ -44,7 +44,7 @@ bool game_class::winner_check()
     vector<unsigned long long> sums(player_number_get()*2, 0);
     for (const auto& u_l : state_->unit_list_get())
     {
-        for (const auto u : u_l)
+        for (const auto& u : u_l)
         {
             sums[u.player_get()] += u.hp_get();
         }
@@ -56,7 +56,7 @@ bool game_class::winner_check()
     else if (sums[1] == 0)
         winner_ = 0;
 
-    for (auto b : state_->base_list_get())
+    for (auto& b : state_->base_list_get())
     {
         sums[b.player_get() + 2] += b.hp_get();
     }

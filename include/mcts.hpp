@@ -45,6 +45,7 @@ public:
         {
             is_max_ = !parent->is_max_;
             state_ = parent_->state_;
+            state_.options_set(parent_->state_.options_get());
         }
         else
             BOOST_LOG_TRIVIAL(error) << "MCTS : parent null ptr";
@@ -93,12 +94,14 @@ class mcts
     int traversals_ = 0;
 
     double c_parameter_ = sqrt(2);
+    int children_parameter_ = 2;
 
     player_id max_player_;
 
-    mcts_node& uct_select(mcts_node& node) const;
-    static void expansion(mcts_node& node);
+    static mcts_node& uct_select(mcts_node& node);
+    void expansion(mcts_node& node) const;
     void simulation(mcts_node& node, int& tick_max);
+    void simulate_a_thread(mcts_node* child);
     static void back_propagation(mcts_node& node);
 
     mcts_node& best_node_select();
@@ -110,11 +113,13 @@ class mcts
 
 
 public:
-    mcts(const state_class &root_state, const int traversals_max, map_class* map, const player_id max_player, const int max_time=20, const double c_parameter=sqrt(2))
+    mcts(const state_class& root_state, const int traversals_max, map_class* map, const player_id max_player,
+         const int max_time = 20, const double c_parameter = sqrt(2), const int children_parameter = 2)
         : root_node_(mcts_node(root_state, max_player))
         , max_time_(max_time)
         , traversals_max_(traversals_max)
         , c_parameter_(c_parameter)
+        , children_parameter_(children_parameter)
         , max_player_(max_player)
         , map_(map)
     {
@@ -122,4 +127,5 @@ public:
     std::vector<unit_action> best_action_calculate(const state_class& initial_state, player_id player);
     mcts_result& results_get() { return results_; }
     [[nodiscard]] double c_parameter_get() const { return c_parameter_; }
+    [[nodiscard]] int children_parameter_get() const { return children_parameter_; }
 };

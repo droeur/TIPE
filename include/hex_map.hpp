@@ -77,21 +77,7 @@ public:
 
     [[nodiscard]] double graphic_x() const;
     [[nodiscard]] double graphic_y() const;
-
-    // path finding
-    int parent_q = -1;
-    int parent_r = -1;
-    float cost_g = FLT_MAX; //distance from start
-    float cost_h = FLT_MAX; //heuristic
-    float cost_f = FLT_MAX; //g+h
-    hex_tile* parent = nullptr;
-
-    [[nodiscard]] int parent_x() const;
-    [[nodiscard]] int parent_y() const;
-
-    bool operator<(const hex_tile& a) const;
-    bool operator>(const hex_tile& a) const;
-
+    
     [[nodiscard]] bool is_valid() const;
 };
 
@@ -106,7 +92,7 @@ public:
 
     std::vector<hex_tile*> path_a_star(hex_tile* start, const hex_tile* end) const;
 
-    static bool in_map(int q, int r, const map_class* map);
+    static bool in_map(int q, int r, const map_class& map);
     [[nodiscard]] hex_tile* tile_get(int q, int r) const;
 
     void row_add(std::vector<hex_tile*>* row) const;

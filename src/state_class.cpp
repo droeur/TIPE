@@ -318,7 +318,7 @@ void state_class::moves_make(const map_class *map)
             u.temporary_hp_apply();
             if (u.carry_food_get())
             {
-                for (auto base : base_list_)
+                for (auto& base : base_list_)
                 {
                     if (base.player_get() == player && base.position_get().distance(u.position_get(), map) < 1)
                     {
@@ -330,7 +330,7 @@ void state_class::moves_make(const map_class *map)
             }
         }
     }
-    for (auto base : base_list_)
+    for (auto& base : base_list_)
     {
         base.temporary_hp_apply();
     }
@@ -359,7 +359,7 @@ void state_class::attack_execute(unit_class& u, object_abstract_class& enemy_obj
         enemy_obj.temporary_hp_set(0);
         if (enemy_obj.object_type_get() == object_type::unit)
         {
-            if (const auto enemy_u = dynamic_cast<unit_class&>(enemy_obj); enemy_u.carry_food_get())
+            if (const auto& enemy_u = dynamic_cast<unit_class&>(enemy_obj); enemy_u.carry_food_get())
             {
                 food_new(enemy_u.q_get(), enemy_u.r_get());
             }

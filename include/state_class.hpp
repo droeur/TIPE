@@ -30,6 +30,8 @@ class state_class
     void base_append(const base_class& b);
     void food_append(const food_class& f);
 
+    options_class* options_{};
+
 public:
     state_class() = default;
 
@@ -61,4 +63,7 @@ public:
 
     [[nodiscard]] int evaluate(player_id player) const;
     std::vector<unit_action> action_vec_get(player_id player);
+
+    [[nodiscard]] options_class& options_get() const { return *options_; }
+    void options_set(options_class& options) { options_ = &options; }
 };

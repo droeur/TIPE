@@ -13,7 +13,8 @@ public:
         : virtual_player_class(id, player_type::mcts)
     {
     }
-    void player_mcts_init(const game_class* game, int time, int traversals_max, double c_parameter);
+    void player_mcts_init(const game_class* game, const int time, const int traversals_max, const double c_parameter, const int
+                          children_parameter);
     mcts& mcts_get() { return *mcts_; }
     void moves_get(const game_class* game, state_class* state) override;
 };

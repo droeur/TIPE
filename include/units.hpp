@@ -6,8 +6,9 @@
 
 using frame = int;
 
-#define ATTACK_COOLDOWN (frame)24
-#define MOVE_COOLDOWN (frame)24
+#define ATTACK_COOLDOWN (frame)12
+#define MOVE_COOLDOWN (frame)12
+#define PATHFINDING_COOLDOWN (frame)12
 
 enum
 {
@@ -94,7 +95,7 @@ public:
 
     void update_cooldown();
     [[nodiscard]] int pathfinding_cooldown_get() const { return pathfinding_cooldown_; }
-    void pathfinding_cooldown_reinitialize() { pathfinding_cooldown_ = 5; }
+    void pathfinding_cooldown_reinitialize() { pathfinding_cooldown_ = PATHFINDING_COOLDOWN; }
     void reinitialize_attack_cooldown(){t_a_ = ATTACK_COOLDOWN;}
     void reinitialize_move_cooldown(){t_m_ = MOVE_COOLDOWN;}
 

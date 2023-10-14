@@ -4,9 +4,10 @@
 using namespace std;
 
 void player_mcts::player_mcts_init(const game_class* game, const int time, const int traversals_max,
-                                   const double c_parameter)
+                                   const double c_parameter, const int children_parameter)
 {
-    mcts_ = new mcts(*game->state_get(), traversals_max, game->map_get(), player_id_, time, c_parameter);
+    mcts_ = new mcts(*game->state_get(), traversals_max, game->map_get(), player_id_, time, c_parameter,
+                     children_parameter);
 }
 
 void player_mcts::moves_get(const game_class* game, state_class* state)
