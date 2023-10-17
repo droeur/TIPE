@@ -39,7 +39,7 @@ void mcts::expansion(mcts_node& node) const
         children.emplace_back(&node, node.player_get());
     }
 }
-
+/*
 void mcts::simulation(mcts_node& node, int& tick_max)
 {
     for (auto& child : node.children_get())
@@ -57,9 +57,9 @@ void mcts::simulation(mcts_node& node, int& tick_max)
         tick_max = max(state.frame_get(), tick_max);
     }
 }
+*/
 
 
-/*
 void mcts::simulation(mcts_node& node, int& tick_max)
 {
     vector<thread> th_list;
@@ -90,7 +90,7 @@ void mcts::simulate_a_thread(mcts_node* child)
     child->visits_increment(1);
     child->uct_val_update();
 }
-*/
+
 void mcts::back_propagation(mcts_node& node)
 {
     int child_wins = 0;
