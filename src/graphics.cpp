@@ -316,7 +316,7 @@ void graphic_class::print_player(virtual_player_class& player, const state_class
     constexpr SDL_Color text_black{0, 0, 0, 255};
     char arr_player[100];
     ostringstream player_string_stream;
-    player_string_stream << "P" << player.player_id_get() << ": " << static_cast<int>(player.player_type_get())
+    player_string_stream << "P" << player.player_id_get() << ": " << virtual_player_class::player_type_to_string(player.player_type_get())
                   << " eval: " << state.evaluate(player.player_id_get());
     if (player.player_type_get() == player_type::mcts)
     {

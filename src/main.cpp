@@ -34,6 +34,7 @@ int main(const int argc, char* argv[])
     const string output_file = settings->output_folder_get() + "out " + buffer + ".txt";
     ofstream result{output_file.c_str(), ofstream::out};
     int numb_of_win[4] = {0};
+    player_type players[2];
     int i = 0;
     for (; i < settings->n_test_get(); i++)
     {
@@ -61,6 +62,9 @@ int main(const int argc, char* argv[])
         if (game->winner_get() < 3 && game->winner_get() >= -1)
             numb_of_win[game->winner_get() + 1]++;
 
+        players[0] = game->player_get(0).player_type_get();
+        players[1] = game->player_get(1).player_type_get();
+
         BOOST_LOG_TRIVIAL(info) << "Game " << i << "/" << settings->n_test_get() << " : winner " << game->winner_get()
                                 << " " << state->evaluate(0) << "/" << state->evaluate(1) << " after " << state->frame_get()
                                 << " ticks";
@@ -72,8 +76,9 @@ int main(const int argc, char* argv[])
         delete game_graphic;
 
     result << endl << "(" << numb_of_win[0] << ") " << numb_of_win[1] << "/" << numb_of_win[2] << " draws:" << numb_of_win[3];
-    result << endl << "win rate 0:" << 100.0*(static_cast<double>(numb_of_win[1])/i);
-    result << endl << "win rate 1:" << 100.0*(static_cast<double>(numb_of_win[2])/i);
+    result << endl << "win rate " << virtual_player_class::player_type_to_string(players[0]) << " (0):" << 100.0 * (static_cast<double>(numb_of_win[1]) / i);
+    result << endl << "win rate " << virtual_player_class::player_type_to_string(players[1])
+           << " (1):" << 100.0 * (static_cast<double>(numb_of_win[2]) / i);
     result.close();
 
     delete settings;
