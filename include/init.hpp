@@ -1,3 +1,3 @@
 #pragma once
 
-void game_players_init(state_class* s, game_class* g, const std::string& parameter_file);
+void game_players_init(state_class* state, game_class* game, const std::string& parameter_file);

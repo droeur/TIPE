@@ -1,0 +1,4 @@
+0,0,1,0,0,1,0,1,0,0,
+(0) 7/3 draws:0
+win rate Random (0):70
+win rate Random (1):30

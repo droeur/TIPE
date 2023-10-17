@@ -4,6 +4,7 @@
 #include <SDL2/SDL_ttf.h>
 #include "state_class.hpp"
 #include "parser.hpp"
+#include <player_class.hpp>
 
 enum
 {
@@ -22,14 +23,15 @@ constexpr auto hex_height_coefficient = 0.78;
 
 class graphic_class
 {
-    void print(int x, int y, const char* text, const SDL_Color& text_color) const;
-    void print_right(int width, int y, const char* text, const SDL_Color& text_color) const;
+    void print(const int x, const int y, const char* text, const SDL_Color& text_color, const SDL_Color& bg_color) const;
+    void print_right(const int width, const int y, const char* text, const SDL_Color& text_color, const SDL_Color& bg_color) const;
     void draw_tile(const hex_tile* hex) const;
-    void draw_unit(unit_class* unit, const game_class* game) const;
-    void draw_food(const food_class* food, const game_class* game) const;
-    void draw_base(const base_class* base, const game_class* game) const;
+    void draw_unit(unit_class& unit, const game_class* game) const;
+    void draw_food(const food_class& food, const game_class* game) const;
+    void draw_base(const base_class& base, const game_class* game) const;
     bool event_handle(const game_class* game, options_class* settings);
     void print_screen(const game_class* game, const std::vector<object_abstract_class*>& pointed_objects) const;
+    void print_player(virtual_player_class& player, const state_class& state, const int y) const;
     SDL_Window* window_;
     SDL_Surface* screen_surface_;
     SDL_Renderer* render_;
@@ -41,6 +43,8 @@ class graphic_class
     int x_mouse_ = 0;
     int y_mouse_ = 0;
     TTF_Font* font_ = nullptr;
+    bool path_debug_ = false;
+    bool target_debug_ = false;
 
 public:
     graphic_class(const std::string& graphic_folder, const std::string& font);

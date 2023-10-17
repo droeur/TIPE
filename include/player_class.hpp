@@ -2,12 +2,20 @@
 
 class virtual_player_class;
 
+enum class player_type
+{
+    error,
+    random,
+    mcts,
+    group
+};
+
+
 #include "units.hpp"
 #include "state_class.hpp"
 #include <iostream>
 #include <boost/log/trivial.hpp>
 
-enum class player_type{error, random, mcts, group};
 
 class virtual_player_class
 {
@@ -31,5 +39,16 @@ public:
 
     [[nodiscard]] player_id player_id_get()     const   {   return player_id_;      }
     [[nodiscard]] player_type player_type_get() const   {   return player_type_;    }
-    
+    static std::string player_type_to_string(const player_type type)
+    {
+        std::string name;
+        switch (type)
+        {
+        case player_type::error: name = "Error";
+        case player_type::group: name = "Group";
+        case player_type::mcts: name = "MCTS";
+        case player_type::random: name = "Random";
+        }
+        return name;
+    }
 };

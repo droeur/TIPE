@@ -1,5 +1,7 @@
 #include <cmath>
 #include <vector>
+#include <string>
+#include <sstream>
 #include <GLFW/glfw3.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -7,14 +9,15 @@
 #include "hex_map.hpp"
 #include "graphics.hpp"
 #include "state_class.hpp"
+#include "player_mcts.hpp"
 
 using namespace std;
 
-void graphic_class::print(const int x, const int y, const char* text, const SDL_Color& text_color) const
+void graphic_class::print(const int x, const int y, const char* text, const SDL_Color& text_color, const SDL_Color& bg_color) const
 {
     SDL_Rect mess_rect = {x, y, 0, 0};
     int w, h;
-    SDL_Surface* mess_fps = TTF_RenderText_Solid(font_, text, text_color);
+    SDL_Surface* mess_fps = TTF_RenderText_Shaded(font_, text, text_color, bg_color);
     SDL_Texture* texture = SDL_CreateTextureFromSurface(render_, mess_fps);
     TTF_SizeText(font_, text, &w, &h);
     mess_rect.w = w;
@@ -24,11 +27,12 @@ void graphic_class::print(const int x, const int y, const char* text, const SDL_
     SDL_DestroyTexture(texture);
 }
 
-void graphic_class::print_right(const int width, const int y, const char* text, const SDL_Color& text_color) const
+void graphic_class::print_right(const int width, const int y, const char* text, const SDL_Color& text_color,
+                                const SDL_Color& bg_color) const
 {
     SDL_Rect mess_rect = {0, y, 0, 0};
     int w, h;
-    SDL_Surface* mess_fps = TTF_RenderText_Solid(font_, text, text_color);
+    SDL_Surface* mess_fps = TTF_RenderText_Shaded(font_, text, text_color, bg_color);
     SDL_Texture* texture = SDL_CreateTextureFromSurface(render_, mess_fps);
     TTF_SizeText(font_, text, &w, &h);
     mess_rect.x = width - w;
@@ -54,7 +58,7 @@ void graphic_class::draw_tile(const hex_tile *hex) const
         SDL_RenderCopy(render_, hex_blocked_texture_, nullptr, &map_tile_rect);
 }
 
-void graphic_class::draw_unit(unit_class* unit, const game_class *game) const
+void graphic_class::draw_unit(unit_class& unit, const game_class *game) const
 {
     SDL_Rect life_rect;
     life_rect.h = static_cast<int>(0.1 * zoom_);
@@ -62,13 +66,13 @@ void graphic_class::draw_unit(unit_class* unit, const game_class *game) const
     unit_rect.w = static_cast<int>(zoom_ * 0.5);
     unit_rect.h = static_cast<int>(zoom_ * 0.5);
 
-    if (unit->player_get() == 0)
+    if (unit.player_get() == 0)
         SDL_SetRenderDrawColor(render_, BLUE);
     else
         SDL_SetRenderDrawColor(render_, RED);
-    const hex_tile* tile = game->map_get()->tile_get(unit->q_get(), unit->r_get());
-    unit_rect.x = static_cast<int>(tile->graphic_x()) * zoom_ - unit_rect.w / 2 + x_shift_ * zoom_ + unit->player_get()*zoom_/5;
-    unit_rect.y = static_cast<int>(unit->r_get() * hex_height_coefficient * zoom_ - unit_rect.h / 2) + y_shift_ * zoom_;
+    const hex_tile* tile = game->map_get()->tile_get(unit.q_get(), unit.r_get());
+    unit_rect.x = static_cast<int>(tile->graphic_x()) * zoom_ - unit_rect.w / 2 + x_shift_ * zoom_ + unit.player_get()*zoom_/5;
+    unit_rect.y = static_cast<int>(unit.r_get() * hex_height_coefficient * zoom_ - unit_rect.h / 2) + y_shift_ * zoom_;
     SDL_RenderFillRect(render_, &unit_rect);
 
     life_rect.w = static_cast<int> (0.1f * unit_hp * zoom_);
@@ -76,24 +80,24 @@ void graphic_class::draw_unit(unit_class* unit, const game_class *game) const
     life_rect.y = static_cast<int> (unit_rect.y + 0.7 * zoom_);
     SDL_RenderDrawRect(render_, &life_rect);
 
-    life_rect.w = static_cast<int> (0.1f * unit->hp_get() * zoom_);
+    life_rect.w = static_cast<int> (0.1f * unit.hp_get() * zoom_);
     SDL_RenderFillRect(render_, &life_rect);
 
-    const unit_action* action = unit->actual_action_get();
-    if (action != nullptr)
+    const unit_action action = unit.actual_action_get();
+    if (target_debug_)
     {
-        switch (action->action_type_get())
+        switch (action.action_type_get())
         {
         case unit_action_id::pick:
         case unit_action_id::attack: {
-            object_abstract_class* enemy_u = action->target_unit_get();
+            object_abstract_class& enemy_u = game->state_get()->object_get(action.target_type_get(), action.target_player_get(), action.target_id_get());
             SDL_RenderDrawLine(
-                render_, static_cast<int>((unit->position_get().graphic_x_get(game->map_get()) + x_shift_) * zoom_),
-                static_cast<int>(unit->position_get().graphic_y_get(game->map_get()) * hex_height_coefficient *
+                render_, static_cast<int>((unit.position_get().graphic_x_get(game->map_get()) + x_shift_) * zoom_),
+                static_cast<int>(unit.position_get().graphic_y_get(game->map_get()) * hex_height_coefficient *
                                     zoom_) +
                     y_shift_ * zoom_,
-                enemy_u->position_get().graphic_x_get(game->map_get()) * zoom_ + x_shift_ * zoom_,
-                (enemy_u->position_get().graphic_y_get(game->map_get()) * hex_height_coefficient) * zoom_ +
+                enemy_u.position_get().graphic_x_get(game->map_get()) * zoom_ + x_shift_ * zoom_,
+                (enemy_u.position_get().graphic_y_get(game->map_get()) * hex_height_coefficient) * zoom_ +
                     y_shift_ * zoom_);
         }
         break;
@@ -101,10 +105,10 @@ void graphic_class::draw_unit(unit_class* unit, const game_class *game) const
         }
     }
     
-    /*if (!unit->path_get()->empty())
+    if (path_debug_ && !unit.path_get()->empty())
     {
-        hex_tile* precendent_tile = game->map_get()->tile_get(unit->position_get().q_get(), unit->position_get().r_get());
-        for (auto tile : *(unit->path_get()))
+        hex_tile* precendent_tile = game->map_get()->tile_get(unit.position_get().q_get(), unit.position_get().r_get());
+        for (auto tile : *(unit.path_get()))
         {
             SDL_RenderDrawLine(render_, 
                 static_cast<int>(precendent_tile->graphic_x() * zoom_ + x_shift_ * zoom_), 
@@ -113,16 +117,16 @@ void graphic_class::draw_unit(unit_class* unit, const game_class *game) const
                 static_cast<int>(tile->graphic_y() * hex_height_coefficient * zoom_ + y_shift_ * zoom_));
             precendent_tile = tile;
         }
-    }*/
+    }
 }
 
-void graphic_class::draw_food(const food_class* food, const game_class* game) const
+void graphic_class::draw_food(const food_class& food, const game_class* game) const
 {
     SDL_Rect food_rect;
     food_rect.w = static_cast<int>(0.2 * zoom_);
     food_rect.h = static_cast<int>(0.2 * zoom_);
     SDL_SetRenderDrawColor(render_, GREEN);
-    const hex_tile* tile = game->map_get()->tile_get(food->q_get(), food->r_get());
+    const hex_tile* tile = game->map_get()->tile_get(food.q_get(), food.r_get());
     food_rect.x = static_cast<int>(tile->graphic_x()) * zoom_ - food_rect.w / 2 + x_shift_ * zoom_;
     food_rect.y =
         static_cast<int>(tile->graphic_y() * hex_height_coefficient) * zoom_ - food_rect.h / 2 + y_shift_ * zoom_;
@@ -130,7 +134,7 @@ void graphic_class::draw_food(const food_class* food, const game_class* game) co
     
 }
 
-void graphic_class::draw_base(const base_class* base, const game_class* game) const
+void graphic_class::draw_base(const base_class& base, const game_class* game) const
 {
     SDL_Rect life_rect;
     life_rect.h = static_cast<int>(0.1 * zoom_);
@@ -139,11 +143,11 @@ void graphic_class::draw_base(const base_class* base, const game_class* game) co
     base_rect.h = static_cast<int>(zoom_);
     SDL_SetRenderDrawColor(render_, BLACK);
     constexpr int bar_width = static_cast<int>(0.01 * base_hp);
-    const hex_tile* tile = game->map_get()->tile_get(base->q_get(), base->r_get());
+    const hex_tile* tile = game->map_get()->tile_get(base.q_get(), base.r_get());
     base_rect.x = static_cast<int>(tile->graphic_x() * zoom_ - base_rect.w / 2 + x_shift_ * zoom_);
     base_rect.y =
         static_cast<int>(tile->graphic_y() * hex_height_coefficient * zoom_ - base_rect.h / 2 + y_shift_ * zoom_);
-    if (base->player_id_get() == 0)
+    if (base.player_id_get() == 0)
         SDL_SetRenderDrawColor(render_, DARK_BLUE);
     else
         SDL_SetRenderDrawColor(render_, DARK_RED);
@@ -155,7 +159,7 @@ void graphic_class::draw_base(const base_class* base, const game_class* game) co
     life_rect.w = bar_width * zoom_;
     SDL_RenderDrawRect(render_, &life_rect);
 
-    life_rect.w = static_cast<int>(0.01 * base->hp_get() * zoom_);
+    life_rect.w = static_cast<int>(0.01 * base.hp_get() * zoom_);
     SDL_RenderFillRect(render_, &life_rect);
 }
 
@@ -201,6 +205,14 @@ bool graphic_class::event_handle(const game_class* game, options_class* settings
             {
                 settings->pause_toggle();
             }
+            else if (e.key.keysym.sym == SDLK_p)
+            {
+                path_debug_ = !path_debug_;
+            }
+            else if (e.key.keysym.sym == SDLK_t)
+            {
+                target_debug_ = !target_debug_;
+            }
         }
         if (e.type == SDL_MOUSEMOTION)
         {
@@ -210,18 +222,15 @@ bool graphic_class::event_handle(const game_class* game, options_class* settings
         {
             if (e.button.button == SDL_BUTTON_LEFT && game->map_get()->passable(mouse_get_q(), mouse_get_r()))
             {
-                const auto u = new unit_class{mouse_get_q(), mouse_get_r(), 0, unit_hp};
-                game->state_get()->unit_append(u, 0);
+                game->state_get()->unit_new(mouse_get_q(), mouse_get_r(), 0, unit_hp);
             }
             if (e.button.button == SDL_BUTTON_RIGHT && game->map_get()->passable(mouse_get_q(), mouse_get_r()))
             {
-                const auto u = new unit_class{mouse_get_q(), mouse_get_r(), 1, unit_hp};
-                game->state_get()->unit_append(u, 1);
+                game->state_get()->unit_new(mouse_get_q(), mouse_get_r(), 1, unit_hp);
             }
             if (e.button.button == SDL_BUTTON_MIDDLE && game->map_get()->passable(mouse_get_q(), mouse_get_r()))
             {
-                const auto food = new food_class{mouse_get_q(), mouse_get_r()};
-                game->state_get()->food_append(food);
+                game->state_get()->food_new(mouse_get_q(), mouse_get_r());
             }
         }
     }
@@ -234,6 +243,7 @@ void graphic_class::print_screen(const game_class* game, const vector<object_abs
     SDL_Color text_red{255, 0, 0, 255};
     SDL_Color text_blue{0, 0, 255, 255};
     SDL_Color text_green{0, 255, 0, 255};
+    SDL_Color text_black{0, 0, 0, 255};
     int window_w, window_h;
 
     SDL_GetWindowSize(window_, &window_w, &window_h);
@@ -241,27 +251,29 @@ void graphic_class::print_screen(const game_class* game, const vector<object_abs
     char arr_fps[20];
     if (sprintf_s(arr_fps, "%d", static_cast<int>(game->state_get()->fps_get())) == -1)
     {
-        BOOST_LOG_TRIVIAL(error) << "printing" ;
+        BOOST_LOG_TRIVIAL(error) << "printing";
     }
-    print(2, 2, arr_fps, text_white);
+    print(2, 2, arr_fps, text_white, text_black);
+    print_player(game->player_get(0), *game->state_get(), 22);
+    print_player(game->player_get(1), *game->state_get(), 42);
 
     char arr_size[3];
     if (sprintf_s(arr_size, "%d", static_cast<int>(pointed_objects.size())) == -1)
     {
         BOOST_LOG_TRIVIAL(error) << "printing" ;
     }
-    print(50, 2, arr_size, text_white);
+    print(50, 2, arr_size, text_white, text_black);
     string pos_str;
     pos_str += to_string(mouse_get_q());
     pos_str += " ";
     pos_str += to_string(mouse_get_r());
-    print_right(window_w, 0, pos_str.c_str(), text_white);
-    if (map_class::in_map(mouse_get_q(), mouse_get_r(), game->map_get()))
+    print_right(window_w, 0, pos_str.c_str(), text_white, text_black);
+    if (map_class::in_map(mouse_get_q(), mouse_get_r(), *game->map_get()))
     {
         pos_str = to_string(game->map_get()->tile_get(mouse_get_q(), mouse_get_r())->index_x());
         pos_str += " ";
         pos_str += to_string(game->map_get()->tile_get(mouse_get_q(), mouse_get_r())->index_y());
-        print_right(window_w, 22, pos_str.c_str(), text_white);
+        print_right(window_w, 22, pos_str.c_str(), text_white, text_black);
     }
     int i = 4;
     for (object_abstract_class* obj : pointed_objects)
@@ -281,43 +293,42 @@ void graphic_class::print_screen(const game_class* game, const vector<object_abs
         {
             text_color = text_red;
         }
-        if (obj->object_type_get() == object_type::undefined)
+        if (sprintf_s(arr_info, "HP: %d ID: %d", obj->hp_get(), obj->id_get()) == -1)
         {
-            auto* u = dynamic_cast<unit_class*>(obj);
-            vector<hex_tile*>* p = u->path_get();
-            path += "[";
-            path += to_string(p->size());
-            path += "]: ";
-            for (hex_tile* t : *p)
-            {
-                path += to_string(t->q());
-                path += " ";
-                path += to_string(t->r());
-                path += " / ";
-            }
-            if (sprintf_s(arr_info, "HP: %d carry: %s", u->hp_get(), u->carry_food_get() ? "true" : "false") == -1)
-            {
-                BOOST_LOG_TRIVIAL(error) << "printing" ;
-            }
+            BOOST_LOG_TRIVIAL(error) << "printing" ;
         }
-        else
-        {
-            if (sprintf_s(arr_info, "HP: %d", obj->hp_get()) == -1)
-            {
-                BOOST_LOG_TRIVIAL(error) << "printing" ;
-            }
-        }
-        print_right(window_w, 2 + i * 20, arr_info, text_color);
+        print_right(window_w, 2 + i * 20, arr_info, text_color, text_black);
         i++;
         if (sprintf_s(arr_info, "%d %d", obj->q_get(), obj->r_get()) == -1)
         {
             BOOST_LOG_TRIVIAL(error) << "printing";
         }
-        print_right(window_w, 2 + i * 20, arr_info, text_color);
+        print_right(window_w, 2 + i * 20, arr_info, text_color, text_black);
         i++;
-        print_right(window_w, 2 + i * 20, path.c_str(), text_color);
+        print_right(window_w, 2 + i * 20, path.c_str(), text_color, text_black);
         i += 2;
     }
+}
+
+void graphic_class::print_player(virtual_player_class& player, const state_class& state, const int y) const
+{
+    constexpr SDL_Color text_white{255, 255, 255, 255};
+    constexpr SDL_Color text_black{0, 0, 0, 255};
+    char arr_player[100];
+    ostringstream player_string_stream;
+    player_string_stream << "P" << player.player_id_get() << ": " << virtual_player_class::player_type_to_string(player.player_type_get())
+                  << " eval: " << state.evaluate(player.player_id_get());
+    if (player.player_type_get() == player_type::mcts)
+    {
+        player_string_stream << " trav:" << dynamic_cast<player_mcts&>(player).mcts_get().results_get().traversals;
+        player_string_stream << "/" << dynamic_cast<player_mcts&>(player).mcts_get().results_get().traversals_max;
+        player_string_stream << " time:" << dynamic_cast<player_mcts&>(player).mcts_get().results_get().time;
+        player_string_stream << "/" << dynamic_cast<player_mcts&>(player).mcts_get().results_get().time_max;
+        player_string_stream << " ticks:" << dynamic_cast<player_mcts&>(player).mcts_get().results_get().tick_max - state.frame_get();
+        player_string_stream << " c:" << dynamic_cast<player_mcts&>(player).mcts_get().c_parameter_get();
+        player_string_stream << " children:" << dynamic_cast<player_mcts&>(player).mcts_get().children_parameter_get();
+    }
+    print(2, y, player_string_stream.str().c_str(), text_white, text_black);
 }
 
 graphic_class::graphic_class(const std::string& graphic_folder, const std::string& font)
@@ -412,17 +423,17 @@ bool graphic_class::update(const game_class* game, options_class* settings)
      * Draw units
      * 
      */
-    const vector<vector<unit_class*>> list_of_u_list = game->state_get()->unit_list_get();
-    for (auto& unit_list : list_of_u_list)
+    vector<vector<unit_class>>& list_of_u_list = game->state_get()->unit_list_get();
+    for (vector<unit_class>& unit_list : list_of_u_list)
     {
-        for (const auto& unit : unit_list)
+        for (unit_class& unit : unit_list)
         {
-            if (unit->hp_get() > 0)
+            if (unit.hp_get() > 0)
             {
                 draw_unit(unit, game);
-                if (unit->q_get() == mouse_get_q() && unit->r_get() == mouse_get_r())
+                if (unit.q_get() == mouse_get_q() && unit.r_get() == mouse_get_r())
                 {
-                    pointed_objects.push_back(unit);
+                    pointed_objects.push_back(&unit);
                 }
             }
         }
@@ -432,13 +443,13 @@ bool graphic_class::update(const game_class* game, options_class* settings)
      * draw food
      * 
      */
-    const vector<food_class*>* food_list = game->state_get()->food_list_get();
-    for (const auto food : *food_list)
+    vector<food_class>& food_list = game->state_get()->food_list_get();
+    for (auto& food : food_list)
     {
         draw_food(food, game);
-        if (food->q_get() == mouse_get_q() && food->r_get() == mouse_get_r())
+        if (food.q_get() == mouse_get_q() && food.r_get() == mouse_get_r())
         {
-            pointed_objects.push_back(food);
+            pointed_objects.push_back(&food);
         }
     }
 
@@ -446,13 +457,13 @@ bool graphic_class::update(const game_class* game, options_class* settings)
      * draw bases
      * 
      */
-    const vector<base_class*>* base_list = game->state_get()->base_list_get();
-    for (const auto base : *base_list)
+    vector<base_class>& base_list = game->state_get()->base_list_get();
+    for (auto& base : base_list)
     {
         draw_base(base, game);
-        if (base->q_get() == mouse_get_q() && base->r_get() == mouse_get_r())
+        if (base.q_get() == mouse_get_q() && base.r_get() == mouse_get_r())
         {
-            pointed_objects.push_back(base);
+            pointed_objects.push_back(&base);
         }
     }
 

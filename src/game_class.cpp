@@ -18,6 +18,13 @@ void game_class::player_set(virtual_player_class* p, const player_id id)
             << players_.size();
 }
 
+player_type game_class::player_type_get(const player_id player) const
+{
+    if (player > player_number_get())
+        return player_type::error;
+    return players_[player]->player_type_get();
+}
+
 std::vector<virtual_player_class*>::size_type game_class::player_number_get() const
 {
     return players_.size();
@@ -37,9 +44,9 @@ bool game_class::winner_check()
     vector<unsigned long long> sums(player_number_get()*2, 0);
     for (const auto& u_l : state_->unit_list_get())
     {
-        for (const auto u : u_l)
+        for (const auto& u : u_l)
         {
-            sums[u->player_get()] += u->hp_get();
+            sums[u.player_get()] += u.hp_get();
         }
     }
     if (sums[0] == 0 && sums[1] == 0)
@@ -49,9 +56,9 @@ bool game_class::winner_check()
     else if (sums[1] == 0)
         winner_ = 0;
 
-    for (const auto& b : *state_->base_list_get())
+    for (auto& b : state_->base_list_get())
     {
-        sums[b->player_get() + 2] += b->hp_get();
+        sums[b.player_get() + 2] += b.hp_get();
     }
     if ((sums[2] == 0 && sums[3] == 0) || ((sums[2] == 0 || sums[3] == 0) && winner_ != -1))
         winner_ = 2;

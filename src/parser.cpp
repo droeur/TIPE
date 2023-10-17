@@ -6,6 +6,8 @@
 #include <boost/log/expressions.hpp>
 #include "parser.hpp"
 
+#include <random>
+
 using namespace std;
 namespace logging = boost::log;
 
@@ -18,6 +20,7 @@ bool file_check(const string &name)
 
 options_class::options_class(const int argc, char* argv[])
 {
+    rand_gen_ = mt19937{static_cast<unsigned>(time(nullptr)) * 5};
     desc_ = new boost::program_options::options_description{"Options"};
     desc_->add_options()
         ("help,h", "Help screen")
@@ -28,7 +31,8 @@ options_class::options_class(const int argc, char* argv[])
         ("font,t", boost::program_options::value<std::string>(), "Font file")
         ("fast,f", "Start without speed limitation")
         ("log,l", boost::program_options::value<int>() ,"Log level")
-        ("output,o", boost::program_options::value<std::string>(), "Output file");
+        ("output,o", boost::program_options::value<std::string>(), "Output folder")
+        ("games,s", boost::program_options::value<int>(), "Number of game to play");
     vm_ = new boost::program_options::variables_map;
     store(parse_command_line(argc, argv, *desc_), *vm_);
     notify(*vm_);
@@ -40,7 +44,7 @@ options_class::options_class(const int argc, char* argv[])
     if (vm_->count("parameter"))
         parameter_file_ = (*vm_)["parameter"].as<std::string>();
     if (vm_->count("output"))
-        output_file_ = (*vm_)["output"].as<std::string>();
+        output_folder_ = (*vm_)["output"].as<std::string>();
     if (vm_->count("no-graphic"))
         graphics_ = false;
     if (vm_->count("graphic-folder"))
@@ -51,6 +55,8 @@ options_class::options_class(const int argc, char* argv[])
         fast_ = true;
     if (vm_->count("log"))
         log_level_ = (*vm_)["log"].as<int>();
+    if (vm_->count("games"))
+        n_test_ = (*vm_)["games"].as<int>();
 
     if (log_level_ >= 2)
         logging::core::get()->set_filter(logging::trivial::severity >= logging::trivial::trace);
@@ -97,9 +103,9 @@ std::string options_class::parameter_file_get()
     return parameter_file_;
 }
 
-std::string options_class::output_file_get()
+std::string options_class::output_folder_get()
 {
-    return output_file_;
+    return output_folder_;
 }
 
 std::string options_class::graphic_folder_get()

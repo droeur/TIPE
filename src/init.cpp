@@ -22,9 +22,8 @@ void tokenize(std::string const& str, const char* delimiter, std::vector<std::st
 } 
 
 
-void game_players_init(state_class* s, game_class* g, const std::string& parameter_file)
+void game_players_init(state_class* state, game_class* game, const std::string& parameter_file)
 {
-    mt19937 rand_gen;
     fstream file{parameter_file};
     string line;
     player_id player_id_order_check = 0;
@@ -49,35 +48,39 @@ void game_players_init(state_class* s, game_class* g, const std::string& paramet
                     else if (tokens[1] == "group")
                         player_temp = new player_group(stoi(tokens[2]));
                     else if (tokens[1] == "mcts")
+                    {
                         player_temp = new player_mcts(stoi(tokens[2]));
+                        dynamic_cast<player_mcts*>(player_temp)
+                            ->player_mcts_init(game, stoi(tokens[7]), stoi(tokens[8]), stoi(tokens[9]),
+                                               stoi(tokens[10]));
+                    }
                     else
                     {
                         BOOST_LOG_TRIVIAL(error)
                             << "unknown player " << tokens[2] << " type: " << tokens[1];
                         player_temp = new player_rand(stoi(tokens[2]));
                     }
-                    g->player_set(player_temp, stoi(tokens[2]));
-                    vector<unit_class*> unit_list;
+                    game->player_set(player_temp, stoi(tokens[2]));
+                    state->unit_list_add();
                     for (int i = 0; i < stoi(tokens[3]); i++)
                     {
                         int q_pos;
                         int r_pos;
                         do
                         {
-                            const double angle = (static_cast<double>(rand_gen()) / mt19937::max()) * 2 * 3.1415;
-                            const double radius = (static_cast<double>(rand_gen()) / mt19937::max()) * 10;
+                            const double angle = (static_cast<double>(game->options_get().rand_n_get()) / mt19937::max()) * 2 * 3.1415;
+                            const double radius =
+                                (static_cast<double>(game->options_get().rand_n_get()) / mt19937::max()) * 10;
                             q_pos = stoi(tokens[5]) + static_cast<int>(radius * cos(angle));
                             r_pos = stoi(tokens[6]) + static_cast<int>(radius * sin(angle));
-                        } while (!map_class::in_map(q_pos, r_pos, g->map_get()) &&
-                                 !g->map_get()->passable(q_pos, r_pos));
-                        auto u = new unit_class{q_pos, r_pos, player_id_order_check, unit_hp};
-                        unit_list.push_back(u);
+                        } while (!map_class::in_map(q_pos, r_pos, *game->map_get()) &&
+                                 !game->map_get()->passable(q_pos, r_pos));
+
+                        state->unit_new(q_pos, r_pos, player_id_order_check, unit_hp);
                     }
-                    s->unit_list_add(unit_list);
                     for (int i = 0; i < stoi(tokens[4]); i++)
                     {
-                        const auto base = new base_class{stoi(tokens[5]), stoi(tokens[6]), player_id_order_check};
-                        s->base_append(base);
+                        state->base_new(stoi(tokens[5]), stoi(tokens[6]), player_id_order_check);
                     }
                     player_id_order_check++;
                 }

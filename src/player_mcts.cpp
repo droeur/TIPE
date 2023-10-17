@@ -3,33 +3,45 @@
 
 using namespace std;
 
+void player_mcts::player_mcts_init(const game_class* game, const int time, const int traversals_max,
+                                   const double c_parameter, const int children_parameter)
+{
+    mcts_ = new mcts(*game->state_get(), traversals_max, game->map_get(), player_id_, time, c_parameter,
+                     children_parameter);
+}
+
 void player_mcts::moves_get(const game_class* game, state_class* state)
 {
+    if (mcts_ == nullptr)
+        BOOST_LOG_TRIVIAL(error) << "MCTS not initialized";
     const auto size = state->unit_list_get()[player_id_].size();
-    for (int unit_index = 0; static_cast<size_t>(unit_index) < size; unit_index++)
+
+    vector<unit_action> action_vec = mcts_->best_action_calculate(*state, player_id_);
+    for (unit_action& action: action_vec)
     {
-        if (const auto unit = state->unit_list_get()[player_id_][unit_index]; unit->can_attack() || unit->can_move())
+        switch (action.action_type_get())
         {
-            switch (unit_action action = mcts_->best_action_get(unit, *state); action.action_type_get())
-            {
             case unit_action_id::attack:
-                unit->attack(action.target_unit_get());
+            state->unit_get(player_id_, action.unit_id_get()).attack(
+                    state->object_get(action.target_type_get(), action.target_player_get(), action.target_id_get()));
                 break;
             case unit_action_id::move:
-                unit->move(action.position_get().q_get(), action.position_get().r_get());
+                state->unit_get(player_id_, action.unit_id_get()).move(action.position_get().q_get(), action.position_get().r_get());
                 break;
             case unit_action_id::wait:
-                unit->wait(action.time_get());
+                state->unit_get(player_id_, action.unit_id_get()).wait(action.time_get());
                 break;
             case unit_action_id::pick:
-                unit->pick(dynamic_cast<food_class*>(action.target_unit_get()));
+                state->unit_get(player_id_, action.unit_id_get()).pick(dynamic_cast<food_class&>(
+                    state->object_get(action.target_type_get(), action.target_player_get(), action.target_id_get())));
                 break;
             case unit_action_id::follow:
-                unit->follow(action.target_unit_get());
+                state->unit_get(player_id_, action.unit_id_get()).follow(state->object_get(action.target_type_get(), action.target_player_get(),
+                                              action.target_id_get()));
                 break;
             case unit_action_id::error: BOOST_LOG_TRIVIAL(error) << "Unknown action"; break;
+            case unit_action_id::nothing:
             default: break;
-            }
         }
     }
 }
