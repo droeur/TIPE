@@ -96,6 +96,9 @@ class mcts
     double c_parameter_ = sqrt(2);
     int children_parameter_ = 2;
 
+    bool multithreading_;
+    int child_depth_;
+
     player_id max_player_;
 
     static mcts_node& uct_select(mcts_node& node);
@@ -114,12 +117,14 @@ class mcts
 
 public:
     mcts(const state_class& root_state, const int traversals_max, map_class* map, const player_id max_player,
-         const int max_time = 20, const double c_parameter = sqrt(2), const int children_parameter = 2)
+         const int max_time = 20, const double c_parameter = sqrt(2), const int children_parameter = 2, const bool multi_threading = false, const int child_depth = 1)
         : root_node_(mcts_node(root_state, max_player))
         , max_time_(max_time)
         , traversals_max_(traversals_max)
         , c_parameter_(c_parameter)
         , children_parameter_(children_parameter)
+        , multithreading_(multi_threading)
+        , child_depth_(child_depth)
         , max_player_(max_player)
         , map_(map)
     {
@@ -128,4 +133,6 @@ public:
     mcts_result& results_get() { return results_; }
     [[nodiscard]] double c_parameter_get() const { return c_parameter_; }
     [[nodiscard]] int children_parameter_get() const { return children_parameter_; }
+    [[nodiscard]] bool multi_threading_get() const { return multithreading_; }
+    [[nodiscard]] int child_depth_get() const { return child_depth_; }
 };

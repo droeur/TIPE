@@ -65,7 +65,7 @@ int main(const int argc, char* argv[])
         players[0] = game->player_get(0).player_type_get();
         players[1] = game->player_get(1).player_type_get();
 
-        BOOST_LOG_TRIVIAL(info) << "Game " << i << "/" << settings->n_test_get() << " : winner " << game->winner_get()
+        BOOST_LOG_TRIVIAL(info) << "Game " << i+1 << "/" << settings->n_test_get() << " : winner " << game->winner_get()
                                 << " " << state->evaluate(0) << "/" << state->evaluate(1) << " after " << state->frame_get()
                                 << " ticks";
         delete state;
@@ -80,6 +80,8 @@ int main(const int argc, char* argv[])
     result << endl << "win rate " << virtual_player_class::player_type_to_string(players[1])
            << " (1):" << 100.0 * (static_cast<double>(numb_of_win[2]) / i);
     result.close();
+
+    BOOST_LOG_TRIVIAL(info) << "Result outputted to " << output_file;
 
     delete settings;
     return EXIT_SUCCESS;

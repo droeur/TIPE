@@ -326,7 +326,10 @@ void graphic_class::print_player(virtual_player_class& player, const state_class
         player_string_stream << "/" << dynamic_cast<player_mcts&>(player).mcts_get().results_get().time_max;
         player_string_stream << " ticks:" << dynamic_cast<player_mcts&>(player).mcts_get().results_get().tick_max - state.frame_get();
         player_string_stream << " c:" << dynamic_cast<player_mcts&>(player).mcts_get().c_parameter_get();
-        player_string_stream << " children:" << dynamic_cast<player_mcts&>(player).mcts_get().children_parameter_get();
+        player_string_stream << " children n/depth:"
+                             << dynamic_cast<player_mcts&>(player).mcts_get().children_parameter_get() << "/"
+                             << dynamic_cast<player_mcts&>(player).mcts_get().child_depth_get();
+        player_string_stream << " multi thread:" << dynamic_cast<player_mcts&>(player).mcts_get().multi_threading_get();
     }
     print(2, y, player_string_stream.str().c_str(), text_white, text_black);
 }

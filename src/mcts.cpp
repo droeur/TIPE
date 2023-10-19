@@ -48,7 +48,7 @@ void mcts::simulation(mcts_node& node, int& tick_max)
         players_[0].moves_get(nullptr, &state);
         players_[1].moves_get(nullptr, &state);
         child.action_vec_set(state.action_vec_get(max_player_));
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < child_depth_; i++)
             state.moves_make(map_);
         if (state.evaluate(max_player_) > 0)
             child.win_increment(1);
@@ -83,7 +83,7 @@ void mcts::simulate_a_thread(mcts_node* child)
     players_[0].moves_get(nullptr, &state);
     players_[1].moves_get(nullptr, &state);
     child->action_vec_set(state.action_vec_get(max_player_));
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < child_depth_; i++)
         state.moves_make(map_);
     if (state.evaluate(max_player_) > 0)
         child->win_increment(1);

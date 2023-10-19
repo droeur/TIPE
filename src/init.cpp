@@ -52,7 +52,7 @@ void game_players_init(state_class* state, game_class* game, const std::string& 
                         player_temp = new player_mcts(stoi(tokens[2]));
                         dynamic_cast<player_mcts*>(player_temp)
                             ->player_mcts_init(game, stoi(tokens[7]), stoi(tokens[8]), stoi(tokens[9]),
-                                               stoi(tokens[10]));
+                                               stoi(tokens[10]), tokens[11] == "multi_thread", stoi(tokens[12]));
                     }
                     else
                     {
