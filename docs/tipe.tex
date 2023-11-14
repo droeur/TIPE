@@ -27,8 +27,17 @@
 
 \begin{document}
 
-\title{Algorithmique des jeux de stratégie}
-\author{Dimitri \bsc{Cocheril-Crèvecoeur}}
+\title{Étude de joueur artificiel de jeu de grande stratégie}
+\author{Dimitri \bsc{Cocheril-Crèvecœur}}
+\date{2023-2024}
+
+\maketitle
+
+\section*{Introduction}
+J'étudie un modèle de joueur artificiel de jeu de grande stratégie (aussi appelé RTS).
+Les RTS sont un genre de jeu de stratégie, sans meilleure stratégie, en temps réel, avec un grand espace d'action.
+J'ai décidé de travailler principalement sur l'adaptation de l'application du Monte Carlo Tree Search (MCTS) au problème.
+
 
 \section*{Présentation}
 On pose les contraintes auxquelles on va répondre :\\
@@ -66,8 +75,12 @@ choix dans les 40ms, sous peine de perdre.
     \item \href{https://web.archive.org/web/20190303080330/http://richoux.fr:80/publications/ecgg15_chapter-rts_ai.pdf}{RTS AI: Problems and Techniques}
     \item \href{https://code.google.com/archive/p/sparcraft/}{Sparcraft}
     \item \href{https://www.youtube.com/@DaveChurchill}{Dave Churchill, \emph{University of Alberta}}
+    \item \href{https://project.dke.maastrichtuniversity.nl/games/files/bsc/Soemers_BSc-paper.pdf}{Tactical Planning Using MCTS in the Game of StarCraft, }
 \end{itemize}
-\newpage
+
+\bibliographystyle{plain}
+\nocite{*}
+\bibliography{bibli}
 
 \section*{Définitions}
 Le framework du jeu est formé de 3 classes et 2 fonctions :

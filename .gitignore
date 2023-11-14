@@ -35,11 +35,13 @@ CTestTestfile.cmake
 _deps
 
 #tex
-docs/tipe.aux
-docs/tipe.fdb_latexmk
-docs/tipe.fls
-docs/tipe.log
-docs/tipe.synctex.gz
+docs/*.aux
+docs/*.fdb_latexmk
+docs/*.fls
+docs/*.log
+docs/*.synctex.gz
+docs/*.bbl
+docs/*.blg
 *.out
 
 #vcpkg
