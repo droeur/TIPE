@@ -10,24 +10,67 @@
 \usepackage{amsthm}
 \usepackage{mathtools}
 \usepackage{listings}
+\usepackage{multicol}
+\usepackage{comment}
+\usepackage{enumerate}
 
+\addto\captionsfrench{%
+  \renewcommand*{\refname}{Bibliographie non commentée}%
+}
 
 \begin{document}
 
-\title{Étude de joueur artificiel de jeu de grande stratégie}
+\title{Étude sur l'application de joueurs artificiels sur un jeu de stratégie en temps réel}
 \author{Dimitri \bsc{Cocheril-Crèvecœur}}
 \date{2023-2024}
 
 \maketitle
 
-\section*{Introduction}
-J'étudie un modèle de joueur artificiel de jeu de grande stratégie (aussi appelé RTS).
-Les RTS sont un genre de jeu de stratégie, sans meilleure stratégie, en temps réel, avec un grand espace d'action.
-J'ai décidé de travailler principalement sur l'application du Monte Carlo Tree Search (MCTS) au problème.
-Le MCTS est souvent utilisé dans des jeux au tour par tour, par exemple le GO ou les échec.
+\section*{Motivations}
+J'ai en 2020 entrepris de recoder en C++ le jeu de grande stratégie \emph{Stellaris} en 24 bit pour une architecture d'ez80.
+J'ai alors abandonné devant le problème de l'integration de joueurs artificiels.
+Le sujet aborde l'intégration de joueurs artificiels dans un jeu plus documenté, \emph{StarCraft}.
+
+\section*{Positionnement thématique}
+\emph{INFORMATIQUE (informatique pratique et théorique)} 
+
+\section*{Mots clés}
+\begin{tabular}{ll}
+    \textbf{Mots clés} (Français) & \textbf{Mots clés} (Anglais) \\
+    \begin{tabular}{@{}l@{}}Recherche Arborescente \\ Monte-Carlo\end{tabular} & Monte Carlo Tree Search (MCTS) \\
+    \begin{tabular}{@{}l@{}}Jeu de stratégie en temps \\ réel\end{tabular} & Real-time strategy (RTS) \\
+    Joueur artificiel & Bot/agent \\
+\end{tabular}
 
 \bibliographystyle{plain}
 \nocite{*}
 \bibliography{bibli}
+
+\section*{Objectifs du TIPE du candidat}
+Pour réaliser le TIPE, il a d'abord fallu développer un moteur de jeu typé \emph{StarCraft} et une api.
+J'entreprends ensuite la création de joueurs artificiels à différents niveau d'abstraction :
+un joueur artificiel utilisant l'algorithme MCTS multithreadé, et un joueur artificiel utilisant une technique de recherche par portfolio.
+Nous nous intéressons particulièrement aux phases de combat, et n'abordons l'aspect gestion de ressources que marginalement, en seconde partie d'étude.
+
+\begin{comment}
+    \section*{Intro}
+    
+    J'étudie un modèle de joueur artificiel de jeu de stratégie en temps réel (aussi appelé RTS).
+    Nous étudions ici des RTS typé \emph{StarCraft}, avec un relativement grand espace de jeu et un relativement grand nombre d'unités.
+    J'ai décidé de travailler principalement sur l'application du Monte Carlo Tree Search (MCTS) au problème.
+    Le MCTS est souvent utilisé dans des jeux au tour par tour, par exemple le GO ou les échec.
+\end{comment}
+
+Real-time strategy games are challenging for the creation of bots due to their real-time and large-scale aspects.
+A large community of players and researchers is actively trying to create the perfect bot through different techniques.
+I study here two scripts that have already proven to be good enough to beat some human players, but not the best world champions.
+
+\section*{DOT}
+\begin{enumerate}[{[1]}]
+    \item avril 2023 : Recherches sur les études déjà réalisées et les codes déjà produits en lien avec le sujet.
+    \item mai/juin 2023 : Codage du moteur du jeu en C++, inspiré de la réelle API de \emph{StarCraft}.
+    \item juillet 2023 : Gros travail d'optimisation sur le moteur, principalement du pathfinding.
+    \item septembre/octobre 2023 : Création et tests du MCTS, puis son perfectionnement, avec multithreading du moteur.
+\end{enumerate}
 
 \end{document}
