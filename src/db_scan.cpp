@@ -1,4 +1,5 @@
 ﻿#include "db_scan.hpp"
+#include <cmath>
 
 using namespace std;
 

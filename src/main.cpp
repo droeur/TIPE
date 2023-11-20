@@ -5,7 +5,6 @@
 
 #include <fstream>
 #include <boost/log/trivial.hpp>
-#include <Windows.h>
 
 using namespace std;
 
@@ -26,11 +25,17 @@ int main(const int argc, char* argv[])
     time_t raw_time;
     char buffer[20];
 
+#ifdef _WIN32
     time(&raw_time);
     tm time_info{};
     localtime_s(&time_info, &raw_time);
-
     strftime(buffer, 20, "%y_%m_%d %H_%M_%S", &time_info);
+#else
+    raw_time = time(nullptr);
+    struct tm* time_info = localtime(&raw_time);
+    strftime(buffer, 20, "%y_%m_%d %H_%M_%S", time_info);
+#endif
+
     const string output_file = settings->output_folder_get() + "out " + buffer + ".txt";
     ofstream result{output_file.c_str(), ofstream::out};
     int numb_of_win[4] = {0};

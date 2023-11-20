@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cassert>
 #include <fstream>
+#include <cmath>
 #include <boost/log/trivial.hpp>
 #include "hex_map.hpp"
 
