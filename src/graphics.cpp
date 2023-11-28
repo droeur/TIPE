@@ -346,9 +346,11 @@ graphic_class::graphic_class(const std::string& graphic_folder, const std::strin
         BOOST_LOG_TRIVIAL(error) << "SDL image not available";
     }
     window_ = SDL_CreateWindow("TIPE", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screen_width, screen_height,
-                               SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED);
+                               0);
     screen_surface_ = SDL_GetWindowSurface(window_);
-    render_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    //render_ = SDL_Renderer(window_, -1, SDL_RENDERER_SOFTWARE);
+    render_ = SDL_GetRenderer(window_);
+    BOOST_LOG_TRIVIAL(error) << SDL_GetError();
 
     if (TTF_Init() < 0)
     {

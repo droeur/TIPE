@@ -21,7 +21,7 @@ int main(const int argc, char* argv[])
     graphic_class* game_graphic = nullptr;
     if (settings->graphics_get())
         game_graphic = new graphic_class{settings->graphic_folder_get(), settings->font_file_get()};
-
+    
     time_t raw_time;
     char buffer[20];
 
@@ -62,7 +62,7 @@ int main(const int argc, char* argv[])
             else
                 quit = game_graphic->update(game, settings);
             state->fps_check_after(settings->fast_get());
-        }
+	}
         result << game->winner_get() << ",";
         if (game->winner_get() < 3 && game->winner_get() >= -1)
             numb_of_win[game->winner_get() + 1]++;
