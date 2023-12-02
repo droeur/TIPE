@@ -90,7 +90,7 @@ class map_class
 public:
     explicit map_class(const std::string& file_name);
 
-    std::vector<hex_tile*> path_a_star(hex_tile* start, const hex_tile* end) const;
+    std::vector<hex_tile*> path_a_star(hex_tile* start, hex_tile* end) const;
 
     static bool in_map(int q, int r, const map_class& map);
     [[nodiscard]] hex_tile* tile_get(int q, int r) const;

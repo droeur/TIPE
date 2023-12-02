@@ -5,15 +5,17 @@ using namespace std;
 void player_rand::moves_get(const game_class* game, state_class* state)
 {
 
-	const vector<vector<unit_action>>& possible_actions_vec = state->moves_generate(player_id_);
+    const vector<vector<unit_action>>& possible_actions_vec = state->moves_generate(player_id_);
     const vector<unit_action>::size_type unit_list_size = state->unit_list_get()[player_id_].size();
     vector<unit_action>::size_type unit_index = 0;
+
     while(unit_index < unit_list_size){
         if (!possible_actions_vec[unit_index].empty() )
         {
             const vector<unit_action>::size_type r =
                 (state->options_get().rand_n_get()) % possible_actions_vec[unit_index].size();
             const auto action_temp_chosen = new unit_action(possible_actions_vec[unit_index][r]);
+
             switch (action_temp_chosen->action_type_get())
             {
             case unit_action_id::attack: 
@@ -43,6 +45,6 @@ void player_rand::moves_get(const game_class* game, state_class* state)
             }
             delete action_temp_chosen;
         }
-        unit_index++;
+	unit_index++;
     }
 }

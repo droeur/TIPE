@@ -1,0 +1,13 @@
+\babel@toc {french}{}\relax 
+\contentsline {section}{\numberline {1}Introduction}{2}{}%
+\contentsline {section}{\numberline {2}Moteur de jeu}{2}{}%
+\contentsline {subsection}{\numberline {2.1}Architecture}{2}{}%
+\contentsline {subsection}{\numberline {2.2}A-star}{2}{}%
+\contentsline {section}{\numberline {3}Joueur aléatoire}{2}{}%
+\contentsline {section}{\numberline {4}Joueur MCTS}{2}{}%
+\contentsline {subsection}{\numberline {4.1}Principe}{2}{}%
+\contentsline {subsection}{\numberline {4.2}Implémentations}{2}{}%
+\contentsline {subsection}{\numberline {4.3}Résultats}{2}{}%
+\contentsline {section}{\numberline {5}Joueur groupe/portfolio}{2}{}%
+\contentsline {subsection}{\numberline {5.1}Principe}{2}{}%
+\contentsline {subsection}{\numberline {5.2}DB-Scan}{2}{}%

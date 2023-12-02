@@ -132,7 +132,7 @@ map_class::map_class(const std::string& file_name)
     size_y_ = r;
 }
 
-std::vector<hex_tile*> map_class::path_a_star(hex_tile* start, const hex_tile* end) const
+std::vector<hex_tile*> map_class::path_a_star(hex_tile* start, hex_tile* end) const
 {
     constexpr int a_weight = 5;
     const auto list_closed = new bool*[size_y_];
@@ -141,10 +141,10 @@ std::vector<hex_tile*> map_class::path_a_star(hex_tile* start, const hex_tile* e
     const auto parent = new hex_tile**[size_y_];
     for (int i = 0; i < size_y_; i++)
     {
-        list_closed[i] = new bool[size_x_];
-        weight_g[i] = new double[size_x_];
-        weight_h[i] = new double[size_x_];
-        parent[i] = new hex_tile*[size_x_];
+        list_closed[i] = new bool[size_x_]();
+        weight_g[i] = new double[size_x_]();
+        weight_h[i] = new double[size_x_]();
+        parent[i] = new hex_tile*[size_x_]();
     }
     vector<hex_tile*> list_open;
     hex_tile* current_node = start;
@@ -158,9 +158,9 @@ std::vector<hex_tile*> map_class::path_a_star(hex_tile* start, const hex_tile* e
         index++;
         current_node = list_open.front();
         list_open.erase(list_open.begin());
-        list_closed[current_node->index_y()][current_node->index_x()] = false;
+        list_closed[current_node->index_y()][current_node->index_x()] = true;
         const double cost_g = weight_g[current_node->index_y()][current_node->index_x()] + 1.0;
-        if (!list_closed[end->index_y()][end->index_x()])
+        if (list_closed[end->index_y()][end->index_x()])
         {
             break;
         }
@@ -179,7 +179,7 @@ std::vector<hex_tile*> map_class::path_a_star(hex_tile* start, const hex_tile* e
             {
                 continue;
             }
-            if (!list_closed[children->index_y()][children->index_x()])
+            if (list_closed[children->index_y()][children->index_x()])
             {
                 continue;
             }
@@ -202,12 +202,22 @@ std::vector<hex_tile*> map_class::path_a_star(hex_tile* start, const hex_tile* e
         }
     }
     vector<hex_tile*> path;
-    if (!list_closed[current_node->index_y()][current_node->index_x()])
+    /*cout << index << ' ' <<  start->index_x() << " " << start->index_y() << "/" << end->index_x() << " " << end->index_y() << endl;
+    for(int y = 0; y<size_y_; y++)
+    {
+        for(int x = 0; x<size_x_; x++)
+        {
+            cout << (list_closed[y][x]);
+        }
+        cout << endl;
+    }*/
+    if (list_closed[current_node->index_y()][current_node->index_x()])
     {
         while (current_node != start && current_node != nullptr)
         {
             path.push_back(current_node);
             current_node = parent[current_node->index_y()][current_node->index_x()];
+            cout << current_node->index_y() << " " << current_node-> index_x() << endl; 
         }
         reverse(path.begin(), path.end());
     }
