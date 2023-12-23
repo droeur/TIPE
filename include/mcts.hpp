@@ -2,7 +2,7 @@
 #include <vector>
 #include "units.hpp"
 #include "state_class.hpp"
-#include "player_random.hpp"
+#include "player_random_total.hpp"
 
 class mcts_result
 {

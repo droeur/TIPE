@@ -15,7 +15,7 @@
 \usepackage{enumerate}
 
 \addto\captionsfrench{%
-  \renewcommand*{\refname}{Bibliographie non commentée}%
+  \renewcommand*{\refname}{Références bibliographiques}%
 }
 
 \begin{document}
@@ -28,8 +28,8 @@
 
 \section*{Motivations}
 J'ai en 2020 entrepris de recoder en C++ le jeu de grande stratégie \emph{Stellaris} en 24 bit pour une architecture d'ez80.
-J'ai alors abandonné devant le problème de l'integration de joueurs artificiels.
-Le sujet aborde l'intégration de joueurs artificiels dans un jeu plus documenté, \emph{StarCraft}.
+J'ai alors abandonné devant le problème de l'intégration de joueurs artificiels.
+Mon sujet de TIPE aborde l'intégration de modèles de combat, et plus généralement de joueurs artificiels, dans un jeu plus documenté, \emph{StarCraft}.
 
 \section*{Positionnement thématique}
 \emph{INFORMATIQUE (informatique pratique et théorique)} 
@@ -38,32 +38,33 @@ Le sujet aborde l'intégration de joueurs artificiels dans un jeu plus document�
 \begin{tabular}{ll}
     \textbf{Mots clés} (Français) & \textbf{Mots clés} (Anglais) \\
     \begin{tabular}{@{}l@{}}Recherche Arborescente \\ Monte-Carlo\end{tabular} & Monte Carlo Tree Search (MCTS) \\
-    \begin{tabular}{@{}l@{}}Jeu de stratégie en temps \\ réel\end{tabular} & Real-time strategy (RTS) \\
+    Stratégie en temps réel & Real-time strategy (RTS) \\
     Joueur artificiel & Bot/agent \\
+    Modèle de combat & Combat model \\
 \end{tabular}
 
-\bibliographystyle{plain}
-\nocite{*}
-\bibliography{bibli}
+\section*{Bibliographie commentée}
+StarCraft, un jeu de stratégie en temps réel (RTS), est depuis plusieurs années source d'avancées dans le domaine de l'IA à cause de son fonctionnement complexe. Une partie peut contenir entre 50 et 400 unités sur une carte de taille $128\times 128$. \cite{survey}
+
+\section*{Problématique retenue}
+
 
 \section*{Objectifs du TIPE du candidat}
 Pour réaliser le TIPE, il a d'abord fallu développer un moteur de jeu typé \emph{StarCraft} et une api.
-J'entreprends ensuite la création de joueurs artificiels à différents niveau d'abstraction :
+J'entreprends ensuite la création de joueurs artificiels à différents niveaux d'abstraction :
 un joueur artificiel utilisant l'algorithme MCTS multithreadé, et un joueur artificiel utilisant une technique de recherche par portfolio.
 Nous nous intéressons particulièrement aux phases de combat, et n'abordons l'aspect gestion de ressources que marginalement, en seconde partie d'étude.
 
-\begin{comment}
-    \section*{Intro}
-    
-    J'étudie un modèle de joueur artificiel de jeu de stratégie en temps réel (aussi appelé RTS).
-    Nous étudions ici des RTS typé \emph{StarCraft}, avec un relativement grand espace de jeu et un relativement grand nombre d'unités.
-    J'ai décidé de travailler principalement sur l'application du Monte Carlo Tree Search (MCTS) au problème.
-    Le MCTS est souvent utilisé dans des jeux au tour par tour, par exemple le GO ou les échec.
-\end{comment}
+\section*{Abstract}
 
 Real-time strategy games are challenging for the creation of bots due to their real-time and large-scale aspects.
 A large community of players and researchers is actively trying to create the perfect bot through different techniques.
 I study here two scripts that have already proven to be good enough to beat some human players, but not the best world champions.
+
+
+\bibliographystyle{plain}
+\nocite{*}
+\bibliography{bibli}
 
 \section*{DOT}
 \begin{enumerate}[{[1]}]

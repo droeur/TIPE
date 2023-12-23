@@ -5,7 +5,7 @@
 #include "game_class.hpp"
 #include "state_class.hpp"
 #include "player_class.hpp"
-#include "player_random.hpp"
+#include "player_random_total.hpp"
 #include "player_group.hpp"
 #include "player_mcts.hpp"
 

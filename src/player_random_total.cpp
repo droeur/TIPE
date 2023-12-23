@@ -1,4 +1,4 @@
-#include "player_random.hpp"
+#include "player_random_total.hpp"
 
 using namespace std;
 

@@ -217,7 +217,6 @@ std::vector<hex_tile*> map_class::path_a_star(hex_tile* start, hex_tile* end) co
         {
             path.push_back(current_node);
             current_node = parent[current_node->index_y()][current_node->index_x()];
-            cout << current_node->index_y() << " " << current_node-> index_x() << endl; 
         }
         reverse(path.begin(), path.end());
     }
