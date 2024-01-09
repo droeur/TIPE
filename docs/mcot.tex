@@ -44,10 +44,28 @@ Mon sujet de TIPE aborde l'intégration de modèles de combat, et plus général
 \end{tabular}
 
 \section*{Bibliographie commentée}
-StarCraft, un jeu de stratégie en temps réel (RTS), est depuis plusieurs années source d'avancées dans le domaine de l'IA à cause de son fonctionnement complexe. Une partie peut contenir entre 50 et 400 unités sur une carte de taille $128\times 128$. \cite{survey}
+StarCraft, un jeu de stratégie en temps réel (RTS), sous-genre des jeux de stratégie, 
+est depuis plusieurs années source d'avancées dans le domaine de l'IA à cause de son 
+fonctionnement complexe. \cite{stateoftheart} 
+Une partie peut contenir entre 50 et 400 unités sur une carte de taille $128\times 128$. 
+\cite{survey} Ces unitées peuvent faire un certain ensemble d'actions avec une certaine 
+latence 24 fois par secondes.
+
+Les meilleurs bots actuels sont faits avec des modèles IA neuronales.
+Le but de ce TIPE est d'étudier la conception d'algorithmes de joueurs artificiels plus classiques.
+
+J'ai ainsi mis en place un joueur utilisant l'algorithme Monte-Carlo Tree Search.
+Étant particuliérement gourmand en ressources, et son éxécution étant limitée dans le temps,
+un certain travail d'optimisation a été nécessaire ainsi que l'implémentation d'un multithreading.
+Le choix d'une fonction d'évaluation est également un challenge fréquent.\cite{MCTSRTS}\cite{MCTStactical}
+
+Les algorithmes classiques les plus performants ont fait le choix de monter en abstraction.
+Si le temps me le permet, je monterais en abstraction, en groupant les unités en armées grâce à l'algorithme DBSCAN.
+\cite{dbscan}\cite{combatmodel}
+
 
 \section*{Problématique retenue}
-
+Quel algorithme est le plus efficace en stratégie de combat sur un RTS ?
 
 \section*{Objectifs du TIPE du candidat}
 Pour réaliser le TIPE, il a d'abord fallu développer un moteur de jeu typé \emph{StarCraft} et une api.
@@ -63,7 +81,7 @@ I study here two scripts that have already proven to be good enough to beat some
 
 
 \bibliographystyle{plain}
-\nocite{*}
+
 \bibliography{bibli}
 
 \section*{DOT}

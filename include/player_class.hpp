@@ -5,7 +5,8 @@ class virtual_player_class;
 enum class player_type
 {
     error,
-    random,
+    random_total,
+    random_constant,
     mcts,
     group
 };
@@ -44,10 +45,11 @@ public:
         std::string name;
         switch (type)
         {
-        case player_type::error: name = "Error";
-        case player_type::group: name = "Group";
-        case player_type::mcts: name = "MCTS";
-        case player_type::random: name = "Random";
+        case player_type::error: name = "Error"; break;
+        case player_type::group: name = "Group"; break;
+        case player_type::mcts: name = "MCTS"; break;
+        case player_type::random_constant: name = "Constant Random"; break;
+        case player_type::random_total: name = "Total Random"; break;
         }
         return name;
     }

@@ -112,7 +112,7 @@ class mcts
     mcts_result results_;
 
     map_class* map_;
-    player_rand players_[2] = {player_rand(0), player_rand(1)};
+    player_rand_total players_[2] = {player_rand_total(0), player_rand_total(1)};
 
 
 public:

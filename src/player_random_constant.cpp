@@ -1,8 +1,8 @@
-#include "player_random_total.hpp"
+#include "player_random_constant.hpp"
 
 using namespace std;
 
-void player_rand_total::moves_get(const game_class* game, state_class* state)
+void player_rand_constant::moves_get(const game_class* game, state_class* state)
 {
 
     const vector<vector<unit_action>>& possible_actions_vec = state->moves_generate(player_id_);
@@ -10,7 +10,7 @@ void player_rand_total::moves_get(const game_class* game, state_class* state)
     vector<unit_action>::size_type unit_index = 0;
 
     while(unit_index < unit_list_size){
-        if (!possible_actions_vec[unit_index].empty() )
+        if (state->unit_list_get()[player_id_][unit_index].actual_action_get().action_type_get() == unit_action_id::nothing && !possible_actions_vec[unit_index].empty())
         {
             const vector<unit_action>::size_type r =
                 (state->options_get().rand_n_get()) % possible_actions_vec[unit_index].size();
