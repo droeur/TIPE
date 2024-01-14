@@ -37,13 +37,9 @@ _deps
 cmake-build-debug/
 
 #tex
-docs/*.aux
-docs/*.fdb_latexmk
-docs/*.fls
-docs/*.log
-docs/*.synctex.gz
-docs/*.bbl
-docs/*.blg
+docs/*
+!docs/*.tex
+!docs/*.pdf
 *.out
 
 #vcpkg

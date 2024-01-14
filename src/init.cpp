@@ -9,6 +9,7 @@
 #include "player_random_total.hpp"
 #include "player_random_constant.hpp"
 #include "player_mcts.hpp"
+#include "player_dpf.hpp"
 
 using namespace std;
 
@@ -44,12 +45,16 @@ void game_players_init(state_class* state, game_class* game, const std::string& 
                         BOOST_LOG_TRIVIAL(error) << "players not in order";
                     }
                     virtual_player_class* player_temp;
+                    if (tokens[1] == "nothing")
+                        player_temp = new player_nothing(stoi(tokens[2]));
                     if (tokens[1] == "rand_total")
                         player_temp = new player_rand_total(stoi(tokens[2]));
                     else if (tokens[1] == "rand_constant")
                         player_temp = new player_rand_constant(stoi(tokens[2]));
                     else if (tokens[1] == "group")
                         player_temp = new player_group(stoi(tokens[2]));
+                    else if (tokens[1] == "dpf")
+                        player_temp = new player_dpf(stoi(tokens[2]));
                     else if (tokens[1] == "mcts")
                     {
                         player_temp = new player_mcts(stoi(tokens[2]));

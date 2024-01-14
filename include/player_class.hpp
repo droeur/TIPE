@@ -5,10 +5,12 @@ class virtual_player_class;
 enum class player_type
 {
     error,
+    nothing,
     random_total,
     random_constant,
     mcts,
-    group
+    group,
+    dpf
 };
 
 
@@ -46,11 +48,24 @@ public:
         switch (type)
         {
         case player_type::error: name = "Error"; break;
+        case player_type::nothing: name = "Nothing"; break;
         case player_type::group: name = "Group"; break;
         case player_type::mcts: name = "MCTS"; break;
+        case player_type::dpf: name = "DPF"; break;
         case player_type::random_constant: name = "Constant Random"; break;
         case player_type::random_total: name = "Total Random"; break;
         }
         return name;
     }
+};
+
+class player_nothing final : public virtual_player_class
+{
+public:
+    explicit player_nothing(const player_id id)
+        : virtual_player_class(id, player_type::dpf)
+    {
+    }
+
+    void moves_get(const game_class* game, state_class* state) override {}
 };
