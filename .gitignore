@@ -44,3 +44,4 @@ docs/*
 
 #vcpkg
 vcpkg_installed/
+cloc-1.98.exe
