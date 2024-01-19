@@ -34,16 +34,16 @@ top=20mm,
 
 \begin{document}
 
-\title{Étude sur l'application de joueurs artificiels sur un jeu de stratégie en temps réel}
+\title{Étude de quelques algorithmes de joueurs artificiels participants à des jeux de stratégie en temps réel}
 \author{Dimitri \bsc{Cocheril-Crèvecœur}}
 \date{2023-2024}
 
 \maketitle
 
 \section*{Motivations}
-J'ai en 2020 entrepris de recoder en C++ le jeu de grande stratégie \emph{Stellaris} en 24 bit pour une architecture d'ez80.
-J'ai alors abandonné devant le problème de l'intégration de joueurs artificiels.
-Mon sujet de TIPE aborde l'intégration de modèles de combat, et plus généralement de joueurs artificiels, dans un jeu plus documenté, \emph{StarCraft}.
+J'ai en 2020 entrepris de coder en C++ le jeu de grande stratégie \emph{Stellaris} en 24 bit pour une architecture de processeur de calculatrice (ez80).
+J'avais abandonné l'idée d'incorporer des joueurs artificiels à l'époque. 
+Cette année j'étais donc motivé pour m'intéresser à la réalisation de joueur artificiel, cette fois ci sur un jeu plus documenté, \emph{StarCraft}.
 
 \section*{Positionnement thématique}
 \emph{INFORMATIQUE (informatique pratique et théorique)} 
@@ -63,7 +63,7 @@ StarCraft, un jeu de stratégie en temps réel (RTS), sous-genre des jeux de str
 est depuis plusieurs années source d'avancées dans le domaine de l'IA du fait de son 
 fonctionnement complexe. \cite{stateoftheart} 
 Une partie peut contenir entre 50 et 400 unités sur une carte de taille $128\times 128$. 
-\cite{survey} Ces unitées peuvent faire un grand nombre d'actions 24 fois par secondes.
+\cite{survey} Ces unités peuvent faire un grand nombre d'actions 24 fois par secondes.
 
 Les meilleurs bots actuels sont faits avec des modèles IA neuronaux.
 Le but de ce TIPE est d'étudier la conception d'algorithmes de joueurs artificiels plus classiques.
@@ -74,7 +74,7 @@ un certain travail d'optimisation a été nécessaire ainsi qu'une l'implémenta
 Le choix d'une fonction d'évaluation est également un challenge.\cite{MCTSRTS}\cite{MCTStactical}
 
 Les algorithmes classiques les plus performants ont fait le choix de monter en abstraction.
-Si le temps me le permet, je monterais en abstraction, en groupant les unités en armées grâce à l'algorithme DBSCAN.
+J'essaierai de le faire si le temps me le permet, en groupant les unités en armées grâce à l'algorithme DBSCAN.
 \cite{dbscan}\cite{combatmodel}
 
 

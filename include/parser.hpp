@@ -23,7 +23,7 @@ public:
     options_class(int argc, char* argv[]);
     ~options_class();
 
-    [[nodiscard]] bool check() const;
+    [[nodiscard]] bool check();
 
     std::string map_file_get();
 

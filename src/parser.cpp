@@ -1,6 +1,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <filesystem>
 #include <boost/log/core.hpp>
 #include <boost/log/trivial.hpp>
 #include <boost/log/expressions.hpp>
@@ -10,6 +11,7 @@
 
 using namespace std;
 namespace logging = boost::log;
+namespace fs = std::filesystem;
 
 bool file_check(const string &name)
 {
@@ -72,12 +74,26 @@ options_class::~options_class()
     delete vm_;
 }
 
-bool options_class::check() const
+bool options_class::check() 
 {
-    if (!file_check(map_file_))
+     while(!file_check(map_file_))
     {
         BOOST_LOG_TRIVIAL(error) << "no map file " << map_file_;
-        return false;
+        std::string path = output_folder_; 
+        int select = 0;
+        int index;
+        vector<string> file_list;
+        do{
+            index = 1;
+            for (const auto & entry : fs::directory_iterator(path)){
+                cout << index << entry.path() << std::endl;
+                index++;
+                file_list.push_back(entry.path());
+            }
+            cin >> select;
+        }while(select < 0 && select >= index);
+       map_file_ = file_list[select-1];
+        cout << map_file_;
     }
     if (!file_check(parameter_file_))
     {
