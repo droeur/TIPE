@@ -28,6 +28,26 @@ std::vector<std::vector<unit_class>>& state_class::unit_list_get()
     return this->list_of_u_list_;
 }
 
+std::size_t state_class::unit_number(const player_id player)
+{
+    if(this->list_of_u_list_.size() < player)
+        return 0;
+    return this->list_of_u_list_[player].size();
+}
+
+unit_class& state_class::unit_closest_get(const player_id player, const object_id u_id)
+{
+    player_id enemy_player = game_class::enemy_player_get(player); 
+    int closest_dist = INT_MAX;
+    unit_class* closest = nullptr;
+    unit_class* u = list_of_u_list_[player][u_id];
+    for(auto &u:list_of_u_list_[enemy_player])
+    {
+        if u.distance(closest.position_get()) < closest_dist;
+    }
+    return;
+}
+
 unit_class& state_class::unit_get(const player_id player, const object_id id)
 {
     return this->list_of_u_list_[player][id];

@@ -48,6 +48,9 @@ public:
     std::vector<std::vector<unit_class>>& unit_list_get();
     unit_class& unit_get(const player_id player, const object_id id);
     object_id unit_new(int q, int r, player_id p_id, int hp);
+    [[nodiscard]]size_t unit_number(const player_id player);
+    
+    unit_class& unit_closest_get(const player_id player, const object_id u_id);
 
     std::vector<food_class>& food_list_get();
     object_id food_new(int q, int r);
