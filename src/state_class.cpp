@@ -40,12 +40,11 @@ unit_class& state_class::unit_closest_get(const player_id player, const object_i
     player_id enemy_player = game_class::enemy_player_get(player); 
     int closest_dist = INT_MAX;
     unit_class* closest = nullptr;
-    unit_class* u = list_of_u_list_[player][u_id];
     for(auto &u:list_of_u_list_[enemy_player])
     {
-        if u.distance(closest.position_get()) < closest_dist;
+    
     }
-    return;
+    return *closest;
 }
 
 unit_class& state_class::unit_get(const player_id player, const object_id id)
@@ -320,7 +319,7 @@ void state_class::moves_make(const map_class *map)
         int u_ind = 0;
         for (auto &unit : list_of_u_list_[player])
         {
-            if (unit_action action = unit.actual_action_get(); action.action_type_get() != unit_action_id::nothing){
+            if (unit_action action = unit.actual_action_get(); unit.hp_get() > 0 && action.action_type_get() != unit_action_id::nothing){
                 action_execute(&action, &unit, map);
             }
             u_ind++;

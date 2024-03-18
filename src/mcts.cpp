@@ -9,7 +9,7 @@ mcts_node& mcts::uct_select(mcts_node& node)
 {
     if (node.children_get().empty())
         return node;
-
+    
     mcts_node* selected_node = &node;
     while (!selected_node->children_get().empty())
     {

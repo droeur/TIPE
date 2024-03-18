@@ -293,7 +293,7 @@ void graphic_class::print_screen(const game_class* game, const vector<object_abs
         {
             text_color = text_red;
         }
-        if (sprintf(arr_info, "HP: %d ID: %d", obj->hp_get(), obj->id_get()) == -1)
+        if (sprintf(arr_info, "HP: %d ID: %d Tar: %d", obj->hp_get(), obj->id_get(), (dynamic_cast<unit_class*>(obj))->actual_action_get().target_id_get()) == -1)
         {
             BOOST_LOG_TRIVIAL(error) << "printing" ;
         }

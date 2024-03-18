@@ -86,9 +86,11 @@ bool options_class::check()
         do{
             index = 1;
             for (const auto & entry : fs::directory_iterator(path)){
-                cout << index << entry.path() << std::endl;
-                index++;
-                file_list.push_back(entry.path());
+                if(entry.path().u8string().find("map")!=string::npos){
+                    cout << index << entry.path() << std::endl;              
+                    file_list.push_back(entry.path());               
+                    index++;
+                }
             }
             cin >> select;
         }while(select < 0 && select >= index);
