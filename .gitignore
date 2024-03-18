@@ -41,9 +41,19 @@ _deps
 cmake-build-debug/
 
 #tex
-docs/*
-!docs/*.tex
-!docs/*.pdf
+docs/*.aux
+docs/*.bbl
+docs/*.blg
+docs/*.fdb_latexmk
+docs/*.fls
+docs/*.log
+docs/*.out
+docs/*.synctex.gz
+docs/*.dvi
+docs/*.nav
+docs/*.snm
+docs/*.toc
+docs/*.vrb
 *.out
 
 #vcpkg
