@@ -1,3 +1,7 @@
+build
+config
+launch
+
 # Editors
 .tags
 *.sublime-workspace

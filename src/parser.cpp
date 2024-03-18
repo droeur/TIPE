@@ -88,7 +88,7 @@ bool options_class::check()
             for (const auto & entry : fs::directory_iterator(path)){
                 if(entry.path().u8string().find("map")!=string::npos){
                     cout << index << entry.path() << std::endl;              
-                    file_list.push_back(entry.path());               
+                    file_list.push_back(entry.path().string());               
                     index++;
                 }
             }
