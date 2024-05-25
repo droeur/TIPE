@@ -27,8 +27,11 @@ class mcts_node
 
     state_class state_;
     player_id player_ = -1;
+    player_id player_to_move_ = -1;
 
     std::vector<unit_action> action_vec_;
+    
+    player_id player_to_move_next(mcts_node* parent);
 
 public:
     mcts_node(state_class state, const player_id player)
@@ -36,6 +39,7 @@ public:
         , player_(player)
     {
         is_max_ = true;
+        player_to_move_ = player;
     }
     mcts_node(mcts_node* parent, const player_id player)
         : parent_(parent)
@@ -46,6 +50,7 @@ public:
             is_max_ = !parent->is_max_;
             state_ = parent_->state_;
             state_.options_set(parent_->state_.options_get());
+            player_to_move_ = player_to_move_next(parent);
         }
         else
             BOOST_LOG_TRIVIAL(error) << "MCTS : parent null ptr";

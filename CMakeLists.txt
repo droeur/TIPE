@@ -91,6 +91,10 @@ target_link_libraries(${LOCAL_PROJECT_NAME} PRIVATE $<IF:$<TARGET_EXISTS:SDL2_im
 find_package(SDL2_ttf CONFIG REQUIRED)
 target_link_libraries(${LOCAL_PROJECT_NAME} PRIVATE $<IF:$<TARGET_EXISTS:SDL2_ttf::SDL2_ttf>,SDL2_ttf::SDL2_ttf,SDL2_ttf::SDL2_ttf-static>)
 
+find_package(sdl2-gfx CONFIG REQUIRED)
+target_link_libraries(${LOCAL_PROJECT_NAME} PRIVATE SDL2::SDL2_gfx)
+
+
 #boost
 find_package(Boost 1.81.0 COMPONENTS program_options log REQUIRED)
 target_include_directories(${LOCAL_PROJECT_NAME} PRIVATE ${Boost_INCLUDE_DIR})
