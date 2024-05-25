@@ -54,6 +54,8 @@ docs/*.nav
 docs/*.snm
 docs/*.toc
 docs/*.vrb
+docs/*.bib
+docs/*.run.xml
 *.out
 
 #vcpkg
