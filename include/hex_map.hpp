@@ -26,35 +26,39 @@ public:
         : q_(q)
         , r_(r)
         , s_(-q - r)
-        , x_graphic_(q + static_cast<double>(r) / 2)
         , x_index_(q + (r + (r & 1)) / 2)
-    {}
+    {
+        this->x_graphic_ = q + static_cast<double>(r) / 2;
+    }
 
     hex_tile(const int q, const int r, const int s)
         : q_(q)
         , r_(r)
         , s_(s)
-        , x_graphic_(q + static_cast<double>(r) / 2)
         , x_index_(q + (r + (r & 1)) / 2)
-    {}
+    {
+        this->x_graphic_ = q + static_cast<double>(r) / 2;
+    }
 
     hex_tile(const int q, const int r, const int s, const bool passable)
         : q_(q)
         , r_(r)
         , s_(s)
         , passable_(passable)
-        , x_graphic_(q + static_cast<double>(r) / 2)
         , x_index_(q + (r + (r & 1)) / 2)
-    {}
+    {
+        this->x_graphic_ = q + static_cast<double>(r) / 2;
+    }
 
     hex_tile(const int q, const int r, const bool passable)
         : q_(q)
         , r_(r)
         , s_(-q - r)
         , passable_(passable)
-        , x_graphic_(q + static_cast<double>(r) / 2)
         , x_index_(q + (r + (r & 1)) / 2)
-    {}
+    {
+        this->x_graphic_ = q + static_cast<double>(r) / 2;
+    }
 
     bool operator==(const hex_tile &a) const;
     bool operator!=(const hex_tile &a) const;

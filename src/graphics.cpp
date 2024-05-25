@@ -6,6 +6,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL2_gfxPrimitives.h>
 #include "hex_map.hpp"
 #include "graphics.hpp"
 #include "state_class.hpp"
@@ -65,13 +66,26 @@ void graphic_class::draw_unit(unit_class& unit, const game_class *game) const
     SDL_Rect unit_rect;
     unit_rect.w = static_cast<int>(zoom_ * 0.5);
     unit_rect.h = static_cast<int>(zoom_ * 0.5);
+    char r,g,b,a;
 
     if (unit.player_get() == 0)
+    {
         SDL_SetRenderDrawColor(render_, BLUE);
+        b=255;
+        g=0;
+        r=0;
+        a=255;
+    }
     else
+    {
         SDL_SetRenderDrawColor(render_, RED);
+        r=255;
+        g=0;
+        b=0;
+        a=255;
+    }
     const hex_tile* tile = game->map_get()->tile_get(unit.q_get(), unit.r_get());
-    unit_rect.x = static_cast<int>(tile->graphic_x()) * zoom_ - unit_rect.w / 2 + x_shift_ * zoom_ + unit.player_get()*zoom_/5;
+    unit_rect.x = static_cast<int>((tile->graphic_x()-0.25) * zoom_ + x_shift_ * zoom_);
     unit_rect.y = static_cast<int>(unit.r_get() * hex_height_coefficient * zoom_ - unit_rect.h / 2) + y_shift_ * zoom_;
     SDL_RenderFillRect(render_, &unit_rect);
 
@@ -91,14 +105,16 @@ void graphic_class::draw_unit(unit_class& unit, const game_class *game) const
         case unit_action_id::pick:
         case unit_action_id::attack: {
             object_abstract_class& enemy_u = game->state_get()->object_get(action.target_type_get(), action.target_player_get(), action.target_id_get());
-            SDL_RenderDrawLine(
+            thickLineRGBA(
                 render_, static_cast<int>((unit.position_get().graphic_x_get(game->map_get()) + x_shift_) * zoom_),
                 static_cast<int>(unit.position_get().graphic_y_get(game->map_get()) * hex_height_coefficient *
                                     zoom_) +
                     y_shift_ * zoom_,
                 enemy_u.position_get().graphic_x_get(game->map_get()) * zoom_ + x_shift_ * zoom_,
                 (enemy_u.position_get().graphic_y_get(game->map_get()) * hex_height_coefficient) * zoom_ +
-                    y_shift_ * zoom_);
+                    y_shift_ * zoom_,
+                    3,
+                r,g,b,a);
         }
         break;
         default: ;
@@ -110,11 +126,13 @@ void graphic_class::draw_unit(unit_class& unit, const game_class *game) const
         hex_tile* precendent_tile = game->map_get()->tile_get(unit.position_get().q_get(), unit.position_get().r_get());
         for (auto tile : *(unit.path_get()))
         {
-            SDL_RenderDrawLine(render_, 
+            thickLineRGBA(render_, 
                 static_cast<int>(precendent_tile->graphic_x() * zoom_ + x_shift_ * zoom_), 
                 static_cast<int>(precendent_tile->graphic_y() * hex_height_coefficient * zoom_ + y_shift_ * zoom_),
                 static_cast<int>(tile->graphic_x() * zoom_ + x_shift_ * zoom_),
-                static_cast<int>(tile->graphic_y() * hex_height_coefficient * zoom_ + y_shift_ * zoom_));
+                static_cast<int>(tile->graphic_y() * hex_height_coefficient * zoom_ + y_shift_ * zoom_),
+                3,
+                r,g,b,a);
             precendent_tile = tile;
         }
     }

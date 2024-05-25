@@ -19,8 +19,13 @@
 	matrix,shapes.symbols,fit,arrows.meta,backgrounds}
 
 
+\lstset{ %
+	texcl=true,
+	escapeinside={//}{\^^M},
+}
+
 \title{Étude de quelques algorithmes de joueurs artificiels participants à des jeux de stratégie en temps réel}
-\author{Dimitri \bsc{Cocheril-Crèvecœur}}
+\author{Dimitri \bsc{Cocheril-Crèvecœur} \\ 13960}
 \begin{document}
 \begin{frame}[plain]
     \maketitle
@@ -35,18 +40,35 @@
 \begin{frame}{StarCraft}
 	\begin{figure}
 		\centering
-		\begin{minipage}{0.49\textwidth}
-			\centering
-			\includegraphics[width=0.95\textwidth]{screen_starcraft.png}
+		\begin{minipage}{0.5\textwidth}
+			Jeu de stratégie en temps réel:
+			\begin{itemize}
+				\item 
+			\end{itemize}
 		\end{minipage}\hfill
-		\begin{minipage}{0.49\textwidth}
-			
+		\begin{minipage}{0.5\textwidth}
+			\centering
+			\includegraphics[width=0.99\textwidth]{screen_starcraft.png}
 		\end{minipage}
 	\end{figure}
 \end{frame}
+\begin{frame}{StarCraft}
+\begin{figure}
+	\centering
+	\begin{minipage}{0.5\textwidth}
+		
+	\end{minipage}\hfill
+	\begin{minipage}{0.5\textwidth}
+		\centering
+		\includegraphics[width=0.99\textwidth]{screen_starcraft_combat.png}
+	\end{minipage}
+\end{figure}
+\end{frame}
 \begin{frame}{Modèles existants}
 	\begin{itemize}
-		\item A apprentissage automatique : AlphaStar (Google)
+		\item IA de Google : \textit{AlphaStar} 
+			\\Apprentissage supervisé puis par renforcement
+		\item Robots ("bots") : (\textit{})
 	\end{itemize}
 \end{frame}
 \begin{frame}{Développement moteur du jeu}

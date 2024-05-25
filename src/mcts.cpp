@@ -1,9 +1,15 @@
 #include "mcts.hpp"
+#include "game_class.hpp"
 
 #include <ctime>
 #include <thread>
 
 using namespace std;
+
+player_id mcts_node::player_to_move_next(mcts_node* parent)
+{
+    return game_class::enemy_player_get(parent->player_to_move_);
+}
 
 mcts_node& mcts::uct_select(mcts_node& node)
 {
@@ -80,7 +86,7 @@ void mcts::simulation(mcts_node& node, int& tick_max)
 void mcts::simulate_a_thread(mcts_node* child)
 {
     state_class& state = child->state_get();
-    players_[0].moves_get(nullptr, &state);
+    players_[0].moves_get(nullptr, &state); //ici on ajoute les actions de chaque joueur
     players_[1].moves_get(nullptr, &state);
     child->action_vec_set(state.action_vec_get(max_player_));
     for (int i = 0; i < child_depth_; i++)
