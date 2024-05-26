@@ -1,4 +1,4 @@
-# Tipe Cocheril-Crevecoeur Dimitri
+# TIPE Cocheril-Crevecoeur Dimitri
 [![CMake](https://github.com/Audic212/TIPE/actions/workflows/cmake.yml/badge.svg)](https://github.com/Audic212/TIPE/actions/workflows/cmake.yml)
 ## Build
 Use Mingw64 or vs

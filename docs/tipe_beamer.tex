@@ -43,7 +43,10 @@
 		\begin{minipage}{0.5\textwidth}
 			Jeu de stratégie en temps réel:
 			\begin{itemize}
-				\item 
+				\item Jeux simultané
+				\item Deux joueurs s'affrontent pour le contrôle d'une carte
+				\item Gestion de ressources : minage, création d'unitées, de bases (stratégie)
+				\item Combat entre unitées (tactique)
 			\end{itemize}
 		\end{minipage}\hfill
 		\begin{minipage}{0.5\textwidth}
@@ -52,11 +55,24 @@
 		\end{minipage}
 	\end{figure}
 \end{frame}
+\begin{frame}{Modèles existants}
+	\begin{itemize}
+		\item IA de Google : \textit{AlphaStar} 
+			\\Apprentissage supervisé puis par renforcement
+		\item Robots ("bots") :
+	\end{itemize}
+	\centering
+	\includegraphics[width=0.7\textwidth]{architectures.png} 
+\end{frame}
 \begin{frame}{StarCraft}
 \begin{figure}
 	\centering
-	\begin{minipage}{0.5\textwidth}
-		
+	\begin{minipage}{0.45\textwidth}
+		On se concentre ici sur la partie "combat" :
+
+		Deux joueurs disposent d'unitées pouvant bouger et attaquer celles adverses
+
+		Chaque joueur doit tuer toute les unitées ennemies
 	\end{minipage}\hfill
 	\begin{minipage}{0.5\textwidth}
 		\centering
@@ -64,12 +80,11 @@
 	\end{minipage}
 \end{figure}
 \end{frame}
-\begin{frame}{Modèles existants}
-	\begin{itemize}
-		\item IA de Google : \textit{AlphaStar} 
-			\\Apprentissage supervisé puis par renforcement
-		\item Robots ("bots") : (\textit{})
-	\end{itemize}
+\begin{frame}{Problème}
+	\begin{enumerate}
+		\item Facteur de branchement entre $10^{50}$ et $10^{200}$
+		\item Durée typique d'une partie : $25$ minutes donc $25\times60\times24=36000$ états
+	\end{enumerate}
 \end{frame}
 \begin{frame}{Développement moteur du jeu}
 	\begin{figure}
@@ -89,14 +104,14 @@
 	\begin{lstlisting}[language=C++,basicstyle=\ttfamily,keywordstyle=\color{red}]
 void game_class::play() const
 {
-  for (const auto p : players_)
-  // Pour chaque joueur...
-  {
-    p->moves_get(this, state_);
-    // ..on choisit les actions..
-  }
-  state_->moves_make(map_);
-  // ..et on effectue les actions.
+    for (const auto p : players_)
+    /*Pour chaque joueur...*/
+    {
+        p->moves_get(this, state_);
+        /*..on choisit les actions..*/
+    }
+    state_->moves_make(map_);
+    /*..et on effectue les actions.*/
 }
 	\end{lstlisting}
 \end{frame}

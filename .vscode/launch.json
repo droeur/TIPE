@@ -6,36 +6,13 @@
             "program": "${command:cmake.launchTargetPath}",
             "name": "Launch (msvc)",
             "request": "launch",
-            "args": [],
+            "args": ["-h","-l","4","-o","${workspaceFolder}/ressources/","-p","${workspaceFolder}/ressources/expe.txt","-g","${workspaceFolder}/ressources/","-t","${workspaceFolder}/ressources/cour.ttf"],
             "environment": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "console": "integratedTerminal",
             "internalConsoleOptions": "openOnSessionStart",
             "type":"cppvsdbg",
-        },
-        
-        // GDB Debugging:
-        {
-            "program": "${command:cmake.launchTargetPath}",
-            "name": "Launch (gdb)",
-            "request": "launch",
-            "args": [],
-            "environment": [],
-            "stopAtEntry": false,
-            "cwd": "${workspaceFolder}",
-            "console": "integratedTerminal",
-            "internalConsoleOptions": "openOnSessionStart",
-            "type": "cppdbg",
-            "MIMode": "gdb",
-            "miDebuggerPath": "gdb",
-            "setupCommands": [
-                {
-                    "description": "Enable pretty-printing for gdb",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                }
-            ]
         }
     ]
 }

@@ -368,7 +368,9 @@ graphic_class::graphic_class(const std::string& graphic_folder, const std::strin
     screen_surface_ = SDL_GetWindowSurface(window_);
     //render_ = SDL_Renderer(window_, -1, SDL_RENDERER_SOFTWARE);
     render_ = SDL_GetRenderer(window_);
-    BOOST_LOG_TRIVIAL(error) << SDL_GetError();
+    const char* error = SDL_GetError();
+    if(error != '\0')
+        BOOST_LOG_TRIVIAL(error) << error;
 
     if (TTF_Init() < 0)
     {
@@ -497,7 +499,6 @@ bool graphic_class::update(const game_class* game, options_class* settings)
     print_screen(game, pointed_objects);
     SDL_SetRenderDrawColor(render_, BLACK); // background
     SDL_RenderPresent(render_);
-
     /**
      * Gerer la souris
      * 
