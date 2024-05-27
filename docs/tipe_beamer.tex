@@ -115,27 +115,62 @@ void game_class::play() const
 }
 	\end{lstlisting}
 \end{frame}
+\begin{frame}[fragile]
+\small
+\begin{lstlisting}[language=C++,basicstyle=\ttfamily,keywordstyle=\color{red}]
+	void game_class::play() const
+	{
+		for (const auto p : players_)
+		/*Pour chaque joueur...*/
+		{
+			p->moves_get(this, state_);
+			/*..on choisit les actions..*/
+		}
+		state_->moves_make(map_);
+		/*..et on effectue les actions.*/
+	}
+
+\end{lstlisting}
+\end{frame}
+\begin{frame}{Problème de la recherche de chemin}
+	\begin{itemize}
+		\item Optimisation compliquée :
+		
+		On utilise un A* pondérée à 5 (trouvé de manière expérimentale)
+		
+		\item Parrallélisation du programme
+		
+		On alloue les espaces dynamiquements au lieu d'utiliser le tas pour éviter la conccurence
+	\end{itemize}
+Parrallélisation :
+\end{frame}
 \begin{frame}{Joueur aléatoire}
 	Joueur témoin : choisis une action aléatoire, et l'effectue avant d'en choisir une autre aléatoirement
+	\vspace*{1em}
 	
-	On effectue 1000 combats sur une carte vide entre deux joueurs aléatoires avec 50 unités chacun:
+	On effectue 10000 combats sur une carte vide entre deux joueurs aléatoires avec 50 unités chacun:
+	\vspace*{1em}
 	
+	Victoires de joueur 0 : 4689
+	
+	Victoires de joueur 1 : 5306
+	
+	Égalités : 5
 \end{frame}
 \begin{frame}{Stratégie naïve : attaque par puissance}
 	Toutes nos unités attaquent l'unitée ennemie avec la plus grande puissance
 	
-	Résultats contre joueur aléatoire :
+	Résultats contre joueur aléatoire avec 50 unités:
 	
 	100\% de victoire pour joueur aléatoire
 \end{frame}
-\begin{frame}{Stratégie naïve : attaquer par distance}
+%\begin{frame}{Stratégie naïve : attaquer par distance}
 	
-\end{frame}
+%\end{frame}
 \begin{frame}{Utilisation MCTS}
-	
+ 
 \end{frame}
 \begin{frame}{Rassemblement des unitées : DBSCAN}
 	
 \end{frame}
-
 \end{document}
