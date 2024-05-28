@@ -368,9 +368,6 @@ graphic_class::graphic_class(const std::string& graphic_folder, const std::strin
     screen_surface_ = SDL_GetWindowSurface(window_);
     //render_ = SDL_Renderer(window_, -1, SDL_RENDERER_SOFTWARE);
     render_ = SDL_GetRenderer(window_);
-    const char* error = SDL_GetError();
-    if(error != '\0')
-        BOOST_LOG_TRIVIAL(error) << error;
 
     if (TTF_Init() < 0)
     {

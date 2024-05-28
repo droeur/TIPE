@@ -14,7 +14,6 @@ void player_dpf::moves_get(const game_class* game, state_class* state)
             targeted_enemy =  &(state->unit_get(player_enemy, u_index));
         }
     }
-    cout << targeted_enemy << endl;
     for(size_t u_index(0); u_index < state->unit_number(player_id_); u_index++)
     {
         if(state->unit_get(player_id_, u_index).actual_action_get().action_type_get() == unit_action_id::nothing)
