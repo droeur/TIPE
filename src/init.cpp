@@ -78,7 +78,7 @@ void game_players_init(state_class* state, game_class* game, const std::string& 
                         {
                             const double angle = (static_cast<double>(game->options_get().rand_n_get()) / mt19937::max()) * 2 * 3.1415;
                             const double radius =
-                                (static_cast<double>(game->options_get().rand_n_get()) / mt19937::max()) * 10;
+                                (static_cast<double>(game->options_get().rand_n_get()) / mt19937::max()) * 30;
                             q_pos = stoi(tokens[5]) + static_cast<int>(radius * cos(angle));
                             r_pos = stoi(tokens[6]) + static_cast<int>(radius * sin(angle));
                         } while (!map_class::in_map(q_pos, r_pos, *game->map_get()) &&

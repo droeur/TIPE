@@ -87,7 +87,7 @@ int main(const int argc, char* argv[])
     result.close();
 
     BOOST_LOG_TRIVIAL(info) << "Result outputted to " << output_file;
-
+    cout << result.rdbuf();
     delete settings;
     return EXIT_SUCCESS;
 }

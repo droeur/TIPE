@@ -38,7 +38,7 @@ public:
         : state_(std::move(state))
         , player_(player)
     {
-        is_max_ = true;
+        is_max_ = false;
         player_to_move_ = player;
     }
     mcts_node(mcts_node* parent, const player_id player)

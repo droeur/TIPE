@@ -85,9 +85,14 @@ void mcts::simulation(mcts_node& node, int& tick_max)
 
 void mcts::simulate_a_thread(mcts_node* child)
 {
+    player_id player_to_play;
     state_class& state = child->state_get();
-    players_[0].moves_get(nullptr, &state); //ici on ajoute les actions de chaque joueur
-    players_[1].moves_get(nullptr, &state);
+    if(child->is_max_get())
+        player_to_play = max_player_;
+    else
+        player_to_play = game_class::enemy_player_get(max_player_);
+    players_[player_to_play].moves_get(nullptr, &state); 
+    //^ici on ajoute les actions du joueur
     child->action_vec_set(state.action_vec_get(max_player_));
     for (int i = 0; i < child_depth_; i++)
         state.moves_make(map_);
@@ -106,7 +111,8 @@ void mcts::back_propagation(mcts_node& node)
     mcts_node* parent_node = node.parent_get();
     while (parent_node != nullptr)
     {
-        parent_node->win_increment(child_wins);
+        if(parent_node->is_max_get() == node.is_max_get())
+            parent_node->win_increment(child_wins);
         parent_node->visits_increment(child_visits);
         parent_node = parent_node->parent_get();
     }

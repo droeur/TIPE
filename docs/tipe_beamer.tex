@@ -119,23 +119,7 @@ void game_class::play() const
 }
 	\end{lstlisting}
 \end{frame}
-\begin{frame}[fragile]
-\small
-\begin{lstlisting}[language=C++,basicstyle=\ttfamily,keywordstyle=\color{red}]
-	void game_class::play() const
-	{
-		for (const auto p : players_)
-		/*Pour chaque joueur...*/
-		{
-			p->moves_get(this, state_);
-			/*..on choisit les actions..*/
-		}
-		state_->moves_make(map_);
-		/*..et on effectue les actions.*/
-	}
 
-\end{lstlisting}
-\end{frame}
 \begin{frame}{Problème de la recherche de chemin}
 	\begin{itemize}
 		\item Optimisation compliquée :
@@ -167,6 +151,11 @@ Parrallélisation :
 	Résultats contre joueur aléatoire avec 50 unités:
 	
 	100\% de victoire pour joueur aléatoire
+\end{frame}
+\begin{frame}{Joueur MCTS}
+	Trop grand nombre de possibilités à chaque tick : plus de $10^50$
+	
+	On utilise la recherche arborescente Monte-Carlo
 \end{frame}
 \begin{frame}{Utilisation MCTS}
 \begin{center}
@@ -478,6 +467,7 @@ Points {\color{darkred}frontière et }{\color{red} centraux du cluster 1 et }{\c
 \end{frame}
 
 \begin{frame}{Application du DBSCAN}
-	
+	\centering
+	\includegraphics[width=0.99\textwidth]{groupes screen.jpg}
 \end{frame}
 \end{document}

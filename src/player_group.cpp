@@ -82,8 +82,8 @@ void squad_class::unit_append(unit_class* unit)
 }
 
 void squad_class::moves_generate(const map_class *map, state_class *state) const
-{/*
-    switch (unit_action action = mcts_->best_action_calculate(leader_, *state, leader_.player_get());
+{
+    switch (unit_action action = mcts_->best_action_calculate(*state, leader_.player_get())[leader_.id_get()];
             action.action_type_get())
     {
         case unit_action_id::follow: {
@@ -145,7 +145,7 @@ void squad_class::moves_generate(const map_class *map, state_class *state) const
     }
     case unit_action_id::error: BOOST_LOG_TRIVIAL(error) << "unknown squad leader action";
     }
-    */
+    
 }
 
 unit_class& squad_class::leader_get() const
