@@ -24,6 +24,10 @@
 	escapeinside={//}{\^^M},
 }
 
+\definecolor{redbackground}{HTML}{ffd4d4}
+\definecolor{darkred}{HTML}{b3590b}
+\definecolor{blued}{HTML}{384da1}
+
 \title{Étude de quelques algorithmes de joueurs artificiels participants à des jeux de stratégie en temps réel}
 \author{Dimitri \bsc{Cocheril-Crèvecœur} \\ 13960}
 \begin{document}
@@ -164,13 +168,316 @@ Parrallélisation :
 	
 	100\% de victoire pour joueur aléatoire
 \end{frame}
-%\begin{frame}{Stratégie naïve : attaquer par distance}
-	
-%\end{frame}
 \begin{frame}{Utilisation MCTS}
- 
+\begin{center}
+\scriptsize
+\begin{tikzpicture}[->,
+	level distance=11mm,
+	level 1/.style={sibling distance=28mm},
+	level 2/.style={sibling distance=10mm},]
+	\node [circle,draw,fill=red!20] (z){$10/21$}
+		child {
+		node [circle,draw,fill=blue!20] (a) {$6/9$}
+			child {node [circle,draw,fill=red!20]{$3/3$}}
+			child {node [circle,draw,fill=red!20]{$1/3$}}
+			child {node [circle,draw,fill=red!20]{$0/3$}}
+		}
+		child {
+		node [circle,draw,fill=blue!20] (a) {$0/3$}
+		}
+		child {
+		node [circle,draw,fill=blue!20] (a) {$2/9$}
+		child {node [circle,draw,fill=red!20]{$3/3$}}
+		child {node [circle,draw,fill=red!20]{$2/3$}}
+		child {node [circle,draw,fill=red!20]{$2/3$}}
+		}
+	;
+\end{tikzpicture}
+\end{center}
+\end{frame}
+\begin{frame}{Utilisation MCTS}
+	Utilisation de UCT pour la selection : $\frac wn+c\sqrt{\frac{\ln N}n}$
+	
+	\begin{center}
+	Selection et expansion
+	\end{center}
+\begin{center}
+\scriptsize
+\begin{tikzpicture}[->,
+	level distance=11mm,
+	level 1/.style={sibling distance=28mm},
+	level 2/.style={sibling distance=10mm},
+	level 3/.style={sibling distance=10mm},
+	level 4/.style={sibling distance=10mm},]
+	\node [circle,draw=red,fill=red!20,thick] (z){$10/21$}
+		child {
+			node [circle,draw=red,fill=blue!20,thick] (a) {$6/9$}
+			child {node [circle,draw,fill=red!20]{$1/3$}}
+			child {node [circle,draw,fill=red!20]{$0/3$}}
+			child {
+				node [circle,draw=red,fill=red!20,thick](b){$3/3$} 
+				child {
+					node [circle,draw,fill=blue!20,thick](c){$0/0$}
+				}
+				child {
+					node [circle,draw,fill=blue!20,thick](c){$0/0$}
+				}
+				child {
+					node [circle,draw,fill=blue!20,thick](c){$0/0$}
+				}edge from parent[thick]
+			}
+			edge from parent[draw=none]
+		}
+		child {
+			node [circle,draw,fill=blue!20] {$0/3$}
+		}
+		child {
+			node [circle,draw,fill=blue!20] {$2/9$}
+			child {node [circle,draw,fill=red!20]{$3/3$}}
+			child {node [circle,draw,fill=red!20]{$2/3$}}
+			child {node [circle,draw,fill=red!20]{$2/3$}}
+		}
+	;
+	\draw[thick,red](z)->(a);
+	\draw[thick,red](a)->(b);
+\end{tikzpicture}
+\end{center}
+\end{frame}
+\begin{frame}{Utilisation MCTS}
+	\begin{center}
+		
+	Simulation
+	\end{center}
+\begin{center}
+\scriptsize
+\begin{tikzpicture}[->,
+	level distance=11mm,
+	level 1/.style={sibling distance=28mm},
+	level 2/.style={sibling distance=10mm},
+	level 3/.style={sibling distance=10mm},
+	level 4/.style={sibling distance=10mm},]
+
+
+	\node [circle,draw=red,fill=red!20,thick] (z){$10/21$}
+		child {
+			node [circle,draw=red,fill=blue!20,thick] (a) {$6/9$}
+			child {node [circle,draw,fill=red!20]{$1/3$}}
+			child {node [circle,draw,fill=red!20]{$0/3$}}
+			child {
+				node [circle,draw=red,fill=red!20,thick](b){$3/3$} 
+				child {
+					node [circle,draw,fill=blue!20,thick](e1){$0/0$}
+					child {
+						node [draw=none](f1){} edge from parent[draw=none]
+					} 
+				}
+				child {
+					node [circle,draw,fill=blue!20,thick](e2){$0/0$}
+					child {
+						node [draw=none](f2){} edge from parent[draw=none]
+					} 
+				}
+				child {
+					node [circle,draw,fill=blue!20,thick](e3){$0/0$}
+					child {
+						node [draw=none](f3){} edge from parent[draw=none]
+					} 
+				}edge from parent[thick]
+			}
+			edge from parent[draw=none]
+		}
+		child {
+			node [circle,draw,fill=blue!20] {$0/3$}
+		}
+		child {
+			node [circle,draw,fill=blue!20] {$2/9$}
+			child {node [circle,draw,fill=red!20]{$3/3$}}
+			child {node [circle,draw,fill=red!20]{$2/3$}}
+			child {node [circle,draw,fill=red!20]{$2/3$}}
+		}
+	;
+	\draw[thick,red](z)->(a);
+	\draw[thick,red](a)->(b);
+	\draw[decoration=snake,decorate, thick,-](e1)--(f1);
+	\draw[decoration=snake,decorate, thick,-](e2)--(f2);
+	\draw[decoration=snake,decorate, thick,-](e3)--(f3)node [midway, right]{10 ticks};
+\end{tikzpicture}
+\end{center}
 \end{frame}
 \begin{frame}{Rassemblement des unitées : DBSCAN}
+	\begin{minipage}{0.5\textwidth}
+		\centering
+		\includegraphics[width=0.99\textwidth]{circles.png}
+		\includegraphics[width=0.99\textwidth]{petit_eps.png}
+	\end{minipage}\hfill
+	\begin{minipage}{0.5\textwidth}
+		\centering
+		\includegraphics[width=0.99\textwidth]{grand_eps.png}
+		\includegraphics[width=0.99\textwidth]{dbscan.png}
+	\end{minipage}
+\end{frame}
+\begin{frame}{Rassemblement des unitées : DBSCAN}
+	Deux paramètres : $\varepsilon$ et $MinPts$
+
+	Ici avec $MinPts = 3$ :
+
+\vspace*{1em}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.8,baseline = (current bounding box.center)]
+	
+    \draw[red, fill=red](0,0) circle (2 pt);
+
+    \draw[fill=black](0.3,0.2) circle (1.5pt);
+    \draw[fill=black](-0.2,0.4) circle (1.5pt);
+    \draw[fill=black](-0.1,0.6) circle (1.5pt);
+    \draw[fill=black](0.2,-0.3) circle (1.5pt);
+    \draw[fill=black](-0.2,-0.5) circle (1.5pt);
+
+    \draw[fill=black](-1,-1) circle (1.5pt);
+
+    \draw[fill=black](1.4,0.6) circle (1.5pt);
+    \draw[fill=black](1.7,0.8) circle (1.5pt);
+    \draw[fill=black](1.6,1) circle (1.5pt);
+    \draw[fill=black](1.9,0.6) circle (1.5pt);
+    \draw[fill=black](2,0.9) circle (1.5pt);
+    \draw[fill=black](1.1,1.3) circle (1.5pt);
+
+\end{tikzpicture}
+$\longrightarrow$
+\begin{tikzpicture}[scale=0.8,baseline = (current bounding box.center)]
+	
+    \draw[red, fill=red](0,0) circle (2 pt);
+
+    \draw[fill=red,red](0.3,0.2) circle (1.5pt);
+    \draw[fill=red,red](-0.2,0.4) circle (1.5pt);
+    \draw[fill=red,red](-0.1,0.6) circle (1.5pt);
+    \draw[fill=red,red](0.2,-0.3) circle (1.5pt);
+    \draw[fill=red,red](-0.2,-0.5) circle (1.5pt);
+
+    \draw[fill=black](-1,-1) circle (1.5pt);
+
+    \draw[fill=black](1.4,0.6) circle (1.5pt);
+    \draw[fill=black](1.7,0.8) circle (1.5pt);
+    \draw[fill=black](1.6,1) circle (1.5pt);
+    \draw[fill=black](1.9,0.6) circle (1.5pt);
+    \draw[fill=black](2,0.9) circle (1.5pt);
+    \draw[fill=black](1.1,1.3) circle (1.5pt);
+
+    \draw[fill=none,red,dashed](0,0) circle (1.0);
+    \draw[red,->](0,0) -> (0.707,0.707) node [midway, above, sloped]{\small$\varepsilon$};
+\end{tikzpicture}
+$\longrightarrow$
+\begin{tikzpicture}[scale=0.8,baseline = (current bounding box.center)]
+
+    \draw[fill=redbackground,draw=none](0.3,0.2) circle (1.0);
+    \draw[fill=redbackground,draw=none](-0.2,0.4) circle (1.0);
+    \draw[fill=redbackground,draw=none](-0.1,0.6) circle (1.0);
+    \draw[fill=redbackground,draw=none](0.2,-0.3) circle (1.0);
+    \draw[fill=redbackground,draw=none](-0.2,-0.5) circle (1.0);
+
+    \draw[red, fill=red](0,0) circle (2 pt);
+
+    \draw[fill=red,red](0.3,0.2) circle (1.5pt);
+    \draw[fill=red,red](-0.2,0.4) circle (1.5pt);
+    \draw[fill=red,red](-0.1,0.6) circle (1.5pt);
+    \draw[fill=red,red](0.2,-0.3) circle (1.5pt);
+    \draw[fill=red,red](-0.2,-0.5) circle (1.5pt);
+
+    \draw[fill=black](-1,-1) circle (1.5pt);
+
+    \draw[fill=black](1.4,0.6) circle (1.5pt);
+    \draw[fill=black](1.7,0.8) circle (1.5pt);
+    \draw[fill=black](1.6,1) circle (1.5pt);
+    \draw[fill=black](1.9,0.6) circle (1.5pt);
+    \draw[fill=black](2,0.9) circle (1.5pt);
+    \draw[fill=black](1.1,1.3) circle (1.5pt);
+\end{tikzpicture}
+\end{center}
+
+\begin{center}
+$\longrightarrow$
+\begin{tikzpicture}[scale=0.8,baseline = (current bounding box.center)]
+
+    \draw[fill=redbackground,draw=none](0.3,0.2) circle (1.0);
+    \draw[fill=redbackground,draw=none](-0.2,0.4) circle (1.0);
+    \draw[fill=redbackground,draw=none](-0.1,0.6) circle (1.0);
+    \draw[fill=redbackground,draw=none](0.2,-0.3) circle (1.0);
+    \draw[fill=redbackground,draw=none](-0.2,-0.5) circle (1.0);
+
+    \draw[red, fill=red](0,0) circle (2 pt);
+
+    \draw[fill=red,red](0.3,0.2) circle (1.5pt);
+    \draw[fill=red,red](-0.2,0.4) circle (1.5pt);
+    \draw[fill=red,red](-0.1,0.6) circle (1.5pt);
+    \draw[fill=red,red](0.2,-0.3) circle (1.5pt);
+    \draw[fill=red,red](-0.2,-0.5) circle (1.5pt);
+
+    \draw[fill=darkred,darkred](-1,-1) circle (1.5pt);
+    \draw[fill=none,darkred,dashed](-1,-1) circle (1.0);
+    \draw[darkred,->](-1,-1) -> (-0.293,-0.293) node [midway, above, sloped]{\small$\varepsilon$};
+
+    \draw[fill=black](1.4,0.6) circle (1.5pt);
+    \draw[fill=black](1.7,0.8) circle (1.5pt);
+    \draw[fill=black](1.6,1) circle (1.5pt);
+    \draw[fill=black](1.9,0.6) circle (1.5pt);
+    \draw[fill=black](2,0.9) circle (1.5pt);
+    \draw[fill=black](1.1,1.3) circle (1.5pt);
+\end{tikzpicture}
+$\rightarrow$
+\begin{tikzpicture}[scale=0.7,baseline = (current bounding box.center)]
+
+    \draw[red, fill=red](0,0) circle (2 pt);
+
+    \draw[fill=red,red](0.3,0.2) circle (1.5pt);
+    \draw[fill=red,red](-0.2,0.4) circle (1.5pt);
+    \draw[fill=red,red](-0.1,0.6) circle (1.5pt);
+    \draw[fill=red,red](0.2,-0.3) circle (1.5pt);
+    \draw[fill=red,red](-0.2,-0.5) circle (1.5pt);
+
+    \draw[fill=darkred,darkred](-1,-1) circle (1.5pt);
+
+    \draw[fill=black](1.4,0.6) circle (1.5pt);
+    \draw[fill=black](1.7,0.8) circle (1.5pt);
+    \draw[fill=black](1.6,1) circle (1.5pt);
+    \draw[blued, fill](1.9,0.6) circle (2pt);
+
+	\draw[fill=none,blued,dashed](1.9,0.6) circle (1.0);
+    \draw[blued,->](1.9,0.6) -> (2.607,1.307) node [midway, above, sloped]{\small$\varepsilon$};
+
+    \draw[fill=black](2,0.9) circle (1.5pt);
+    \draw[fill=black](1.1,1.3) circle (1.5pt);
+
+\end{tikzpicture}
+$\rightarrow$
+\begin{tikzpicture}[scale=0.8,baseline = (current bounding box.center)]
+	
+
+    \draw[red, fill=red](0,0) circle (2 pt);
+
+    \draw[red, fill](0.3,0.2) circle (1.5pt);
+    \draw[red, fill](-0.2,0.4) circle (1.5pt);
+    \draw[red, fill](-0.1,0.6) circle (1.5pt);
+    \draw[red, fill](0.2,-0.3) circle (1.5pt);
+    \draw[red, fill](-0.2,-0.5) circle (1.5pt);
+
+    \draw[darkred, fill](-1,-1) circle (1.5pt);
+
+    \draw[blued, fill](1.4,0.6) circle (1.5pt);
+    \draw[blued, fill](1.7,0.8) circle (1.5pt);
+    \draw[blued, fill](1.6,1) circle (1.5pt);
+    \draw[blued, fill](1.9,0.6) circle (1.5pt);
+    \draw[blued, fill](2,0.9) circle (1.5pt);
+    \draw[blued, fill](1.1,1.3) circle (1.5pt);
+
+	\draw[fill=none,blued,dashed](1.1,1.3) circle (1.0);
+\end{tikzpicture}
+\end{center}
+
+Points {\color{darkred}frontière et }{\color{red} centraux du cluster 1 et }{\color{blued}du cluster 2}
+\end{frame}
+
+\begin{frame}{Application du DBSCAN}
 	
 \end{frame}
 \end{document}
