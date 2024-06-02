@@ -30,8 +30,8 @@ class mcts_node
     player_id player_to_move_ = -1;
 
     std::vector<unit_action> action_vec_;
-    
-    player_id player_to_move_next(mcts_node* parent);
+
+    static player_id player_to_move_next(const mcts_node* parent);
 
 public:
     mcts_node(state_class state, const player_id player)
@@ -63,12 +63,12 @@ public:
     void win_increment(const int wins) { wins_ += wins; }
 
     [[nodiscard]] double uct_val_get() const { return uct_val_; }
-    void uct_val_update()
+    void uct_val_update(const double c_parameter)
     {
         if (parent_ != nullptr)
         {
             uct_val_ = static_cast<double>(win_get()) / visits_get() +
-                       0 * sqrt(log(parent_->visits_get() + 1) / visits_get());
+                       c_parameter * sqrt(log(parent_->visits_get() + 1) / visits_get());
         }
         else
         {
@@ -106,7 +106,7 @@ class mcts
 
     player_id max_player_;
 
-    static mcts_node& uct_select(mcts_node& node);
+    mcts_node& uct_select(mcts_node& node) const;
     void expansion(mcts_node& node) const;
     void simulation(mcts_node& node, int& tick_max);
     void simulate_a_thread(mcts_node* child);

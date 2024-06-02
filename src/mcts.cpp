@@ -6,12 +6,12 @@
 
 using namespace std;
 
-player_id mcts_node::player_to_move_next(mcts_node* parent)
+player_id mcts_node::player_to_move_next(const mcts_node* parent)
 {
     return game_class::enemy_player_get(parent->player_to_move_);
 }
 
-mcts_node& mcts::uct_select(mcts_node& node)
+mcts_node& mcts::uct_select(mcts_node& node) const
 {
     if (node.children_get().empty())
         return node;
@@ -24,7 +24,7 @@ mcts_node& mcts::uct_select(mcts_node& node)
         int index = 0;
         for (auto& child : selected_node->children_get())
         {
-            child.uct_val_update();
+            child.uct_val_update(c_parameter_);
             if (child.uct_val_get() > best_node_uct)
             {
                 best_node_uct = child.uct_val_get();
@@ -99,7 +99,7 @@ void mcts::simulate_a_thread(mcts_node* child)
     if (state.evaluate(max_player_) > 0)
         child->win_increment(1);
     child->visits_increment(1);
-    child->uct_val_update();
+    child->uct_val_update(c_parameter_);
 }
 
 void mcts::back_propagation(mcts_node& node)
