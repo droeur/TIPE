@@ -505,7 +505,54 @@ Modèle de bataille :
 	\right.
 \end{equation*}
 avec $A(t)$ et $B(t)$ le nombre d'unitées dans les armées A et B à l'instant $t$
+
+$\alpha$ et $\beta$ les coefficients d'attritions de Lanchester de A et B : nombre d'unitées tuées par seconde par chaque armée
+
+Intensitée du combat définie par $I=\sqrt{\alpha\beta}$
+\end{frame}
+\begin{frame}{Application de la loi de Lanchester}
+On applique la loi de Lanchester dans le modèle du jeu :
+\begin{equation*}
+	\left\{
+	\begin{aligned}
+		&\alpha = \frac{DPF(B,A)}{HP(A)}\\
+		&\beta = \frac{DPF(B,A)}{HP(B)}
+	\end{aligned}
+	\right.
+\end{equation*}
+avec $HP(A)$ le nombre de points de vie de A et $DPF(B,A)$ le nombre moyen de dégâts que l'armée B peut faire à l'armée A
+
+On peut alors approximer le vainqueur :
+\begin{equation*}
+	\frac{|A(0)|}{|B(0)|}
+	\left\{
+	\begin{aligned}
+		&> R_\alpha \text{victoire de A}\\
+		&= R_\alpha \text{égalité}\\
+		&< R_\alpha \text{victoire de B}
+	\end{aligned}
+	\right.
+\end{equation*}
+avec
+$R_\alpha = \sqrt{\frac\alpha\beta}$ et 
+$R_\beta = \sqrt{\frac\beta\alpha}$
+\end{frame}
+\begin{frame}{Application de la loi de Lanchester}
+	Et la durée du combat est :
 	
+	\begin{equation*}
+		t=
+		\left\{
+		\begin{aligned}
+			&\frac{1}{2I}\ln\left(\frac{1+\frac{B(0)}{A(0)}R_\alpha}{1-\frac{B(0)}{A(0)}R_\alpha}\right) \text{Si A gagne}\\
+			&\frac{1}{2I}\ln\left(\frac{1+\frac{A(0)}{B(0)}R_\beta}{1-\frac{A(0)}{B(0)}R_\beta}\right)\text{si B gagne}
+		\end{aligned}
+		\right.
+	\end{equation*}
+Mais divergence en cas d'égalité
+
+\end{frame}
+\begin{frame}
 \begin{itemize}
 	\item On génère des armées : DBSCAN
 	\item On applique le MCTS à ces armées
