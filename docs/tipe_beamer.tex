@@ -131,6 +131,24 @@ void game_class::play() const
 		On alloue les espaces dynamiquements au lieu d'utiliser le tas pour éviter la conccurence
 	\end{itemize}
 Parrallélisation :
+\begin{center}
+\begin{tikzpicture}[baseline = (current bounding box.center)]
+	\draw (0,0)node[left]{Cœur 1};
+	\draw[decoration=snake,decorate, thick,-](0,0)--node [above]{$f$}(1,0);
+	\draw[decoration=snake,decorate, thick,-](1.2,0)--node [above]{$f$}(2.2,0);
+	\draw[decoration=snake,decorate, thick,-](2.4,0)--node [above]{$f$}(3.4,0);
+	\draw(3.6,0) node[right]{$\rightarrow$};
+\end{tikzpicture}
+\begin{tikzpicture}[baseline = (current bounding box.center)]
+	\draw (0,0)node[left]{Cœur 1};
+	\draw[decoration=snake,decorate, thick,-](0,0)--node [above]{$f$}(1,0);
+	\draw (0,-0.6)node[left]{Cœur 2};
+	\draw[decoration=snake,decorate, thick,-](0.2,-0.6)--node [above]{$f$}(1.2,-0.6);
+	\draw (0,-1.2)node[left]{Cœur 3};
+	\draw[decoration=snake,decorate, thick,-](0.4,-1.2)--node [above]{$f$}(1.4,-1.2);
+\end{tikzpicture}
+\end{center}
+
 \end{frame}
 \begin{frame}{Joueur aléatoire}
 	Joueur "témoin" : choisis une action aléatoire, et l'effectue avant d'en choisir une autre aléatoirement
@@ -139,9 +157,9 @@ Parrallélisation :
 	On effectue 10000 combats sur une carte vide entre deux joueurs aléatoires avec 50 unités chacun:
 	\vspace*{1em}
 	
-	Victoires de joueur 0 : 4689
+	Victoires de joueur 0 : 4889
 	
-	Victoires de joueur 1 : 5306
+	Victoires de joueur 1 : 5106
 	
 	Égalités : 5
 \end{frame}
@@ -153,9 +171,13 @@ Parrallélisation :
 	100\% de victoire pour joueur aléatoire
 \end{frame}
 \begin{frame}{Joueur MCTS}
-	Trop grand nombre de possibilités à chaque tick : plus de $10^50$
+	Trop grand nombre de possibilités à chaque tick : plus de $10^{50}$
 	
-	On utilise la recherche arborescente Monte-Carlo
+	On utilise la recherche arborescente Monte-Carlo :
+	
+	Exploration de l'arbre des possibilités en vue du choix d'une bonne solution
+	
+	Utilisé en Go, en échecs et pour d'autres jeux au tour par tour.
 \end{frame}
 \begin{frame}{Utilisation MCTS}
 \begin{center}
@@ -469,5 +491,28 @@ Points {\color{darkred}frontière et }{\color{red} centraux du cluster 1 et }{\c
 \begin{frame}{Application du DBSCAN}
 	\centering
 	\includegraphics[width=0.99\textwidth]{groupes screen.jpg}
+\end{frame}
+\begin{frame}{Monter en abstraction : loi de Lanchester}
+Loi géométrique de Lanchester : Modèle de simulation de bataille entre armées en combat "corps à corps"
+
+Modèle de bataille : 
+\begin{equation*}
+	\left\{
+	\begin{aligned}
+		&\frac{dA}{dt}(t) =-\alpha B(t)\\
+		&\frac{dB}{dt}(t) =-\beta A(t)
+	\end{aligned}
+	\right.
+\end{equation*}
+avec $A(t)$ et $B(t)$ le nombre d'unitées dans les armées A et B à l'instant $t$
+	
+\begin{itemize}
+	\item On génère des armées : DBSCAN
+	\item On applique le MCTS à ces armées
+	\item On accelère le MCTS grâce à la loi de Lanchester
+\end{itemize}
+	
+	
+	
 \end{frame}
 \end{document}
