@@ -39,7 +39,7 @@
 \begin{frame}{Plan}
 	\begin{enumerate}
 		\item Présentation du problème
-		\item Moteur
+		\item Création du moteur
 		\item Stratégies testées
 	\end{enumerate}
 \end{frame}
@@ -75,9 +75,9 @@
 	\centering
 	\begin{minipage}{0.45\textwidth}
 		On se concentre ici sur la partie "combat" :
-
+		\vspace{0.3cm}
 		Deux joueurs disposent d'unitées pouvant bouger et attaquer celles adverses
-
+		\vspace{0.3cm}
 		Chaque joueur doit tuer toute les unitées ennemies
 	\end{minipage}\hfill
 	\begin{minipage}{0.5\textwidth}
@@ -167,17 +167,22 @@ Parrallélisation :
 \end{frame}
 \begin{frame}{Stratégie naïve : attaque par puissance}
 	Toutes nos unités attaquent l'unitée ennemie avec la plus grande puissance
+	\vspace*{1em}
 	
 	Résultats contre joueur aléatoire avec 50 unités:
+	\vspace*{1em}
 	
 	100\% de victoire pour joueur aléatoire
 \end{frame}
 \begin{frame}{Joueur MCTS}
 	Trop grand nombre de possibilités à chaque tick : plus de $10^{50}$
+	\vspace*{1em}
 	
 	On utilise la recherche arborescente Monte-Carlo :
+	\vspace*{1em}
 	
 	Exploration de l'arbre des possibilités en vue du choix d'une bonne solution
+	\vspace*{1em}
 	
 	Utilisé en Go, en échecs et pour d'autres jeux au tour par tour.
 \end{frame}
@@ -364,6 +369,12 @@ Parrallélisation :
 		\end{tikzpicture}
 	\end{center}
 \end{frame}
+\begin{frame}{Résultats MCTS}
+	Assez faible profondeur : prends trop de temps
+	\vspace*{1em}
+	
+	Résultat médiocre : gagne 70\% du temps contre joueur aléatoire
+\end{frame}
 \begin{frame}{Rassemblement des unitées : DBSCAN}
 	\begin{minipage}{0.5\textwidth}
 		\centering
@@ -548,10 +559,9 @@ Points {\color{darkred}frontière et }{\color{red} centraux du cluster 1 et }{\c
 	\item On accelère le MCTS grâce à la loi de Lanchester
 \end{itemize}
 \end{frame}
-\setlength\pdfpagewidth{12.8cm}
-\setlength\pdfpageheight{18.10cm}
 \begin{frame}[plain]
-	\vspace*{2em}
+\begin{minipage}{0.49\textwidth}
+	\tiny
 	\begin{equation*}
 		\left\{
 		\begin{aligned}
@@ -573,17 +583,18 @@ Points {\color{darkred}frontière et }{\color{red} centraux du cluster 1 et }{\c
 	\end{equation*}
 	
 	Intensitée du combat définie par $I=\sqrt{\alpha\beta}$
-On peut alors approximer le vainqueur :
-\begin{equation*}
-	\frac{|A(0)|}{|B(0)|}
-	\left\{
-	\begin{aligned}
-		&> R_\alpha \text{ victoire de A}\\
-		&= R_\alpha \text{ égalité}\\
-		&< R_\alpha \text{ victoire de B}
-	\end{aligned}
-	\right.
-\end{equation*}
+	On peut alors approximer le vainqueur :
+	\begin{equation*}
+		\frac{|A(0)|}{|B(0)|}
+		\left\{
+		\begin{aligned}
+			&> R_\alpha \text{ victoire de A}\\
+			&= R_\alpha \text{ égalité}\\
+			&< R_\alpha \text{ victoire de B}
+		\end{aligned}
+		\right.
+	\end{equation*}
+\end{minipage}
 avec
 $R_\alpha = \sqrt{\frac\alpha\beta}$ et 
 $R_\beta = \sqrt{\frac\beta\alpha}$
