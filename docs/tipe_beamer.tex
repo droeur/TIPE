@@ -126,11 +126,11 @@ void game_class::play() const
 	\begin{itemize}
 		\item Optimisation compliquée :
 		
-		On utilise un A* pondérée à 5 (trouvé de manière expérimentale)
+		On utilise un A* pondérée à 5 (trouvé empiriquement) : comme le A* normal mais on ajoute un poids à l'heuristique
 		
-		\item Parrallélisation du programme
+		\item Fonctions parallélisables
 		
-		On alloue les espaces dynamiquements au lieu d'utiliser le tas pour éviter la conccurence
+		On alloue les espaces dynamiquement au lieu d'utiliser le tas pour éviter la concurrence
 	\end{itemize}
 Parrallélisation :
 \begin{center}
@@ -560,8 +560,8 @@ Points {\color{darkred}frontière et }{\color{red} centraux du cluster 1 et }{\c
 \end{itemize}
 \end{frame}
 \begin{frame}[plain]
-\begin{minipage}{0.49\textwidth}
 	\tiny
+\begin{minipage}{0.49\textwidth}
 	\begin{equation*}
 		\left\{
 		\begin{aligned}
@@ -594,7 +594,7 @@ Points {\color{darkred}frontière et }{\color{red} centraux du cluster 1 et }{\c
 		\end{aligned}
 		\right.
 	\end{equation*}
-\end{minipage}
+\end{minipage}\hfill
 \begin{minipage}{0.49\textwidth}
 avec
 $R_\alpha = \sqrt{\frac\alpha\beta}$ et 
