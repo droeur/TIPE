@@ -27,9 +27,11 @@
 \definecolor{redbackground}{HTML}{ffd4d4}
 \definecolor{darkred}{HTML}{b3590b}
 \definecolor{blued}{HTML}{384da1}
+\setbeamertemplate{navigation symbols}{}
+\addtobeamertemplate{footline}{\normalsize\hspace*{10pt}\insertframenumber/\inserttotalframenumber\vspace*{10pt}}
 
 \title{Étude de quelques algorithmes de joueurs artificiels participants à des jeux de stratégie en temps réel}
-\author{13960}
+\author{Cocheril-Crèvecoeur Dimitri\\13960}
 \begin{document}
 \begin{frame}[plain]
     \maketitle
@@ -186,9 +188,9 @@ Parrallélisation :
 	level distance=11mm,
 	level 1/.style={sibling distance=28mm},
 	level 2/.style={sibling distance=10mm},]
-	\node [circle,draw,fill=red!20] (z){$10/21$}
+	\node [circle,draw,fill=red!20] (z){$13/21$}
 		child {
-		node [circle,draw,fill=blue!20] (a) {$6/9$}
+		node [circle,draw,fill=blue!20] (a) {$5/9$}
 			child {node [circle,draw,fill=red!20]{$3/3$}}
 			child {node [circle,draw,fill=red!20]{$1/3$}}
 			child {node [circle,draw,fill=red!20]{$0/3$}}
@@ -220,9 +222,9 @@ Parrallélisation :
 	level 2/.style={sibling distance=10mm},
 	level 3/.style={sibling distance=10mm},
 	level 4/.style={sibling distance=10mm},]
-	\node [circle,draw=red,fill=red!20,thick] (z){$10/21$}
+	\node [circle,draw=red,fill=red!20,thick] (z){$13/21$}
 		child {
-			node [circle,draw=red,fill=blue!20,thick] (a) {$6/9$}
+			node [circle,draw=red,fill=blue!20,thick] (a) {$5/9$}
 			child {node [circle,draw,fill=red!20]{$1/3$}}
 			child {node [circle,draw,fill=red!20]{$0/3$}}
 			child {
@@ -269,9 +271,9 @@ Parrallélisation :
 	level 4/.style={sibling distance=10mm},]
 
 
-	\node [circle,draw=red,fill=red!20,thick] (z){$10/21$}
+	\node [circle,draw=red,fill=red!20,thick] (z){$13/21$}
 		child {
-			node [circle,draw=red,fill=blue!20,thick] (a) {$6/9$}
+			node [circle,draw=red,fill=blue!20,thick] (a) {$5/9$}
 			child {node [circle,draw,fill=red!20]{$1/3$}}
 			child {node [circle,draw,fill=red!20]{$0/3$}}
 			child {
@@ -314,6 +316,53 @@ Parrallélisation :
 	\draw[decoration=snake,decorate, thick,-](e3)--(f3)node [midway, right]{10 ticks};
 \end{tikzpicture}
 \end{center}
+\end{frame}
+
+\begin{frame}{Utilisation MCTS}
+	\begin{center}
+		
+		Rétro-propagation
+	\end{center}
+	\begin{center}
+		\scriptsize
+		\begin{tikzpicture}[->,
+			level distance=11mm,
+			level 1/.style={sibling distance=28mm},
+			level 2/.style={sibling distance=10mm},
+			level 3/.style={sibling distance=10mm},
+			level 4/.style={sibling distance=10mm},]
+			
+			
+			\node [circle,draw,fill=red!20] (z){$19/30$}
+			child {
+				node [circle,draw,fill=blue!20] (a) {$8/18$}
+				child {node [circle,draw,fill=red!20]{$1/3$}}
+				child {node [circle,draw,fill=red!20]{$0/3$}}
+				child {
+					node [circle,draw,fill=red!20](b){$9/12$} 
+					child {
+						node [circle,draw,fill=blue!20](e1){$0/3$}
+					}
+					child {
+						node [circle,draw,fill=blue!20](e2){$2/3$}
+					}
+					child {
+						node [circle,draw,fill=blue!20](e3){$1/3$}
+					}
+				}
+			}
+			child {
+				node [circle,draw,fill=blue!20] {$0/3$}
+			}
+			child {
+				node [circle,draw,fill=blue!20] {$2/9$}
+				child {node [circle,draw,fill=red!20]{$3/3$}}
+				child {node [circle,draw,fill=red!20]{$2/3$}}
+				child {node [circle,draw,fill=red!20]{$2/3$}}
+			}
+			;
+		\end{tikzpicture}
+	\end{center}
 \end{frame}
 \begin{frame}{Rassemblement des unitées : DBSCAN}
 	\begin{minipage}{0.5\textwidth}
@@ -492,74 +541,63 @@ Points {\color{darkred}frontière et }{\color{red} centraux du cluster 1 et }{\c
 	\centering
 	\includegraphics[width=0.99\textwidth]{groupes screen.jpg}
 \end{frame}
-\begin{frame}{Monter en abstraction : loi de Lanchester}
-Loi géométrique de Lanchester : Modèle de simulation de bataille entre armées en combat "corps à corps"
-
-Modèle de bataille : 
-\begin{equation*}
-	\left\{
-	\begin{aligned}
-		&\frac{dA}{dt}(t) =-\alpha B(t)\\
-		&\frac{dB}{dt}(t) =-\beta A(t)
-	\end{aligned}
-	\right.
-\end{equation*}
-avec $A(t)$ et $B(t)$ le nombre d'unitées dans les armées A et B à l'instant $t$
-
-$\alpha$ et $\beta$ les coefficients d'attritions de Lanchester de A et B : nombre d'unitées tuées par seconde par chaque armée
-
-Intensitée du combat définie par $I=\sqrt{\alpha\beta}$
+\begin{frame}{Monter en abstraction}
+\begin{itemize}
+	\item On génère des armées : DBSCAN
+	\item On applique le MCTS à ces armées
+	\item On accelère le MCTS grâce à la loi de Lanchester
+\end{itemize}
 \end{frame}
-\begin{frame}{Application de la loi de Lanchester}
-On applique la loi de Lanchester dans le modèle du jeu :
-\begin{equation*}
-	\left\{
-	\begin{aligned}
-		&\alpha = \frac{DPF(B,A)}{HP(A)}\\
-		&\beta = \frac{DPF(B,A)}{HP(B)}
-	\end{aligned}
-	\right.
-\end{equation*}
-avec $HP(A)$ le nombre de points de vie de A et $DPF(B,A)$ le nombre moyen de dégâts que l'armée B peut faire à l'armée A
-
+\setlength\pdfpagewidth{12.8cm}
+\setlength\pdfpageheight{18.10cm}
+\begin{frame}[plain]
+	\vspace*{2em}
+	\begin{equation*}
+		\left\{
+		\begin{aligned}
+			&\frac{dA}{dt}(t) =-\alpha B(t)\\
+			&\frac{dB}{dt}(t) =-\beta A(t)
+		\end{aligned}
+		\right.
+	\end{equation*}
+	avec $A(t)$ et $B(t)$ le nombre d'unitées dans les armées A et B à l'instant $t$
+	
+	$\alpha$ et $\beta$ les coefficients d'attritions de Lanchester de A et B :
+	\begin{equation*}
+		\left\{
+		\begin{aligned}
+			&\alpha = \frac{DPF(B,A)}{HP(A)}\\
+			&\beta = \frac{DPF(B,A)}{HP(B)}
+		\end{aligned}
+		\right.
+	\end{equation*}
+	
+	Intensitée du combat définie par $I=\sqrt{\alpha\beta}$
 On peut alors approximer le vainqueur :
 \begin{equation*}
 	\frac{|A(0)|}{|B(0)|}
 	\left\{
 	\begin{aligned}
-		&> R_\alpha \text{victoire de A}\\
-		&= R_\alpha \text{égalité}\\
-		&< R_\alpha \text{victoire de B}
+		&> R_\alpha \text{ victoire de A}\\
+		&= R_\alpha \text{ égalité}\\
+		&< R_\alpha \text{ victoire de B}
 	\end{aligned}
 	\right.
 \end{equation*}
 avec
 $R_\alpha = \sqrt{\frac\alpha\beta}$ et 
 $R_\beta = \sqrt{\frac\beta\alpha}$
-\end{frame}
-\begin{frame}{Application de la loi de Lanchester}
-	Et la durée du combat est :
-	
-	\begin{equation*}
-		t=
-		\left\{
-		\begin{aligned}
-			&\frac{1}{2I}\ln\left(\frac{1+\frac{B(0)}{A(0)}R_\alpha}{1-\frac{B(0)}{A(0)}R_\alpha}\right) \text{Si A gagne}\\
-			&\frac{1}{2I}\ln\left(\frac{1+\frac{A(0)}{B(0)}R_\beta}{1-\frac{A(0)}{B(0)}R_\beta}\right)\text{si B gagne}
-		\end{aligned}
-		\right.
-	\end{equation*}
-Mais divergence en cas d'égalité
 
-\end{frame}
-\begin{frame}
-\begin{itemize}
-	\item On génère des armées : DBSCAN
-	\item On applique le MCTS à ces armées
-	\item On accelère le MCTS grâce à la loi de Lanchester
-\end{itemize}
-	
-	
-	
+Unités restantes à la fin : 
+
+\begin{equation*}
+	\left\{
+	\begin{aligned}
+		&A(T) = \sqrt{A(0)^2-\frac\alpha\beta B(0)^2}, B(T)=0\text{ si A gagne}\\
+		&B(T) = \sqrt{B(0)^2-\frac\beta\alpha A(0)^2}, A(T)=0\text{ si B gagne}
+	\end{aligned}
+	\right.
+\end{equation*}
+
 \end{frame}
 \end{document}
