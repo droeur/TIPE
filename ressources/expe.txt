@@ -2,10 +2,10 @@
 #player mcts 0 3 1 53 7 4000 1000 2 5 multi_thread 1
 
 
-player rand_total 0 50 1 -22 57
+player mcts 0 10 1 -22 57 100000 1000 2 3 multi_thread 10 
+player rand_total 1 10 1 53 7
 #player group 1 1 1 53 7
 
-player mcts 1 50 1 53 7 40 1000 1.3 5 multi_thread 1 
 
 #player rand_total 0 30 1 0 14 
 #player rand_total 1 30 1 27 51

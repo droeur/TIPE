@@ -1,0 +1,3 @@
+#!/usr/bin/bash
+
+cmake -S . -B out/ -DCMAKE_TOOLCHAIN_FILE=/home/droeur/dev/vcpkg/scripts/buildsystems/vcpkg.cmake

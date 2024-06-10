@@ -1,0 +1,3 @@
+#!/usr/bin/bash
+
+./out/bin/TIPE -h -n -s 100 -f -o ressources/ -p ressources/expe.txt -g ressources/ -t ressources/cour.ttf

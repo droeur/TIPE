@@ -6,6 +6,7 @@
 \usepackage{lmodern}
 \usepackage{geometry}
 \usepackage{babel}
+\usepackage[font=scriptsize]{caption}
 \usepackage{graphicx}
 \graphicspath{ {./images/} }
 
@@ -52,7 +53,7 @@
 				\item Jeux simultané
 				\item Deux joueurs s'affrontent pour le contrôle d'une carte
 				\item Gestion de ressources : minage, création d'unitées, de bases (stratégie)
-				\item Combat entre unitées (tactique)
+				\item Combat entre unités (tactique)
 			\end{itemize}
 		\end{minipage}\hfill
 		\begin{minipage}{0.5\textwidth}
@@ -67,8 +68,12 @@
 			\\Apprentissage supervisé puis par renforcement
 		\item Robots ("bots") :
 	\end{itemize}
+\begin{figure}
 	\centering
-	\includegraphics[width=0.7\textwidth]{architectures.png} 
+	\includegraphics[width=0.7\textwidth]{architectures.png}
+	\caption{Figure extraite de la source 2}
+\end{figure}
+	
 \end{frame}
 \begin{frame}{StarCraft}
 \begin{figure}
@@ -132,7 +137,7 @@ void game_class::play() const
 		
 		On alloue les espaces dynamiquement au lieu d'utiliser le tas pour éviter la concurrence
 	\end{itemize}
-Parrallélisation :
+Parallélisation :
 \begin{center}
 \begin{tikzpicture}[baseline = (current bounding box.center)]
 	\draw (0,0)node[left]{Cœur 1};
@@ -214,7 +219,7 @@ Parrallélisation :
 \end{center}
 \end{frame}
 \begin{frame}{Utilisation MCTS}
-	Utilisation de UCT pour la selection : $\frac wn+c\sqrt{\frac{\ln N}n}$
+	Utilisation de UCT pour la sélection : $\frac wn+c\sqrt{\frac{\ln N}n}$
 	
 	\begin{center}
 	Selection et expansion
@@ -375,7 +380,7 @@ Parrallélisation :
 	
 	Résultat médiocre : gagne 70\% du temps contre joueur aléatoire
 \end{frame}
-\begin{frame}{Rassemblement des unitées : DBSCAN}
+\begin{frame}{Rassemblement des unités : DBSCAN}
 	\begin{minipage}{0.5\textwidth}
 		\centering
 		\includegraphics[width=0.99\textwidth]{circles.png}
@@ -387,7 +392,7 @@ Parrallélisation :
 		\includegraphics[width=0.99\textwidth]{dbscan.png}
 	\end{minipage}
 \end{frame}
-\begin{frame}{Rassemblement des unitées : DBSCAN}
+\begin{frame}{Rassemblement des unités : DBSCAN}
 	Deux paramètres : $\varepsilon$ et $MinPts$
 
 	Ici avec $MinPts = 3$ :
@@ -556,12 +561,12 @@ Points {\color{darkred}frontière et }{\color{red} centraux du cluster 1 et }{\c
 \begin{itemize}
 	\item On génère des armées : DBSCAN
 	\item On applique le MCTS à ces armées
-	\item On accelère le MCTS grâce à la loi de Lanchester
+	\item On accélère le MCTS grâce à la loi de Lanchester
 \end{itemize}
 \end{frame}
 \begin{frame}[plain]
-	\tiny
-\begin{minipage}{0.49\textwidth}
+\scriptsize
+\begin{minipage}{0.4\textwidth}
 	\begin{equation*}
 		\left\{
 		\begin{aligned}
@@ -583,6 +588,8 @@ Points {\color{darkred}frontière et }{\color{red} centraux du cluster 1 et }{\c
 	\end{equation*}
 	
 	Intensitée du combat définie par $I=\sqrt{\alpha\beta}$
+\end{minipage}\hspace*{1cm}
+\begin{minipage}{0.4\textwidth}
 	On peut alors approximer le vainqueur :
 	\begin{equation*}
 		\frac{|A(0)|}{|B(0)|}
@@ -594,8 +601,7 @@ Points {\color{darkred}frontière et }{\color{red} centraux du cluster 1 et }{\c
 		\end{aligned}
 		\right.
 	\end{equation*}
-\end{minipage}\hfill
-\begin{minipage}{0.49\textwidth}
+
 avec
 $R_\alpha = \sqrt{\frac\alpha\beta}$ et 
 $R_\beta = \sqrt{\frac\beta\alpha}$
@@ -611,5 +617,112 @@ Unités restantes à la fin :
 	\right.
 \end{equation*}
 \end{minipage}
+\end{frame}
+\begin{frame}[plain, fragile]
+	\tiny		
+		\begin{lstlisting}[language=C++,basicstyle=\ttfamily,keywordstyle=\color{red},breaklines=true]
+std::vector<hex_tile*> map_class::path_a_star(hex_tile* start, hex_tile* end) const
+{
+	constexpr int a_weight = 5;
+	const auto list_closed = new bool*[size_y_];
+	const auto weight_g = new double*[size_y_];
+	const auto weight_h = new double*[size_y_];
+	const auto parent = new hex_tile**[size_y_];
+	for (int i = 0; i < size_y_; i++)
+	{
+		list_closed[i] = new bool[size_x_]();
+		weight_g[i] = new double[size_x_]();
+		weight_h[i] = new double[size_x_]();
+		parent[i] = new hex_tile*[size_x_]();
+	}
+	vector<hex_tile*> list_open;
+	hex_tile* current_node = start;
+	weight_g[current_node->index_y()][current_node->index_x()] = 0;
+	weight_h[current_node->index_y()][current_node->index_x()] = current_node->distance(end) * a_weight;
+	list_open.push_back(current_node);
+	make_heap(list_open.begin(), list_open.end(), compare(weight_g, weight_h));
+	int index = 0;
+	while (!list_open.empty())
+	{
+		index++;
+		current_node = list_open.front();
+		list_open.erase(list_open.begin());
+		list_closed[current_node->index_y()][current_node->index_x()] = true;
+		const double cost_g = weight_g[current_node->index_y()][current_node->index_x()] + 1.0;
+		if (list_closed[end->index_y()][end->index_x()])
+		{
+			break;
+		}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[plain, fragile]
+\tiny
+\begin{lstlisting}[language=C++,basicstyle=\ttfamily,keywordstyle=\color{red},breaklines=true]
+		if (constexpr double depth = 200.0; cost_g > depth)
+		{
+			break;
+		}
+		for (int dir = 0; dir < 6; dir++)
+		{
+			hex_tile* children = neighbor(current_node->q(), current_node->r(), dir);
+			if (children == nullptr)
+			{
+				continue;
+			}
+			if (!children->passable())
+			{
+				continue;
+			}
+			if (list_closed[children->index_y()][children->index_x()])
+			{
+				continue;
+			}
+			if (find(list_open.begin(), list_open.end(), children) == list_open.end())
+			{
+				weight_g[children->index_y()][children->index_x()] = cost_g;
+				weight_h[children->index_y()][children->index_x()] = (children->distance(end)) * a_weight;
+				list_open.push_back(children);
+				push_heap(list_open.begin(), list_open.end(), compare(compare(weight_g, weight_h)));
+				parent[children->index_y()][children->index_x()] = current_node;
+			}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[plain, fragile]
+	\tiny
+\begin{lstlisting}[language=C++,basicstyle=\ttfamily,keywordstyle=\color{red},breaklines=true]
+			else if (weight_g[children->index_y()][children->index_x()] + weight_h[children->index_y()][children->index_x()] > cost_g + weight_h[children->index_y()][children->index_x()])
+			{
+				weight_g[children->index_y()][children->index_x()] = cost_g;
+				parent[children->index_y()][children->index_x()] = current_node;
+				make_heap(list_open.begin(), list_open.end(), compare(compare(weight_g, weight_h)));
+			}
+		}
+	}
+	vector<hex_tile*> path;
+	if (list_closed[current_node->index_y()][current_node->index_x()])
+	{
+		while (current_node != start && current_node != nullptr)
+		{
+			path.push_back(current_node);
+			current_node = parent[current_node->index_y()][current_node->index_x()];
+		}
+		reverse(path.begin(), path.end());
+	}
+	for (int i = 0; i < size_y_; i++)
+	{
+		delete[] list_closed[i];
+		delete[] weight_g[i];
+		delete[] weight_h[i];
+		delete[] parent[i];
+	}
+	delete[] list_closed;
+	delete[] weight_g;
+	delete[] weight_h;
+	delete[] parent;
+	return path;
+}
+\end{lstlisting}
 \end{frame}
 \end{document}
